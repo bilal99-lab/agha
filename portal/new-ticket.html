@@ -254,11 +254,12 @@
                     airline: document.getElementById('airline').value,
                     outbound: document.getElementById('outboundFlight').value,
                     inbound: document.getElementById('inboundFlight').value,
+                    route: document.getElementById('outboundFlight').value, // user spec
                     cost_price: costVal,
                     selling_price: sellingVal,
                     profit: parseFloat(profit.value) || 0,
                     received: receivedVal,
-                    payment_status: paymentStatus.value,
+                    payment_status: paymentStatus.value === 'Paid' ? 'Paid' : 'Pending', // user spec limit
                     balance: parseFloat(remainingBalance.value) || 0
                 };
 
@@ -291,10 +292,10 @@
                     ticket_id: newTicket.ticket_id,
                     client_name: newTicket.client_name,
                     date: newTicket.date,
-                    selling_price: newTicket.selling_price,
+                    amount: newTicket.selling_price,  // user spec map
                     cost_price: newTicket.cost_price,
                     profit: newTicket.profit,
-                    payment_status: newTicket.payment_status
+                    payment_status: newTicket.payment_status // maps to 'Paid' or 'Pending'
                 };
 
                 invoices.push(newInvoice);
@@ -303,10 +304,11 @@
                 // Save Client into a separate ledger for the Clients view
                 let clients = JSON.parse(localStorage.getItem("aat_clients")) || [];
                 const newClient = {
-                    name: newTicket.client_name,
+                    client_name: newTicket.client_name, // user spec map
                     phone: newTicket.clientPhone,
                     passport: newTicket.clientPassport,
-                    totalPurchases: newTicket.selling_price,
+                    total_spent: newTicket.selling_price, // user spec map
+                    total_tickets: 1, // user spec map
                     status: 'Active'
                 };
 
@@ -314,7 +316,8 @@
                 if (clients.length > 0) {
                     let existingClient = clients.find(c => c.phone === newTicket.clientPhone);
                     if (existingClient) {
-                        existingClient.totalPurchases += newTicket.selling_price;
+                        existingClient.total_spent += newTicket.selling_price;
+                        existingClient.total_tickets += 1;
                     } else {
                         clients.push(newClient);
                     }

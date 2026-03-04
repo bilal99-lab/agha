@@ -216,7 +216,7 @@
                         // Action buttons logic
                         let actionBtns = `<button class="btn btn-outline" style="padding: 4px 12px; font-size: 0.8rem; margin-right: 8px;" onclick="printInvoice('${inv.invoice_id}')"><i class="fas fa-print"></i> Print</button>`;
 
-                        if (inv.payment_status !== "Paid") {
+                        if (inv.payment_status === "Pending") {
                             actionBtns += `<button class="btn" style="padding: 4px 12px; font-size: 0.8rem;" onclick="markPaid('${inv.invoice_id}')"><i class="fas fa-check"></i> Mark Paid</button>`;
                         }
 
@@ -225,7 +225,7 @@
                                 <td style="font-weight: 600;">${inv.invoice_id}</td>
                                 <td>${inv.date}</td>
                                 <td>${inv.client_name}</td>
-                                <td>Rs ${(inv.selling_price || 0).toLocaleString()}</td>
+                                <td>Rs ${(inv.amount || 0).toLocaleString()}</td>
                                 <td style="color: var(--success); font-weight: 600;">Rs ${(inv.profit || 0).toLocaleString()}</td>
                                 <td><span class="status-badge ${badgeClass}">${inv.payment_status}</span></td>
                                 <td style="text-align: right;">${actionBtns}</td>
@@ -269,8 +269,8 @@
                     document.getElementById('printClientName').textContent = targetInv.client_name;
                     document.getElementById('printDate').textContent = targetInv.date;
                     document.getElementById('printRoute').textContent = 'Ref: Ticket ' + targetInv.ticket_id;
-                    document.getElementById('printAmount').textContent = 'Rs ' + (targetInv.selling_price || 0).toLocaleString();
-                    document.getElementById('printTotalAmount').textContent = 'Rs ' + (targetInv.selling_price || 0).toLocaleString();
+                    document.getElementById('printAmount').textContent = 'Rs ' + (targetInv.amount || 0).toLocaleString();
+                    document.getElementById('printTotalAmount').textContent = 'Rs ' + (targetInv.amount || 0).toLocaleString();
 
                     // Trigger browser print dialog
                     window.print();
