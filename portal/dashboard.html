@@ -15,7 +15,7 @@
 
     <script>
         // Auth Guard
-        if (localStorage.getItem("isLoggedIn") !== "true") {
+        if (localStorage.getItem("portal_logged_in") !== "true") {
             window.location.href = "login.html";
         }
     </script>
@@ -210,7 +210,7 @@
         });
 
         function logout() {
-            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("portal_logged_in");
             window.location.href = "login.html";
         }
     </script>
