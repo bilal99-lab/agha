@@ -175,38 +175,52 @@
             const tableBody = document.getElementById("recentActivityTableBody");
             let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
             let invoices = JSON.parse(localStorage.getItem("aat_invoices")) || [];
+            let expenses = JSON.parse(localStorage.getItem("aat_expenses")) || [];
 
             // Calculate Dashboard Stats
             let todaySales = 0;
             let totalReceivable = 0;
             let monthProfit = 0;
+            let totalExpenses = 0;
 
             const todayStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
             const currentMonth = new Date().toLocaleDateString('en-GB', { month: 'short' });
+            const currentMonthNumStr = new Date().toISOString().slice(0, 7); // YYYY-MM
 
             tickets.forEach(t => {
-                // Today Sales (Still based on tickets)
+                // Today Sales
                 if (t.date === todayStr) {
                     todaySales += (t.selling_price || 0);
                 }
             });
 
             invoices.forEach(inv => {
-                // Total Receivable (sum of invoices where payment_status = pending)
+                // Total Receivable
                 if (inv.payment_status === "Pending") {
                     totalReceivable += (inv.amount || inv.selling_price || 0);
                 }
 
-                // Monthly Profit (sum of invoice profit)
+                // Monthly Ticket Profit
                 if (inv.date && inv.date.includes(currentMonth)) {
                     monthProfit += (inv.profit || 0);
                 }
             });
 
+            expenses.forEach(exp => {
+                // Total Expenses
+                if (exp.date && exp.date.startsWith(currentMonthNumStr)) {
+                    totalExpenses += (exp.amount || 0);
+                }
+            });
+
+            let netProfit = monthProfit - totalExpenses;
+
             // Update DOM
             document.getElementById("statTodaySales").textContent = "Rs " + todaySales.toLocaleString();
             document.getElementById("statTotalReceivable").textContent = "Rs " + totalReceivable.toLocaleString();
             document.getElementById("statMonthProfit").textContent = "Rs " + monthProfit.toLocaleString();
+            document.getElementById("statTotalExpenses").textContent = "Rs " + totalExpenses.toLocaleString();
+            document.getElementById("statNetProfit").textContent = "Rs " + netProfit.toLocaleString();
 
             if (tickets.length > 0) {
                 tableBody.innerHTML = ""; // Clear mock data
@@ -234,7 +248,83 @@
                     `;
                 });
             }
+
+            // Initialize Charts
+            initCharts(monthProfit, netProfit);
         });
+
+        function initCharts(currentProfit, currentNetProfit) {
+            // Dummy historical data for visualization, blending with current month's calculated live data
+            const months = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'];
+
+            // Sales Chart (Bar)
+            const ctxSales = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctxSales, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Monthly Ticket Sales (PKR)',
+                        data: [1200000, 1500000, 1100000, 1800000, 2100000, 1950000, 2400000],
+                        backgroundColor: '#2563eb',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: '6-Month Sales Volume', align: 'start', padding: 20 }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, border: { dash: [4, 4] }, grid: { color: '#f1f5f9' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Profit Tracker (Line)
+            const ctxProfit = document.getElementById('profitChart').getContext('2d');
+            new Chart(ctxProfit, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Gross Profit',
+                            data: [150000, 180000, 140000, 220000, 250000, 210000, currentProfit > 0 ? currentProfit : 280000],
+                            borderColor: '#10b981',
+                            backgroundColor: '#10b98115',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Net Profit',
+                            data: [100000, 120000, 90000, 160000, 180000, 150000, currentNetProfit > 0 ? currentNetProfit : 200000],
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', align: 'end' },
+                        title: { display: true, text: 'Gross vs Net Profit Trend', align: 'start', padding: 20 }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, border: { dash: [4, 4] }, grid: { color: '#f1f5f9' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
 
         function logout() {
             localStorage.removeItem("portal_logged_in");
