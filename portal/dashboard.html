@@ -12,6 +12,8 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/portal.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
         // Auth Guard
@@ -60,7 +62,7 @@
             <div class="content-area">
 
                 <!-- Stats Grid -->
-                <div class="stats-grid">
+                <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
                     <div class="card stat-card c-primary">
                         <div class="stat-info">
                             <h4>Today Sales</h4>
@@ -73,16 +75,22 @@
                             <div class="value" id="statTotalReceivable">Rs 0</div>
                         </div>
                     </div>
-                    <div class="card stat-card c-danger">
-                        <div class="stat-info">
-                            <h4>Total Payable</h4>
-                            <div class="value">Rs 850,000</div>
-                        </div>
-                    </div>
                     <div class="card stat-card c-success">
                         <div class="stat-info">
                             <h4>This Month Profit</h4>
                             <div class="value" id="statMonthProfit">Rs 0</div>
+                        </div>
+                    </div>
+                    <div class="card stat-card c-danger">
+                        <div class="stat-info">
+                            <h4>Total Expenses</h4>
+                            <div class="value" id="statTotalExpenses">Rs 0</div>
+                        </div>
+                    </div>
+                    <div class="card stat-card" style="border-left: 4px solid #8b5cf6;">
+                        <div class="stat-info">
+                            <h4 style="color: #64748b;">Net Profit</h4>
+                            <div class="value" id="statNetProfit" style="color: #8b5cf6;">Rs 0</div>
                         </div>
                     </div>
                 </div>
@@ -91,12 +99,18 @@
                 <div class="dashboard-row">
                     <div class="card" style="padding: 0;">
                         <div class="section-header" style="padding: 24px 24px 0 24px; margin-bottom: 24px;">
-                            <h3>Revenue Overview</h3>
+                            <h3>Financial Analytics</h3>
                             <button class="btn btn-outline" style="font-weight: 600;"><i class="fas fa-download"></i>
-                                Export CSV</button>
+                                Export</button>
                         </div>
-                        <div class="chart-placeholder" style="margin: 0 24px 24px 24px;">
-                            [ Chart.js Line / Bar Chart Placeholder ]
+                        <div
+                            style="margin: 0 24px 24px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div style="height: 300px;">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                            <div style="height: 300px;">
+                                <canvas id="profitChart"></canvas>
+                            </div>
                         </div>
                     </div>
 
