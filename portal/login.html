@@ -20,25 +20,32 @@
     <div class="login-wrapper">
         <div class="card login-card">
             <div class="login-header">
-                <h2>AAT Portal</h2>
+                <div class="login-logo">
+                    <i class="fas fa-plane"></i>
+                </div>
+                <h2>AAT Admin Portal</h2>
+                <p>Secure access to the travel management system</p>
             </div>
 
             <div id="loginError" class="alert alert-error" style="display: none; margin-bottom: 20px;"></div>
 
             <form id="loginForm">
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" id="email" class="form-control" placeholder="Enter your email" required
-                        autofocus>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label class="form-label" style="color: #334155;">Email Address</label>
+                    <input type="email" id="email" class="login-input" placeholder="admin@aat.com" required autofocus>
                 </div>
 
-                <div class="form-group" style="margin-top: 16px;">
-                    <label class="form-label">Password</label>
-                    <input type="password" id="password" class="form-control" placeholder="Enter your password"
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label class="form-label" style="color: #334155;">Password</label>
+                    <input type="password" id="password" class="login-input" placeholder="Enter secure password"
                         required>
                 </div>
-                <button type="submit" class="btn login-btn">Sign In to Portal</button>
+                <button type="submit" class="login-btn">Access Portal</button>
             </form>
+
+            <div class="login-footer">
+                Agha Air Travel &bull; Internal System
+            </div>
         </div>
     </div>
 
