@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AAT Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/portal.css">
+
+    <script>
+        // Auth Guard
+        if (localStorage.getItem("isLoggedIn") !== "true") {
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="app-layout">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                AAT Portal
+            </div>
+            <div class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="new-ticket.html" class="nav-item"><i class="fas fa-ticket-alt"></i> New Ticket</a>
+                <a href="umrah-entry.html" class="nav-item"><i class="fas fa-kaaba"></i> Umrah Entry</a>
+                <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
+                <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
+                <a href="expenses.html" class="nav-item"><i class="fas fa-receipt"></i> Expenses</a>
+                <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
+                <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
+                    Logout</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="page-title">Dashboard Overview</div>
+                <div class="user-profile">
+                    <span class="avatar">A</span>
+                    <span>Admin User</span>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="card stat-card c-primary">
+                        <div class="stat-info">
+                            <h4>Today Sales</h4>
+                            <div class="value" id="statTodaySales">Rs 0</div>
+                        </div>
+                    </div>
+                    <div class="card stat-card c-warning">
+                        <div class="stat-info">
+                            <h4>Total Receivable</h4>
+                            <div class="value" id="statTotalReceivable">Rs 0</div>
+                        </div>
+                    </div>
+                    <div class="card stat-card c-danger">
+                        <div class="stat-info">
+                            <h4>Total Payable</h4>
+                            <div class="value">Rs 850,000</div>
+                        </div>
+                    </div>
+                    <div class="card stat-card c-success">
+                        <div class="stat-info">
+                            <h4>This Month Profit</h4>
+                            <div class="value" id="statMonthProfit">Rs 0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Row -->
+                <div class="dashboard-row">
+                    <div class="card" style="padding: 0;">
+                        <div class="section-header" style="padding: 24px 24px 0 24px; margin-bottom: 24px;">
+                            <h3>Revenue Overview</h3>
+                            <button class="btn btn-outline" style="font-weight: 600;"><i class="fas fa-download"></i>
+                                Export CSV</button>
+                        </div>
+                        <div class="chart-placeholder" style="margin: 0 24px 24px 24px;">
+                            [ Chart.js Line / Bar Chart Placeholder ]
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card" style="overflow: hidden;">
+                        <div class="section-header">
+                            <h3>Recent Activity</h3>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Date</th>
+                                        <th>Client</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentActivityTableBody">
+                                    <tr>
+                                        <td>#TKT-1045</td>
+                                        <td>Oct 24</td>
+                                        <td>Usman Ali</td>
+                                        <td>Rs 145,000</td>
+                                        <td><span class="status-badge bg-success-light">Paid</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>#UMR-892</td>
+                                        <td>Oct 24</td>
+                                        <td>Salman Khan</td>
+                                        <td>Rs 800,000</td>
+                                        <td><span class="status-badge bg-warning-light">Pending</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>#TKT-1044</td>
+                                        <td>Oct 23</td>
+                                        <td>Ahmed Raza</td>
+                                        <td>Rs 90,000</td>
+                                        <td><span class="status-badge bg-success-light">Paid</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>#EXP-55</td>
+                                        <td>Oct 22</td>
+                                        <td>Office Rent</td>
+                                        <td>Rs 50,000</td>
+                                        <td><span class="status-badge bg-danger-light">Cleared</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tableBody = document.getElementById("recentActivityTableBody");
+            let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
+
+            // Calculate Dashboard Stats
+            let todaySales = 0;
+            let totalReceivable = 0;
+            let monthProfit = 0;
+
+            const todayStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+            const currentMonth = new Date().toLocaleDateString('en-GB', { month: 'short' });
+
+            tickets.forEach(t => {
+                // Today Sales
+                if (t.date === todayStr) {
+                    todaySales += (t.selling || 0);
+                }
+                // Total Receivable (Sum of all remaining balances)
+                totalReceivable += (t.balance || 0);
+                // Monthly Profit (Simple check if date string contains current month)
+                if (t.date.includes(currentMonth)) {
+                    monthProfit += (t.profit || 0);
+                }
+            });
+
+            // Update DOM
+            document.getElementById("statTodaySales").textContent = "Rs " + todaySales.toLocaleString();
+            document.getElementById("statTotalReceivable").textContent = "Rs " + totalReceivable.toLocaleString();
+            document.getElementById("statMonthProfit").textContent = "Rs " + monthProfit.toLocaleString();
+
+            if (tickets.length > 0) {
+                tableBody.innerHTML = ""; // Clear mock data
+                // Sort by latest and take last 5
+                let recentTickets = tickets.reverse().slice(0, 5);
+
+                recentTickets.forEach(t => {
+                    let badgeClass = "bg-warning-light"; // default Partial
+                    if (t.status === "Paid") badgeClass = "bg-success-light";
+                    if (t.status === "Credit") badgeClass = "bg-danger-light";
+
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${t.id}</td>
+                            <td>${t.date}</td>
+                            <td>${t.clientName}</td>
+                            <td>Rs ${t.selling.toLocaleString()}</td>
+                            <td><span class="status-badge ${badgeClass}">${t.status}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+
+</html>

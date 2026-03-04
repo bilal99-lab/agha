@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Ticket - AAT Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/portal.css">
+
+    <script>
+        // Auth Guard
+        if (localStorage.getItem("isLoggedIn") !== "true") {
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="app-layout">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                AAT Portal
+            </div>
+            <div class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="new-ticket.html" class="nav-item active"><i class="fas fa-ticket-alt"></i> New Ticket</a>
+                <a href="umrah-entry.html" class="nav-item"><i class="fas fa-kaaba"></i> Umrah Entry</a>
+                <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
+                <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
+                <a href="expenses.html" class="nav-item"><i class="fas fa-receipt"></i> Expenses</a>
+                <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
+                <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
+                    Logout</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="page-title">New Ticket Entry</div>
+                <div class="user-profile">
+                    <span class="avatar">A</span>
+                    <span>Admin User</span>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <div style="max-width: 900px; margin: 0 auto; width: 100%;">
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+                        <div>
+                            <h2 style="margin-bottom: 6px; font-size: 1.5rem;">New Ticket Entry</h2>
+                            <p class="text-muted" style="margin: 0;">Create a structured passenger and itinerary record.
+                            </p>
+                        </div>
+                        <button class="btn btn-save" id="btnSave"
+                            onclick="document.getElementById('ticketForm').requestSubmit();"><i class="fas fa-save"
+                                style="margin-right: 8px;"></i> Save Ticket</button>
+                    </div>
+
+                    <div id="alertMessage" class="alert"></div>
+
+                    <form id="ticketForm">
+                        <!-- CLIENT INFO -->
+                        <div class="card" style="margin-bottom: 24px; padding: 32px;">
+                            <div class="form-section-title">Client Information</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Client Name *</label>
+                                    <input type="text" id="clientName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Phone Number *</label>
+                                    <input type="text" id="clientPhone" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Passport Number</label>
+                                    <input type="text" id="clientPassport" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FLIGHT DETAILS -->
+                        <div class="card" style="margin-bottom: 24px; padding: 32px;">
+                            <div class="form-section-title">Flight Details</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">PNR *</label>
+                                    <input type="text" id="pnr" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Airline *</label>
+                                    <input type="text" id="airline" class="form-control" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label">Outbound Flight (From - To - Date) *</label>
+                                    <input type="text" id="outboundFlight" class="form-control"
+                                        placeholder="e.g. KHI - DXB - 12 Nov 2026" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label">Inbound Flight (From - To - Date)</label>
+                                    <input type="text" id="inboundFlight" class="form-control"
+                                        placeholder="e.g. DXB - KHI - 25 Nov 2026">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FARE DETAILS -->
+                        <div class="card" style="margin-bottom: 24px; padding: 32px;">
+                            <div class="form-section-title">Fare Details</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Cost Price (Rs) *</label>
+                                    <input type="number" id="costPrice" class="form-control" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Selling Price (Rs) *</label>
+                                    <input type="number" id="sellingPrice" class="form-control" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Profit (Rs)</label>
+                                    <input type="text" id="profit" class="form-control" readonly
+                                        style="background: #f8fafc; font-weight: 600;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PAYMENT SECTION -->
+                        <div class="card" style="margin-bottom: 24px; padding: 32px;">
+                            <div class="form-section-title">Payment Section</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Amount Received (Rs) *</label>
+                                    <input type="number" id="amountReceived" class="form-control" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Payment Status</label>
+                                    <select id="paymentStatus" class="form-control">
+                                        <option value="Credit">Credit</option>
+                                        <option value="Partial">Partial</option>
+                                        <option value="Paid">Paid</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Remaining Balance (Rs)</label>
+                                    <input type="text" id="remainingBalance" class="form-control" readonly
+                                        style="background: #f8fafc; font-weight: 600;">
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div> <!-- End Centered Max Width -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const ticketForm = document.getElementById("ticketForm");
+
+            // Financial calculations
+            const costPrice = document.getElementById("costPrice");
+            const sellingPrice = document.getElementById("sellingPrice");
+            const profit = document.getElementById("profit");
+            const amountReceived = document.getElementById("amountReceived");
+            const paymentStatus = document.getElementById("paymentStatus");
+            const remainingBalance = document.getElementById("remainingBalance");
+
+            const btnSave = document.getElementById("btnSave");
+            const alertMessage = document.getElementById("alertMessage");
+
+            function calculateFinancials() {
+                const cost = parseFloat(costPrice.value) || 0;
+                const selling = parseFloat(sellingPrice.value) || 0;
+                const received = parseFloat(amountReceived.value) || 0;
+
+                // Validate no negatives manually just in case
+                if (cost < 0) costPrice.value = 0;
+                if (selling < 0) sellingPrice.value = 0;
+                if (received < 0) amountReceived.value = 0;
+
+                // Calculate Profit
+                const profitVal = selling - cost;
+                profit.value = profitVal;
+
+                // Color Code Profit
+                if (profitVal > 0) {
+                    profit.style.color = "var(--success)";
+                    profit.style.background = "#ecfdf5"; // light green tint
+                } else if (profitVal < 0) {
+                    profit.style.color = "var(--danger)";
+                    profit.style.background = "#fef2f2"; // light red tint
+                } else {
+                    profit.style.color = "var(--text-dark)";
+                    profit.style.background = "#f8fafc"; // default light grey tint
+                }
+
+                // Calculate Balance
+                const balance = selling - received;
+                remainingBalance.value = balance >= 0 ? balance : 0;
+
+                // Auto set status based on logic
+                if (selling > 0) {
+                    if (received >= selling) {
+                        paymentStatus.value = "Paid";
+                    } else if (received > 0 && received < selling) {
+                        paymentStatus.value = "Partial";
+                    } else {
+                        paymentStatus.value = "Credit";
+                    }
+                } else {
+                    paymentStatus.value = "Credit";
+                }
+            }
+
+            costPrice.addEventListener("input", calculateFinancials);
+            sellingPrice.addEventListener("input", calculateFinancials);
+            amountReceived.addEventListener("input", calculateFinancials);
+
+            btnSave.addEventListener("click", () => {
+                // Rely on native HTML5 validation
+                if (!ticketForm.checkValidity()) {
+                    ticketForm.reportValidity();
+                    return;
+                }
+
+                const costVal = parseFloat(costPrice.value) || 0;
+                const sellingVal = parseFloat(sellingPrice.value) || 0;
+                const receivedVal = parseFloat(amountReceived.value) || 0;
+
+                const newTicket = {
+                    id: "#TKT-" + Math.floor(1000 + Math.random() * 9000),
+                    date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+                    clientName: document.getElementById('clientName').value,
+                    clientPhone: document.getElementById('clientPhone').value,
+                    clientPassport: document.getElementById('clientPassport').value,
+                    pnr: document.getElementById('pnr').value,
+                    airline: document.getElementById('airline').value,
+                    outbound: document.getElementById('outboundFlight').value,
+                    inbound: document.getElementById('inboundFlight').value,
+                    cost: costVal,
+                    selling: sellingVal,
+                    profit: parseFloat(profit.value) || 0,
+                    received: receivedVal,
+                    status: paymentStatus.value,
+                    balance: parseFloat(remainingBalance.value) || 0
+                };
+
+                // Save to LocalStorage
+                let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
+                tickets.push(newTicket);
+                localStorage.setItem("aat_tickets", JSON.stringify(tickets));
+
+                // Save Client into a separate ledger for the Clients view
+                let clients = JSON.parse(localStorage.getItem("aat_clients")) || [];
+                const newClient = {
+                    name: newTicket.clientName,
+                    phone: newTicket.clientPhone,
+                    passport: newTicket.clientPassport,
+                    totalPurchases: newTicket.selling,
+                    status: 'Active'
+                };
+
+                // Check if user exists, else add
+                if (clients.length > 0) {
+                    let existingClient = clients.find(c => c.phone === newTicket.clientPhone);
+                    if (existingClient) {
+                        existingClient.totalPurchases += newTicket.selling;
+                    } else {
+                        clients.push(newClient);
+                    }
+                } else {
+                    clients.push(newClient);
+                }
+                localStorage.setItem("aat_clients", JSON.stringify(clients));
+
+                // Save Ledger transaction
+                if (receivedVal > 0) {
+                    let ledger = JSON.parse(localStorage.getItem("aat_ledger")) || [];
+                    ledger.push({
+                        id: "#LDG-" + Math.floor(1000 + Math.random() * 9000),
+                        date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+                        description: "Ticket Payment - " + newTicket.clientName,
+                        type: "Income",
+                        amount: receivedVal
+                    });
+                    localStorage.setItem("aat_ledger", JSON.stringify(ledger));
+                }
+
+                showAlert('Ticket generated and saved successfully!', 'success');
+                ticketForm.reset();
+                calculateFinancials(); // Reset calc read-only fields
+            });
+
+            function showAlert(msg, type) {
+                alertMessage.textContent = msg;
+                alertMessage.className = `alert alert-${type}`;
+                alertMessage.style.display = "block";
+                setTimeout(() => {
+                    alertMessage.style.display = "none";
+                }, 3000);
+            }
+
+            // Initial calc
+            calculateFinancials();
+        });
+
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+
+</html>

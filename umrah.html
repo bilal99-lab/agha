@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Umrah Packages from Karachi | Agha Air Travel</title>
+    <meta name="description"
+        content="Experience peace of mind with Agha Air Travel's complete Umrah packages from Karachi. We manage visas, 5-star hotels, ground transport, and Ziarat tours.">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Premium Umrah Packages from Karachi | Agha Air Travel">
+    <meta property="og:description"
+        content="Experience peace of mind with Agha Air Travel's complete Umrah packages from Karachi. We manage visas, 5-star hotels, ground transport, and Ziarat tours.">
+    <meta property="og:image" content="https://example.com/logo.png">
+    <meta property="og:type" content="website">
+
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TravelAgency",
+      "name": "Agha Air Travel",
+      "image": "https://example.com/logo.png",
+      "telephone": "03058107136",
+      "email": "aghairtravel101@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Office #1,2 Faizan Market, Main Dawood Chorangi, Landhi",
+        "addressLocality": "Karachi",
+        "addressCountry": "PK"
+      }
+    }
+    </script>
+    <!-- Font Preloading & Optimization -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Specific styles for Umrah Page */
+        .hero-umrah {
+            position: relative;
+            background: #0B1220;
+        }
+
+        .spiritual-glow {
+            position: absolute;
+            top: 0%;
+            left: 50%;
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, rgba(45, 75, 255, 0.04) 40%, rgba(11, 18, 32, 0) 70%);
+            transform: translate(-50%, -30%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.9) 0%, rgba(243, 229, 171, 0.9) 100%);
+            color: #0B1220;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 700;
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 1) 0%, rgba(243, 229, 171, 1) 100%);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+        }
+
+        /* Package Tiers */
+        .tier-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .tier-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 40px 30px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tier-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .tier-card.highlight {
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.05);
+            transform: scale(1.02);
+        }
+
+        .tier-card.highlight:hover {
+            transform: scale(1.02) translateY(-6px);
+            box-shadow: 0 14px 40px rgba(212, 175, 55, 0.1);
+            border-color: rgba(212, 175, 55, 0.5);
+        }
+
+        .tier-card.highlight::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.9) 0%, rgba(243, 229, 171, 0.9) 100%);
+            color: #0B1220;
+            padding: 4px 40px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .tier-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .tier-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .tier-price {
+            font-size: 2.25rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            color: var(--text-white);
+        }
+
+        .tier-price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .tier-features {
+            flex: 1;
+            margin-bottom: 30px;
+        }
+
+        .tier-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .tier-features li i {
+            color: var(--primary);
+            font-size: 0.85rem;
+        }
+
+        .tier-card.highlight .tier-features li i {
+            color: #D4AF37;
+        }
+
+        /* Included Features Grid */
+        .included-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .included-box {
+            background: #0B1220;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: var(--transition-normal);
+        }
+
+        .included-box:hover {
+            border-color: rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .included-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .included-box h4 {
+            font-size: 1.05rem;
+            margin-bottom: 2px;
+        }
+
+        /* Vertical Timeline */
+        .timeline-vertical {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        .timeline-vertical::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 24px;
+            width: 2px;
+            background: var(--border-light);
+        }
+
+        .timeline-v-item {
+            position: relative;
+            padding-left: 70px;
+            margin-bottom: 40px;
+        }
+
+        .timeline-v-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-v-icon {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 50px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            z-index: 1;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .timeline-v-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-normal);
+        }
+
+        .timeline-v-item:hover .timeline-v-content {
+            border-color: rgba(255, 255, 255, 0.05);
+            transform: translateX(6px);
+        }
+
+        .timeline-v-item:hover .timeline-v-icon {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .timeline-v-content h4 {
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+        }
+
+        .timeline-v-content p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Trust Grid */
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .trust-box {
+            background: #0B1220;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .trust-box h3 {
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .trust-box p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* CTA WhatsApp */
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #1DB954 0%, #17A046 100%);
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(29, 185, 84, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #1ED760 0%, #1DB954 100%);
+            box-shadow: 0 10px 20px rgba(29, 185, 84, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            color: #FFFFFF;
+        }
+
+        .cta-section {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.03) 0%, rgba(15, 23, 42, 0) 70%);
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @media (max-width: 1024px) {
+
+            .tier-grid,
+            .included-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .trust-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tier-card.highlight {
+                transform: none;
+            }
+
+            .tier-card.highlight:hover {
+                transform: translateY(-6px);
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .tier-grid,
+            .included-grid,
+            .trust-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Glass Navbar -->
+    <nav class="navbar glass-nav" id="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="brand">
+                <div class="logo-wrapper">
+                    <!-- Text logo fallback in case image is missing -->
+                    <span class="logo-text">AAT</span>
+                </div>
+                <span class="brand-name">Agha Air Travel</span>
+            </a>
+
+            <div class="nav-links" id="nav-links">
+                <a href="index.html#home">Home</a>
+                <a href="index.html#services">Services</a>
+                <a href="air-ticket.html">Air Tickets</a>
+                <a href="umrah.html" class="active">Umrah</a>
+                <a href="index.html#contact">Contact</a>
+                <a href="/portal/dashboard.html" class="btn btn-outline">Login</a>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobile-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero hero-umrah" style="min-height: 80vh; padding-top: 180px;">
+        <div class="spiritual-glow"></div>
+        <div class="container">
+            <div class="hero-text fade-up" style="max-width: 900px; margin: 0 auto; text-align: center;">
+                <div class="badge"
+                    style="background: rgba(212, 175, 55, 0.1); color: #D4AF37; border: 1px solid rgba(212, 175, 55, 0.2);">
+                    Premium Spiritual Travel</div>
+                <h1>Sacred Journeys, <br><span
+                        style="background: linear-gradient(135deg, #D4AF37 0%, #F3E5AB 100%); background-clip: text; -webkit-background-clip: text; color: transparent;">Perfectly
+                        Managed.</span></h1>
+                <p style="margin: 0 auto 40px;">Experience peace of mind with our complete Umrah packages — from visa
+                    processing to guided Ziarat. Allow us to handle the details so you can focus on your spiritual
+                    journey.</p>
+                <div class="hero-cta" style="justify-content: center;">
+                    <a href="#packages" class="btn btn-gold btn-lg">
+                        Explore Packages <i class="fas fa-kaaba"></i>
+                    </a>
+                    <a href="#contact" class="btn btn-glass btn-lg">
+                        Request Custom Quote
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Package Tiers Section -->
+    <section id="packages" class="section">
+        <div class="container">
+            <div class="section-header fade-up">
+                <h2>Our Umrah Packages</h2>
+                <p>Transparent pricing with fully managed services for individuals, families, and groups.</p>
+            </div>
+
+            <div class="tier-grid fade-up" style="transition-delay: 100ms;">
+                <!-- Economy -->
+                <div class="tier-card">
+                    <div class="tier-header">
+                        <h3>Economy Package</h3>
+                        <div class="tier-price">Custom <span>/person</span></div>
+                    </div>
+                    <ul class="tier-features">
+                        <li><i class="fas fa-check"></i> E-Visa Processing Included</li>
+                        <li><i class="fas fa-check"></i> 3/4 Star Economy Hotels</li>
+                        <li><i class="fas fa-check"></i> Shared Ground Transport</li>
+                        <li><i class="fas fa-check"></i> Standard Ziarat Tours</li>
+                        <li><i class="fas fa-check"></i> 14 Days Duration</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline btn-block">Inquire Now</a>
+                </div>
+
+                <!-- Premium Focus -->
+                <div class="tier-card highlight">
+                    <div class="tier-header">
+                        <h3>Standard Package</h3>
+                        <div class="tier-price">Custom <span>/person</span></div>
+                    </div>
+                    <ul class="tier-features">
+                        <li><i class="fas fa-check"></i> Fast-Track E-Visa</li>
+                        <li><i class="fas fa-check"></i> 4 Star Hotel Stay (Close to Haram)</li>
+                        <li><i class="fas fa-check"></i> Private VIP Transport Options</li>
+                        <li><i class="fas fa-check"></i> Guided Ziarat Tours</li>
+                        <li><i class="fas fa-check"></i> 15-21 Days Duration</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-gold btn-block">Book Standard</a>
+                </div>
+
+                <!-- Luxury -->
+                <div class="tier-card">
+                    <div class="tier-header">
+                        <h3>Premium Luxury</h3>
+                        <div class="tier-price">Custom <span>/person</span></div>
+                    </div>
+                    <ul class="tier-features">
+                        <li><i class="fas fa-check"></i> Immediate Visa Processing</li>
+                        <li><i class="fas fa-check"></i> 5 Star Luxury Hotels (Haram View)</li>
+                        <li><i class="fas fa-check"></i> Dedicated Luxury Transport</li>
+                        <li><i class="fas fa-check"></i> Exclusive Guided Ziarat</li>
+                        <li><i class="fas fa-check"></i> Flexible Duration</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline btn-block">Request VIP Quote</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What's Included Grid -->
+    <section class="section bg-light-blue">
+        <div class="container">
+            <div class="section-header fade-up">
+                <h2>What’s Included</h2>
+                <p>Every detail of your spiritual journey is meticulously planned and managed by our experienced team.
+                </p>
+            </div>
+
+            <div class="included-grid fade-up" style="transition-delay: 150ms;">
+                <div class="included-box">
+                    <div class="included-icon"><i class="fas fa-passport"></i></div>
+                    <div>
+                        <h4>E-Visa Processing</h4>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin:0;">Fast, guaranteed issuance</p>
+                    </div>
+                </div>
+                <div class="included-box">
+                    <div class="included-icon"><i class="fas fa-hotel"></i></div>
+                    <div>
+                        <h4>4/5 Star Hotels</h4>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin:0;">Premium stay near Haram</p>
+                    </div>
+                </div>
+                <div class="included-box">
+                    <div class="included-icon"><i class="fas fa-bus"></i></div>
+                    <div>
+                        <h4>Airport Transfers</h4>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin:0;">Comfortable ground transport
+                        </p>
+                    </div>
+                </div>
+                <div class="included-box">
+                    <div class="included-icon"><i class="fas fa-mosque"></i></div>
+                    <div>
+                        <h4>Guided Ziarat Tours</h4>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin:0;">Expert-led sacred site visits
+                        </p>
+                    </div>
+                </div>
+                <div class="included-box">
+                    <div class="included-icon"><i class="fas fa-users"></i></div>
+                    <div>
+                        <h4>Group & Family</h4>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin:0;">Custom packages available</p>
+                    </div>
+                </div>
+                <div class="included-box">
+                    <div class="included-icon"><i class="fas fa-headset"></i></div>
+                    <div>
+                        <h4>Dedicated Support</h4>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin:0;">24/7 assistance on ground</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vertical Timeline Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header fade-up">
+                <h2>Your Journey Timeline</h2>
+                <p>A seamless, worry-free flow from arrival to departure.</p>
+            </div>
+
+            <div class="timeline-vertical fade-up" style="transition-delay: 100ms;">
+                <div class="timeline-v-item">
+                    <div class="timeline-v-icon"><i class="fas fa-plane-arrival"></i></div>
+                    <div class="timeline-v-content">
+                        <h4>Arrival in Saudi Arabia</h4>
+                        <p>Receive VIP assistance at the airport and comfortable transfer to your hotel.</p>
+                    </div>
+                </div>
+                <div class="timeline-v-item">
+                    <div class="timeline-v-icon"><i class="fas fa-hotel"></i></div>
+                    <div class="timeline-v-content">
+                        <h4>Hotel Check-In</h4>
+                        <p>Settle into your premium accommodation, mere steps away from the Haram.</p>
+                    </div>
+                </div>
+                <div class="timeline-v-item">
+                    <div class="timeline-v-icon"><i class="fas fa-kaaba"></i></div>
+                    <div class="timeline-v-content">
+                        <h4>Umrah Rituals</h4>
+                        <p>Perform your Umrah with peace of mind. Guides available upon request.</p>
+                    </div>
+                </div>
+                <div class="timeline-v-item">
+                    <div class="timeline-v-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <div class="timeline-v-content">
+                        <h4>Ziarat Tours</h4>
+                        <p>Visit historically significant Islamic sites in Makkah and Madinah.</p>
+                    </div>
+                </div>
+                <div class="timeline-v-item">
+                    <div class="timeline-v-icon"><i class="fas fa-plane-departure"></i></div>
+                    <div class="timeline-v-content">
+                        <h4>Safe Departure</h4>
+                        <p>Comfortable transfer to the airport for your journey back home.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Grid -->
+    <section class="section bg-light-blue">
+        <div class="container">
+            <div class="trust-grid fade-up">
+                <div class="trust-box">
+                    <h3>100%</h3>
+                    <p>Transparent Pricing</p>
+                </div>
+                <div class="trust-box">
+                    <h3>50+</h3>
+                    <p>Trusted Saudi Vendors</p>
+                </div>
+                <div class="trust-box">
+                    <h3>24/7</h3>
+                    <p>Dedicated Support</p>
+                </div>
+                <div class="trust-box">
+                    <h3>10+</h3>
+                    <p>Years Experience</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header fade-up">
+                <h2>Trusted by Pilgrims</h2>
+                <p>Authentic feedback from our community of spiritual travelers.</p>
+            </div>
+
+            <div class="reviews-grid fade-up" style="transition-delay: 100ms;">
+                <!-- Review 1 -->
+                <div class="review-card">
+                    <div class="review-stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                            class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="review-text">"An absolutely beautiful experience. Agha Air Travel handled our visas,
+                        flights, and directly booked us into a stunning hotel facing the Haram in Makkah."</p>
+                    <div class="review-author">
+                        <div class="author-avatar">MS</div>
+                        <div class="author-details">
+                            <h5>Muhammad Siddiqui</h5>
+                            <span>Karachi, PK</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="review-card">
+                    <div class="review-stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                            class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="review-text">"Their Ziarat guides were incredibly knowledgeable. Traveling with elderly
+                        parents is stressful, but their ground team in Madinah made it seamless."</p>
+                    <div class="review-author">
+                        <div class="author-avatar">AZ</div>
+                        <div class="author-details">
+                            <h5>Ayesha Zaman</h5>
+                            <span>Lahore, PK</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="review-card">
+                    <div class="review-stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                            class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="review-text">"Transparent pricing from day one. There were no hidden surprises. The 5-star
+                        package we requested exceeded all our expectations."</p>
+                    <div class="review-author">
+                        <div class="author-avatar">UK</div>
+                        <div class="author-details">
+                            <h5>Usman Khan</h5>
+                            <span>Islamabad, PK</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Animated Trust Stats Strip -->
+    <section class="stats-strip">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item fade-up">
+                    <div class="stat-number" data-target="5000">0</div>
+                    <div class="stat-label">Tickets Issued</div>
+                </div>
+                <div class="stat-item fade-up" style="transition-delay: 100ms;">
+                    <div class="stat-number" data-target="1200">0</div>
+                    <div class="stat-label">Umrah Pilgrims Served</div>
+                </div>
+                <div class="stat-item fade-up" style="transition-delay: 200ms;">
+                    <div class="stat-number" data-target="10">0</div>
+                    <div class="stat-label">Airline Partners</div>
+                </div>
+                <div class="stat-item fade-up" style="transition-delay: 300ms;">
+                    <div class="stat-number" data-target="24">0</div>
+                    <div class="stat-label">24/7 Dedicated Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Verified Office Section -->
+    <section class="section">
+        <div class="container">
+            <div class="office-grid fade-up">
+                <div class="office-info">
+                    <div class="registered-badge">
+                        <i class="fas fa-shield-check"></i> Verified & Registered Travel Agency
+                    </div>
+                    <h2>Visit Our Office</h2>
+                    <p>We believe in absolute transparency. Visit our physical branch to discuss your Umrah journey in
+                        person with our expert consultants.</p>
+
+                    <div class="office-details-list">
+                        <div class="office-detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div class="office-detail-text">
+                                <h4>Head Office</h4>
+                                <p>Office #1,2 Faizan Market, Main Dawood Chorangi, Landhi, Karachi</p>
+                            </div>
+                        </div>
+                        <div class="office-detail-item">
+                            <i class="fas fa-clock"></i>
+                            <div class="office-detail-text">
+                                <h4>Business Hours</h4>
+                                <p>Monday - Saturday: 10:00 AM - 9:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="office-map-container fade-left">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>Google Maps Interactive Embed Placehoder</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section id="contact" class="cta-section">
+        <div class="container">
+            <div class="cta-content fade-up">
+                <h2>Begin Your Spiritual Journey With Confidence</h2>
+                <p>Allow our experts to handle your visas, flights, and accommodations while you focus on what truly
+                    matters.</p>
+                <div class="cta-buttons">
+                    <a href="javascript:void(0)" class="btn btn-primary btn-lg" onclick="openModal('umrah')">Request
+                        Custom Plan</a>
+                    <a href="https://wa.me/923058107136?text=Hello%20Agha%20Air%20Travel,%20I%20would%20like%20to%20discuss%20Umrah%20packages."
+                        target="_blank" class="btn btn-whatsapp btn-lg"><i class="fab fa-whatsapp"></i> Chat on
+                        WhatsApp</a>
+                </div>
+                <p class="cta-trust-text">Transparent pricing. Dedicated support. Trusted service.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dark footer -->
+    <footer class="modern-footer">
+        <div class="container footer-top">
+            <div class="footer-brand">
+                <div class="logo-text light">AAT</div>
+                <p>Elevating global connectivity with trust, transparency, and premium personalized service.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-links-group">
+                <h4>Company</h4>
+                <a href="index.html#home">Home</a>
+                <a href="index.html#about">About Us</a>
+                <a href="index.html#services">Services</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+
+            <div class="footer-links-group">
+                <h4>Services</h4>
+                <a href="air-ticket.html">Air Tickets</a>
+                <a href="umrah.html">Umrah Packages</a>
+                <a href="index.html#services">Visa Processing</a>
+                <a href="index.html#services">Corporate Travel</a>
+            </div>
+
+            <div class="footer-contact-widget">
+                <h4>Contact Info</h4>
+                <a href="tel:03058107136"><i class="fas fa-phone"></i> 0305-8107136</a>
+                <a href="mailto:aghairtravel101@gmail.com"><i class="fas fa-envelope"></i> aghairtravel101@gmail.com</a>
+                <p><i class="fas fa-map-marker-alt"></i> Landhi, Karachi, PK</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom border-top">
+            <div class="container bottom-content">
+                <p>&copy; 2026 Agha Air Travel. All rights reserved.</p>
+                <div class="legal-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js" defer></script>
+    <script src="js/modal.js" defer></script>
+    <script src="js/whatsapp.js" defer async></script>
+    <script src="js/announcement.js" defer></script>
+    <script src="js/sticky-cta.js" defer></script>
+</body>
+
+</html>

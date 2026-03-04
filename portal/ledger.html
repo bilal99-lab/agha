@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ledger - AAT Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/portal.css">
+
+    <script>
+        // Auth Guard
+        if (localStorage.getItem("isLoggedIn") !== "true") {
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="app-layout">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                AAT Portal
+            </div>
+            <div class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="new-ticket.html" class="nav-item"><i class="fas fa-ticket-alt"></i> New Ticket</a>
+                <a href="umrah-entry.html" class="nav-item"><i class="fas fa-kaaba"></i> Umrah Entry</a>
+                <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
+                <a href="ledger.html" class="nav-item active"><i class="fas fa-book"></i> Ledger</a>
+                <a href="expenses.html" class="nav-item"><i class="fas fa-receipt"></i> Expenses</a>
+                <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
+                <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
+                    Logout</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="page-title">Ledger & Accounts</div>
+                <div class="user-profile">
+                    <span class="avatar">A</span>
+                    <span>Admin User</span>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <div class="card">
+                    <div class="section-header">
+                        <h3>General Ledger</h3>
+                        <button class="btn btn-outline"><i class="fas fa-filter"></i> Filter</button>
+                    </div>
+                    <div class="chart-placeholder">
+                        [ Ledger Table & Filters Placeholder ]
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Placeholder for ledger loading logic
+            // In a real application, this would fetch data and populate the table
+            const tableBody = document.querySelector(".chart-placeholder"); // Assuming this will be the table body
+            if (tableBody) {
+                // Example of how you might populate it
+                const transactions = []; // Replace with actual data
+                if (transactions.length > 0) {
+                    // Render transactions
+                    // transactions.forEach(transaction => { /* ... */ });
+                } else {
+                    tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px;">No transactions recorded yet.</td></tr>`;
+                }
+            }
+
+            // loadLedger(); // Uncomment and define this function if needed
+        });
+
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+
+</html>
