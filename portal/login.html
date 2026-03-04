@@ -55,7 +55,7 @@
             const loginError = document.getElementById("loginError");
 
             // Redirect if already logged in
-            if (localStorage.getItem("isLoggedIn") === "true") {
+            if (localStorage.getItem("portal_logged_in") === "true") {
                 window.location.href = "dashboard.html";
             }
 
@@ -66,7 +66,7 @@
                 const password = document.getElementById("password").value;
 
                 if (email === "admin@aat.com" && password === "123456") {
-                    localStorage.setItem("isLoggedIn", "true");
+                    localStorage.setItem("portal_logged_in", "true");
                     window.location.href = "dashboard.html";
                 } else {
                     loginError.textContent = "Invalid email or password.";
