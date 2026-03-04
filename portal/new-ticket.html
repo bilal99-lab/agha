@@ -244,20 +244,20 @@
                 const receivedVal = parseFloat(amountReceived.value) || 0;
 
                 const newTicket = {
-                    id: "#TKT-" + Math.floor(1000 + Math.random() * 9000),
+                    ticket_id: "#TKT-" + Math.floor(1000 + Math.random() * 9000),
                     date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
-                    clientName: document.getElementById('clientName').value,
+                    client_name: document.getElementById('clientName').value,
                     clientPhone: document.getElementById('clientPhone').value,
                     clientPassport: document.getElementById('clientPassport').value,
                     pnr: document.getElementById('pnr').value,
                     airline: document.getElementById('airline').value,
                     outbound: document.getElementById('outboundFlight').value,
                     inbound: document.getElementById('inboundFlight').value,
-                    cost: costVal,
-                    selling: sellingVal,
+                    cost_price: costVal,
+                    selling_price: sellingVal,
                     profit: parseFloat(profit.value) || 0,
                     received: receivedVal,
-                    status: paymentStatus.value,
+                    payment_status: paymentStatus.value,
                     balance: parseFloat(remainingBalance.value) || 0
                 };
 
@@ -269,10 +269,10 @@
                 // Save Client into a separate ledger for the Clients view
                 let clients = JSON.parse(localStorage.getItem("aat_clients")) || [];
                 const newClient = {
-                    name: newTicket.clientName,
+                    name: newTicket.client_name,
                     phone: newTicket.clientPhone,
                     passport: newTicket.clientPassport,
-                    totalPurchases: newTicket.selling,
+                    totalPurchases: newTicket.selling_price,
                     status: 'Active'
                 };
 
@@ -280,7 +280,7 @@
                 if (clients.length > 0) {
                     let existingClient = clients.find(c => c.phone === newTicket.clientPhone);
                     if (existingClient) {
-                        existingClient.totalPurchases += newTicket.selling;
+                        existingClient.totalPurchases += newTicket.selling_price;
                     } else {
                         clients.push(newClient);
                     }
@@ -293,11 +293,12 @@
                 if (receivedVal > 0) {
                     let ledger = JSON.parse(localStorage.getItem("aat_ledger")) || [];
                     ledger.push({
-                        id: "#LDG-" + Math.floor(1000 + Math.random() * 9000),
+                        entry_id: "#LDG-" + Math.floor(1000 + Math.random() * 9000),
+                        type: "ticket_sale",
+                        amount: receivedVal,
+                        client_name: newTicket.client_name,
                         date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
-                        description: "Ticket Payment - " + newTicket.clientName,
-                        type: "Income",
-                        amount: receivedVal
+                        description: "Ticket Payment Received"
                     });
                     localStorage.setItem("aat_ledger", JSON.stringify(ledger));
                 }

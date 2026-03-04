@@ -171,12 +171,14 @@
             tickets.forEach(t => {
                 // Today Sales
                 if (t.date === todayStr) {
-                    todaySales += (t.selling || 0);
+                    todaySales += (t.selling_price || 0);
                 }
-                // Total Receivable (Sum of all remaining balances)
-                totalReceivable += (t.balance || 0);
-                // Monthly Profit (Simple check if date string contains current month)
-                if (t.date.includes(currentMonth)) {
+                // Total Receivable (Tickets where payment_status = unpaid/partial)
+                if (t.payment_status === "Credit" || t.payment_status === "Partial") {
+                    totalReceivable += (t.balance || 0);
+                }
+                // Monthly Profit
+                if (t.date && t.date.includes(currentMonth)) {
                     monthProfit += (t.profit || 0);
                 }
             });
@@ -193,16 +195,21 @@
 
                 recentTickets.forEach(t => {
                     let badgeClass = "bg-warning-light"; // default Partial
-                    if (t.status === "Paid") badgeClass = "bg-success-light";
-                    if (t.status === "Credit") badgeClass = "bg-danger-light";
+                    if (t.payment_status === "Paid") badgeClass = "bg-success-light";
+                    if (t.payment_status === "Credit" || t.payment_status === "unpaid") badgeClass = "bg-danger-light";
+
+                    let itemName = t.client_name || t.clientName || 'Unknown';
+                    let itemAmount = t.selling_price || t.selling || 0;
+                    let itemStatus = t.payment_status || t.status || 'Pending';
+                    let itemId = t.ticket_id || t.id || '#---';
 
                     tableBody.innerHTML += `
                         <tr>
-                            <td>${t.id}</td>
+                            <td>${itemId}</td>
                             <td>${t.date}</td>
-                            <td>${t.clientName}</td>
-                            <td>Rs ${t.selling.toLocaleString()}</td>
-                            <td><span class="status-badge ${badgeClass}">${t.status}</span></td>
+                            <td>${itemName}</td>
+                            <td>Rs ${itemAmount.toLocaleString()}</td>
+                            <td><span class="status-badge ${badgeClass}">${itemStatus}</span></td>
                         </tr>
                     `;
                 });
