@@ -90,13 +90,79 @@
                 color: #64748b;
                 font-style: italic;
             }
+
+            /* --- TICKET PRINT MODE --- */
+            .print-ticket-wrapper {
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 40px;
+                background: white;
+            }
+
+            .ticket-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 2px solid #2563eb;
+                padding-bottom: 15px;
+                margin-bottom: 25px;
+            }
+
+            .ticket-branding h1 {
+                margin: 0;
+                color: #2563eb;
+                /* Primary Accent */
+                font-size: 24px;
+            }
+
+            .ticket-branding p {
+                margin: 5px 0 0 0;
+                color: #64748b;
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .ticket-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 24px;
+                margin-bottom: 30px;
+            }
+
+            .ticket-label {
+                font-size: 12px;
+                color: #64748b;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+            }
+
+            .ticket-value {
+                font-size: 18px;
+                font-weight: 600;
+                color: #0f172a;
+            }
+
+            .ticket-footer {
+                text-align: center;
+                padding-top: 20px;
+                border-top: 1px dashed #cbd5e1;
+                color: #64748b;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <!-- Print Area -->
-    <div class="print-invoice-wrapper" id="printArea">
+    <!-- Default Invoice Print Area -->
+    <div class="print-invoice-wrapper" id="printArea" data-print-mode="invoice">
         <div class="invoice-header">
             <div>
                 <h1 style="margin:0; color: #0f172a;">Agha Air Travel</h1>
@@ -138,6 +204,47 @@
 
         <div class="invoice-footer">
             "Thank you for choosing Agha Air Travel"
+        </div>
+    </div>
+
+    <!-- Ticket Print Area (Hidden unless specifically triggered) -->
+    <div class="print-ticket-wrapper" id="printTicketArea" data-print-mode="ticket" style="display: none;">
+        <div class="ticket-header">
+            <div class="ticket-branding">
+                <h1>Agha Air Travel</h1>
+                <p>E-Ticket / Travel Itinerary</p>
+            </div>
+            <div style="text-align: right;">
+                <div class="ticket-label">Date Issued</div>
+                <div class="ticket-value" id="tktPrintDate">12 Nov 2026</div>
+            </div>
+        </div>
+
+        <div class="ticket-grid">
+            <div>
+                <div class="ticket-label">Passenger Name</div>
+                <div class="ticket-value" id="tktPrintName">Passenger Name</div>
+            </div>
+            <div>
+                <div class="ticket-label">Booking Reference (PNR)</div>
+                <div class="ticket-value" id="tktPrintPnr" style="color: #2563eb;">ABCDEF</div>
+            </div>
+            <div style="grid-column: span 2;">
+                <div class="ticket-label">Flight Route / Details</div>
+                <div class="ticket-value" id="tktPrintRoute">KHI - DXB</div>
+            </div>
+            <div>
+                <div class="ticket-label">Ticket Amount</div>
+                <div class="ticket-value" id="tktPrintAmount">Rs 0</div>
+            </div>
+            <div>
+                <div class="ticket-label">Invoice Ref</div>
+                <div class="ticket-value" id="tktPrintInv">INV-0000</div>
+            </div>
+        </div>
+
+        <div class="ticket-footer">
+            "Thank you for choosing Agha Air Travel. Have a safe flight."
         </div>
     </div>
 
@@ -214,10 +321,14 @@
                         let badgeClass = inv.payment_status === "Paid" ? "bg-success-light" : "bg-warning-light";
 
                         // Action buttons logic
-                        let actionBtns = `<button class="btn btn-outline" style="padding: 4px 12px; font-size: 0.8rem; margin-right: 8px;" onclick="printInvoice('${inv.invoice_id}')"><i class="fas fa-print"></i> Print</button>`;
+                        let actionBtns = `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px;" onclick="printInvoice('${inv.invoice_id}')" title="Print Invoice"><i class="fas fa-file-invoice"></i></button>`;
+
+                        actionBtns += `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px; color: #2563eb; border-color: #bfdbfe;" onclick="printTicketPdf('${inv.invoice_id}')" title="Download Ticket PDF"><i class="fas fa-ticket-alt"></i></button>`;
+
+                        actionBtns += `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px; color: #16a34a; border-color: #bbf7d0;" onclick="sendWhatsApp('${inv.invoice_id}')" title="Send WhatsApp"><i class="fab fa-whatsapp"></i></button>`;
 
                         if (inv.payment_status === "Pending") {
-                            actionBtns += `<button class="btn" style="padding: 4px 12px; font-size: 0.8rem;" onclick="markPaid('${inv.invoice_id}')"><i class="fas fa-check"></i> Mark Paid</button>`;
+                            actionBtns += `<button class="btn" style="padding: 4px 8px; font-size: 0.8rem;" onclick="markPaid('${inv.invoice_id}')"><i class="fas fa-check"></i> Pay</button>`;
                         }
 
                         tableBody.innerHTML += `
@@ -264,6 +375,10 @@
             window.printInvoice = function (invoiceId) {
                 let targetInv = invoices.find(i => i.invoice_id === invoiceId);
                 if (targetInv) {
+                    // Hide ticket, show invoice
+                    document.getElementById('printTicketArea').style.display = 'none';
+                    document.getElementById('printArea').style.display = 'block';
+
                     // Populate print template
                     document.getElementById('printInvoiceId').textContent = targetInv.invoice_id;
                     document.getElementById('printClientName').textContent = targetInv.client_name;
@@ -272,8 +387,53 @@
                     document.getElementById('printAmount').textContent = 'Rs ' + (targetInv.amount || 0).toLocaleString();
                     document.getElementById('printTotalAmount').textContent = 'Rs ' + (targetInv.amount || 0).toLocaleString();
 
-                    // Trigger browser print dialog
                     window.print();
+                }
+            };
+
+            window.printTicketPdf = function (invoiceId) {
+                let targetInv = invoices.find(i => i.invoice_id === invoiceId);
+                if (targetInv) {
+                    // Pull full PNR/Route data from tickets array
+                    let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
+                    let targetTicket = tickets.find(t => t.ticket_id === targetInv.ticket_id);
+
+                    let pnr = targetTicket ? (targetTicket.pnr || "N/A") : "N/A";
+                    let route = targetTicket ? (targetTicket.route || targetTicket.outbound || "N/A") : "N/A";
+
+                    // Hide invoice, show ticket
+                    document.getElementById('printArea').style.display = 'none';
+                    document.getElementById('printTicketArea').style.display = 'block';
+
+                    // Populate ticket template
+                    document.getElementById('tktPrintDate').textContent = targetInv.date;
+                    document.getElementById('tktPrintName').textContent = targetInv.client_name;
+                    document.getElementById('tktPrintPnr').textContent = pnr;
+                    document.getElementById('tktPrintRoute').textContent = route;
+                    document.getElementById('tktPrintAmount').textContent = 'Rs ' + (targetInv.amount || 0).toLocaleString();
+                    document.getElementById('tktPrintInv').textContent = targetInv.invoice_id;
+
+                    window.print();
+                }
+            };
+
+            window.sendWhatsApp = function (invoiceId) {
+                let targetInv = invoices.find(i => i.invoice_id === invoiceId);
+                if (targetInv) {
+                    // Locate client phone from aat_clients mapping
+                    let clients = JSON.parse(localStorage.getItem('aat_clients')) || [];
+                    let targetClient = clients.find(c => c.client_name === targetInv.client_name || c.name === targetInv.client_name);
+                    let phoneStr = targetClient ? targetClient.phone : "";
+
+                    // Clean phone number formats (strip spaces/plus if simple wa.me requirement)
+                    if (phoneStr) {
+                        phoneStr = phoneStr.replace(/\D/g, '');
+                    }
+
+                    let message = `Hello ${targetInv.client_name},\n\nYour ticket invoice from Agha Air Travel.\n\nInvoice ID: ${targetInv.invoice_id}\nAmount: PKR ${(targetInv.amount || 0).toLocaleString()}\n\nThank you for choosing us!`;
+
+                    let url = `https://wa.me/${phoneStr}?text=${encodeURIComponent(message)}`;
+                    window.open(url, '_blank');
                 }
             };
         });
