@@ -74,8 +74,8 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Phone</th>
-                                    <th>Passport</th>
-                                    <th>Total Purchases</th>
+                                    <th>Total Tickets</th>
+                                    <th>Total Spent</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -113,10 +113,10 @@
                 clients.forEach(c => {
                     tableBody.innerHTML += `
                         <tr>
-                            <td>${c.name}</td>
+                            <td>${c.client_name || c.name}</td>
                             <td>${c.phone}</td>
-                            <td>${c.passport || '-'}</td>
-                            <td>Rs ${c.totalPurchases.toLocaleString()}</td>
+                            <td>${c.total_tickets || 1} Tickets</td>
+                            <td>Rs ${(c.total_spent || c.totalPurchases || 0).toLocaleString()}</td>
                             <td><span class="status-badge bg-success-light">${c.status || 'Active'}</span></td>
                         </tr>
                     `;

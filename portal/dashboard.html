@@ -178,12 +178,9 @@
             });
 
             invoices.forEach(inv => {
-                // Total Receivable (sum of invoices where payment_status = pending/partial/credit)
-                if (inv.payment_status !== "Paid") {
-                    // Approximate remaining based on ticket balance if we had it, but specs say sum invoices
-                    // Assuming total amount of unpaid invoice is the receivable for this scope:
-                    let relatedTicket = tickets.find(t => t.ticket_id === inv.ticket_id);
-                    totalReceivable += relatedTicket ? (relatedTicket.balance || 0) : (inv.selling_price || 0);
+                // Total Receivable (sum of invoices where payment_status = pending)
+                if (inv.payment_status === "Pending") {
+                    totalReceivable += (inv.amount || inv.selling_price || 0);
                 }
 
                 // Monthly Profit (sum of invoice profit)
