@@ -77,7 +77,17 @@
                     <form id="ticketForm">
                         <!-- CLIENT INFO -->
                         <div class="card" style="margin-bottom: 24px; padding: 32px;">
-                            <div class="form-section-title">Client Information</div>
+                            <div class="form-section-title"
+                                style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>Client Information</span>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="text" id="searchPnrInput" class="form-control"
+                                        placeholder="Search PNR..." style="height: 36px; width: 200px;">
+                                    <button type="button" id="btnSearchPnr" class="btn btn-outline"
+                                        style="height: 36px; padding: 0 16px;"><i class="fas fa-search"></i>
+                                        Search</button>
+                                </div>
+                            </div>
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label class="form-label">Client Name *</label>
@@ -184,6 +194,35 @@
 
             const btnSave = document.getElementById("btnSave");
             const alertMessage = document.getElementById("alertMessage");
+
+            // Auto PNR Search Logic
+            const btnSearchPnr = document.getElementById("btnSearchPnr");
+            const searchPnrInput = document.getElementById("searchPnrInput");
+
+            btnSearchPnr.addEventListener("click", () => {
+                const searchVal = searchPnrInput.value.trim().toUpperCase();
+                if (!searchVal) return;
+
+                let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
+                let foundTicket = tickets.find(t => t.pnr && t.pnr.toUpperCase() === searchVal);
+
+                if (foundTicket) {
+                    document.getElementById('clientName').value = foundTicket.client_name || foundTicket.clientName || '';
+                    document.getElementById('clientPhone').value = foundTicket.clientPhone || '';
+                    document.getElementById('clientPassport').value = foundTicket.clientPassport || '';
+                    document.getElementById('pnr').value = foundTicket.pnr || '';
+                    document.getElementById('airline').value = foundTicket.airline || '';
+                    document.getElementById('outboundFlight').value = foundTicket.outbound || foundTicket.route || '';
+                    document.getElementById('inboundFlight').value = foundTicket.inbound || '';
+                    costPrice.value = foundTicket.cost_price || foundTicket.cost || '';
+                    sellingPrice.value = foundTicket.selling_price || foundTicket.selling || '';
+
+                    calculateFinancials();
+                    showAlert('PNR successfully loaded.', 'success');
+                } else {
+                    showAlert('PNR not found in system.', 'error');
+                }
+            });
 
             function calculateFinancials() {
                 const cost = parseFloat(costPrice.value) || 0;
