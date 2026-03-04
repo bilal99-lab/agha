@@ -33,6 +33,7 @@
             <div class="sidebar-nav">
                 <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
                 <a href="new-ticket.html" class="nav-item active"><i class="fas fa-ticket-alt"></i> New Ticket</a>
+                <a href="invoices.html" class="nav-item"><i class="fas fa-file-invoice"></i> Invoices</a>
                 <a href="umrah-entry.html" class="nav-item"><i class="fas fa-kaaba"></i> Umrah Entry</a>
                 <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
                 <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
@@ -265,6 +266,39 @@
                 let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
                 tickets.push(newTicket);
                 localStorage.setItem("aat_tickets", JSON.stringify(tickets));
+
+                // Auto Generate Invoice
+                let invoices = JSON.parse(localStorage.getItem("aat_invoices")) || [];
+
+                // Figure out next sequential INV number (INV-YYYY-XXXX)
+                let currentYear = new Date().getFullYear();
+                let lastInvNumber = 0;
+                let yearInvoices = invoices.filter(i => i.invoice_id && i.invoice_id.includes(`INV-${currentYear}-`));
+
+                if (yearInvoices.length > 0) {
+                    let lastInv = yearInvoices[yearInvoices.length - 1];
+                    let parts = lastInv.invoice_id.split('-');
+                    if (parts.length === 3) {
+                        lastInvNumber = parseInt(parts[2], 10) || 0;
+                    }
+                }
+
+                let nextInvNumber = String(lastInvNumber + 1).padStart(4, '0');
+                let newInvoiceId = `INV-${currentYear}-${nextInvNumber}`;
+
+                const newInvoice = {
+                    invoice_id: newInvoiceId,
+                    ticket_id: newTicket.ticket_id,
+                    client_name: newTicket.client_name,
+                    date: newTicket.date,
+                    selling_price: newTicket.selling_price,
+                    cost_price: newTicket.cost_price,
+                    profit: newTicket.profit,
+                    payment_status: newTicket.payment_status
+                };
+
+                invoices.push(newInvoice);
+                localStorage.setItem("aat_invoices", JSON.stringify(invoices));
 
                 // Save Client into a separate ledger for the Clients view
                 let clients = JSON.parse(localStorage.getItem("aat_clients")) || [];

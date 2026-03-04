@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoices - AAT Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/portal.css">
+
+    <script>
+        // Auth Guard
+        if (localStorage.getItem("portal_logged_in") !== "true") {
+            window.location.href = "login.html";
+        }
+    </script>
+    <style>
+        /* Specific Print Styles hidden by default */
+        .print-invoice-wrapper {
+            display: none;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            .print-invoice-wrapper,
+            .print-invoice-wrapper * {
+                visibility: visible;
+            }
+
+            .print-invoice-wrapper {
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 40px;
+                background: white;
+            }
+
+            .invoice-header {
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 2px solid #0f172a;
+                padding-bottom: 20px;
+                margin-bottom: 30px;
+            }
+
+            .invoice-details {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 40px;
+            }
+
+            .invoice-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 40px;
+            }
+
+            .invoice-table th,
+            .invoice-table td {
+                border: 1px solid #e2e8f0;
+                padding: 12px;
+                text-align: left;
+            }
+
+            .invoice-table th {
+                background-color: #f8fafc !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .invoice-total {
+                text-align: right;
+                font-size: 1.2rem;
+                font-weight: bold;
+            }
+
+            .invoice-footer {
+                text-align: center;
+                margin-top: 60px;
+                color: #64748b;
+                font-style: italic;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Print Area -->
+    <div class="print-invoice-wrapper" id="printArea">
+        <div class="invoice-header">
+            <div>
+                <h1 style="margin:0; color: #0f172a;">Agha Air Travel</h1>
+                <p style="margin-top:5px; color: #64748b;">Premium Travel Management</p>
+            </div>
+            <div style="text-align: right;">
+                <h2 style="margin:0; color: #0f172a;">INVOICE</h2>
+                <p style="margin-top:5px; font-weight: bold;" id="printInvoiceId">INV-0000</p>
+            </div>
+        </div>
+
+        <div class="invoice-details">
+            <div>
+                <strong>Billed To:</strong><br>
+                <span id="printClientName">Client Name</span><br>
+                Date: <span id="printDate">12 Nov 2026</span>
+            </div>
+        </div>
+
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th style="text-align: right;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Air Ticket / Travel Services <br><small id="printRoute" style="color: #64748b;">Route
+                            details</small></td>
+                    <td style="text-align: right;" id="printAmount">Rs 0</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="invoice-total">
+            Total Amount: <span id="printTotalAmount">Rs 0</span>
+        </div>
+
+        <div class="invoice-footer">
+            "Thank you for choosing Agha Air Travel"
+        </div>
+    </div>
+
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                AAT Portal
+            </div>
+            <div class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="new-ticket.html" class="nav-item"><i class="fas fa-ticket-alt"></i> New Ticket</a>
+                <a href="invoices.html" class="nav-item active"><i class="fas fa-file-invoice"></i> Invoices</a>
+                <a href="umrah-entry.html" class="nav-item"><i class="fas fa-kaaba"></i> Umrah Entry</a>
+                <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
+                <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
+                <a href="expenses.html" class="nav-item"><i class="fas fa-receipt"></i> Expenses</a>
+                <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
+                <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
+                    Logout</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="page-title">Invoice Management</div>
+                <div class="user-profile">
+                    <span class="avatar">A</span>
+                    <span>Admin User</span>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <div class="card">
+                    <div class="section-header">
+                        <h3>Generated Invoices</h3>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Invoice ID</th>
+                                    <th>Date</th>
+                                    <th>Client</th>
+                                    <th>Amount</th>
+                                    <th>Profit</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoiceTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tableBody = document.getElementById("invoiceTableBody");
+            let invoices = JSON.parse(localStorage.getItem("aat_invoices")) || [];
+
+            function renderTable() {
+                if (invoices.length > 0) {
+                    tableBody.innerHTML = "";
+                    invoices.reverse().forEach((inv, index) => {
+                        let badgeClass = inv.payment_status === "Paid" ? "bg-success-light" : "bg-warning-light";
+
+                        // Action buttons logic
+                        let actionBtns = `<button class="btn btn-outline" style="padding: 4px 12px; font-size: 0.8rem; margin-right: 8px;" onclick="printInvoice('${inv.invoice_id}')"><i class="fas fa-print"></i> Print</button>`;
+
+                        if (inv.payment_status !== "Paid") {
+                            actionBtns += `<button class="btn" style="padding: 4px 12px; font-size: 0.8rem;" onclick="markPaid('${inv.invoice_id}')"><i class="fas fa-check"></i> Mark Paid</button>`;
+                        }
+
+                        tableBody.innerHTML += `
+                            <tr>
+                                <td style="font-weight: 600;">${inv.invoice_id}</td>
+                                <td>${inv.date}</td>
+                                <td>${inv.client_name}</td>
+                                <td>Rs ${(inv.selling_price || 0).toLocaleString()}</td>
+                                <td style="color: var(--success); font-weight: 600;">Rs ${(inv.profit || 0).toLocaleString()}</td>
+                                <td><span class="status-badge ${badgeClass}">${inv.payment_status}</span></td>
+                                <td style="text-align: right;">${actionBtns}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 32px;">No invoices generated yet. Create a ticket to auto-generate an invoice.</td></tr>`;
+                }
+            }
+
+            renderTable();
+
+            window.markPaid = function (invoiceId) {
+                // Update Invoice array
+                let targetInv = invoices.find(i => i.invoice_id === invoiceId);
+                if (targetInv) {
+                    targetInv.payment_status = "Paid";
+                    localStorage.setItem("aat_invoices", JSON.stringify(invoices));
+
+                    // Also attempt to update the corresponding Ticket if found
+                    let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
+                    let targetTicket = tickets.find(t => t.ticket_id === targetInv.ticket_id);
+                    if (targetTicket) {
+                        targetTicket.payment_status = "Paid";
+                        targetTicket.balance = 0;
+                        targetTicket.received = targetTicket.selling_price; // Assuming full payment
+                        localStorage.setItem("aat_tickets", JSON.stringify(tickets));
+                    }
+
+                    // Reload UI
+                    renderTable();
+                }
+            };
+
+            window.printInvoice = function (invoiceId) {
+                let targetInv = invoices.find(i => i.invoice_id === invoiceId);
+                if (targetInv) {
+                    // Populate print template
+                    document.getElementById('printInvoiceId').textContent = targetInv.invoice_id;
+                    document.getElementById('printClientName').textContent = targetInv.client_name;
+                    document.getElementById('printDate').textContent = targetInv.date;
+                    document.getElementById('printRoute').textContent = 'Ref: Ticket ' + targetInv.ticket_id;
+                    document.getElementById('printAmount').textContent = 'Rs ' + (targetInv.selling_price || 0).toLocaleString();
+                    document.getElementById('printTotalAmount').textContent = 'Rs ' + (targetInv.selling_price || 0).toLocaleString();
+
+                    // Trigger browser print dialog
+                    window.print();
+                }
+            };
+        });
+
+        function logout() {
+            localStorage.removeItem("portal_logged_in");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+
+</html>

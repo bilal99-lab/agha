@@ -33,6 +33,7 @@
             <div class="sidebar-nav">
                 <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i> Dashboard</a>
                 <a href="new-ticket.html" class="nav-item"><i class="fas fa-ticket-alt"></i> New Ticket</a>
+                <a href="invoices.html" class="nav-item"><i class="fas fa-file-invoice"></i> Invoices</a>
                 <a href="umrah-entry.html" class="nav-item"><i class="fas fa-kaaba"></i> Umrah Entry</a>
                 <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
                 <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
@@ -159,6 +160,7 @@
         document.addEventListener("DOMContentLoaded", () => {
             const tableBody = document.getElementById("recentActivityTableBody");
             let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
+            let invoices = JSON.parse(localStorage.getItem("aat_invoices")) || [];
 
             // Calculate Dashboard Stats
             let todaySales = 0;
@@ -169,17 +171,24 @@
             const currentMonth = new Date().toLocaleDateString('en-GB', { month: 'short' });
 
             tickets.forEach(t => {
-                // Today Sales
+                // Today Sales (Still based on tickets)
                 if (t.date === todayStr) {
                     todaySales += (t.selling_price || 0);
                 }
-                // Total Receivable (Tickets where payment_status = unpaid/partial)
-                if (t.payment_status === "Credit" || t.payment_status === "Partial") {
-                    totalReceivable += (t.balance || 0);
+            });
+
+            invoices.forEach(inv => {
+                // Total Receivable (sum of invoices where payment_status = pending/partial/credit)
+                if (inv.payment_status !== "Paid") {
+                    // Approximate remaining based on ticket balance if we had it, but specs say sum invoices
+                    // Assuming total amount of unpaid invoice is the receivable for this scope:
+                    let relatedTicket = tickets.find(t => t.ticket_id === inv.ticket_id);
+                    totalReceivable += relatedTicket ? (relatedTicket.balance || 0) : (inv.selling_price || 0);
                 }
-                // Monthly Profit
-                if (t.date && t.date.includes(currentMonth)) {
-                    monthProfit += (t.profit || 0);
+
+                // Monthly Profit (sum of invoice profit)
+                if (inv.date && inv.date.includes(currentMonth)) {
+                    monthProfit += (inv.profit || 0);
                 }
             });
 
