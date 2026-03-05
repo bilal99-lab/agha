@@ -316,12 +316,259 @@ const PortalModules = {
         });
     },
 
-    invoices: function () { },
-    ledger: function () { },
-    staff: function () { },
-    reports: function () { },
-    suppliers: function () { },
-    backup: function () { }
+    invoices: function () {
+        const renderTable = () => {
+            const tableBody = document.getElementById("invoiceTableBody");
+            if (!tableBody) return;
+            let invoices = Storage.get("aat_invoices");
+            if (invoices.length > 0) {
+                tableBody.innerHTML = invoices.reverse().map(inv => {
+                    let statusClass = inv.payment_status?.toLowerCase() === 'paid' ? 'bg-success-light' : 'bg-warning-light';
+                    let profitBadge = parseFloat(inv.profit) >= 0 ? "bg-success-light" : "bg-danger-light";
+                    return `<tr>
+                        <td><strong>${inv.invoice_id}</strong></td>
+                        <td>${Format.date(inv.date)}</td>
+                        <td>${inv.client_name || '-'}</td>
+                        <td>${Format.currency(inv.amount)}</td>
+                        <td><span class="status-badge ${profitBadge}">${Format.currency(inv.profit)}</span></td>
+                        <td><span class="status-badge ${statusClass}">${inv.payment_status || 'Pending'}</span></td>
+                        <td style="text-align: right;">
+                            <button class="btn btn-outline" style="padding: 4px 8px; font-size:0.8rem;" data-action="mark-paid-invoice" data-id="${inv.invoice_id}" ${inv.payment_status?.toLowerCase() === 'paid' ? 'disabled' : ''}><i class="fas fa-check"></i></button>
+                            <button class="btn btn-outline" style="padding: 4px 8px; font-size:0.8rem;" data-action="print-invoice" data-id="${inv.invoice_id}"><i class="fas fa-print"></i></button>
+                            <button class="btn btn-outline" style="padding: 4px 8px; font-size:0.8rem;" data-action="print-ticket" data-id="${inv.ticket_id}"><i class="fas fa-plane"></i></button>
+                            <button class="btn btn-outline" style="padding: 4px 8px; font-size:0.8rem; color: #25d366; border-color: #25d366;" data-action="whatsapp-invoice" data-id="${inv.invoice_id}"><i class="fab fa-whatsapp"></i></button>
+                            ${inv.payment_status?.toLowerCase() !== 'paid' ? `<button class="btn btn-outline" style="padding: 4px 8px; font-size:0.8rem; color: #f59e0b; border-color: #f59e0b;" data-action="whatsapp-reminder" data-id="${inv.invoice_id}"><i class="fas fa-bell"></i></button>` : ''}
+                        </td>
+                    </tr>`;
+                }).join('');
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 32px;">No invoices generated.</td></tr>`;
+            }
+        };
+        renderTable();
+        window.moduleRenderers = window.moduleRenderers || {};
+        window.moduleRenderers.invoices = renderTable;
+    },
+
+    ledger: function () {
+        const renderTable = () => {
+            const tableBody = document.getElementById("ledgerTableBody");
+            if (!tableBody) return;
+            let ledger = Storage.get("aat_ledger");
+            if (ledger.length > 0) {
+                tableBody.innerHTML = ledger.reverse().map(entry => {
+                    let badgeClass = (entry.type === "Expense" || entry.type === "ticket_sale_refund") ? "bg-danger-light" : "bg-success-light";
+                    let clientDisplay = entry.client_name ? `<strong>${entry.client_name}</strong><br>` : '';
+                    let descDisplay = entry.description || 'No description';
+                    return `<tr>
+                        <td>${entry.entry_id || entry.id || '#---'}</td>
+                        <td>${Format.date(entry.date) || '-'}</td>
+                        <td>${clientDisplay}<span class="text-muted" style="font-size: 0.8rem;">${descDisplay}</span></td>
+                        <td><span class="status-badge ${badgeClass}">${entry.type}</span></td>
+                        <td>${Format.currency(entry.amount)}</td>
+                    </tr>`;
+                }).join('');
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px;">No transactions recorded yet.</td></tr>`;
+            }
+        };
+        renderTable();
+        window.moduleRenderers = window.moduleRenderers || {};
+        window.moduleRenderers.ledger = renderTable;
+    },
+
+    staff: function () {
+        const renderTable = () => {
+            const tableBody = document.getElementById("staffTableBody");
+            if (!tableBody) return;
+            let staff = Storage.get("aat_staff");
+            if (!staff.find(s => s.role === 'Admin')) {
+                staff.unshift({ staff_id: "STF-0000", name: "Super Admin", email: "admin@aat.com", role: "Admin", status: "Active" });
+            }
+            tableBody.innerHTML = staff.map(s => {
+                let roleBadge = s.role === 'Admin' ? 'bg-primary-light' : (s.role === 'Manager' ? 'bg-warning-light' : 'bg-success-light');
+                let statusBadge = s.status === 'Active' ? 'bg-success-light' : 'bg-danger-light';
+                let actionHtml = s.email !== 'admin@aat.com' ? `<button class="btn btn-outline" style="padding: 4px 12px; font-size: 0.8rem;" data-action="toggle-staff-status" data-id="${s.staff_id}">${s.status === 'Active' ? 'Disable' : 'Enable'}</button> <button class="btn btn-outline" style="padding: 4px 12px; font-size: 0.8rem; border-color: var(--danger); color: var(--danger);" data-action="delete-staff" data-id="${s.staff_id}"><i class="fas fa-trash"></i></button>` : '';
+                return `<tr>
+                    <td><strong>${s.name}</strong></td>
+                    <td>${s.email}</td>
+                    <td><span class="status-badge ${roleBadge}">${s.role}</span></td>
+                    <td><span class="status-badge ${statusBadge}">${s.status}</span></td>
+                    <td style="text-align: right;">${actionHtml}</td>
+                </tr>`;
+            }).join('');
+        };
+        renderTable();
+        window.moduleRenderers = window.moduleRenderers || {};
+        window.moduleRenderers.staff = renderTable;
+    },
+
+    reports: function () {
+        const generateReport = () => {
+            const monthVal = document.getElementById('reportMonth')?.value;
+            if (!monthVal) return;
+
+            const selectedDate = new Date(monthVal + "-01");
+            const shortMonth = selectedDate.toLocaleDateString('en-GB', { month: 'short' });
+            const yyyy_mm = monthVal;
+
+            let tickets = Storage.get("aat_tickets");
+            let invoices = Storage.get("aat_invoices");
+            let expenses = Storage.get("aat_expenses");
+
+            let mSales = 0, mProfit = 0, mExpenses = 0;
+            let periodTickets = tickets.filter(t => t.date && t.date.includes(shortMonth));
+
+            invoices.forEach(inv => {
+                if (inv.date && inv.date.includes(shortMonth)) {
+                    mSales += parseFloat(inv.amount || inv.selling_price || 0);
+                    mProfit += parseFloat(inv.profit || 0);
+                }
+            });
+
+            expenses.forEach(exp => {
+                if (exp.date && exp.date.startsWith(yyyy_mm)) {
+                    mExpenses += parseFloat(exp.amount || 0);
+                }
+            });
+
+            let netProfit = mProfit - mExpenses;
+
+            if (document.getElementById('repSales')) document.getElementById('repSales').textContent = Format.currency(mSales);
+            if (document.getElementById('repProfit')) document.getElementById('repProfit').innerHTML = `<span class="status-badge ${mProfit >= 0 ? 'bg-success-light' : 'bg-danger-light'}" style="font-size: 1.1rem; padding: 4px 12px;">${Format.currency(mProfit)}</span>`;
+            if (document.getElementById('repExpenses')) document.getElementById('repExpenses').textContent = Format.currency(mExpenses);
+            if (document.getElementById('repNetProfit')) document.getElementById('repNetProfit').innerHTML = `<span class="status-badge ${netProfit >= 0 ? 'bg-success-light' : 'bg-danger-light'}" style="color: ${netProfit >= 0 ? '#8b5cf6' : 'var(--danger)'}; font-size: 1.1rem; padding: 4px 12px;">${Format.currency(netProfit)}</span>`;
+
+            let routeCounts = {};
+            periodTickets.forEach(t => {
+                let route = t.route || t.outbound || "Unknown Route";
+                routeCounts[route] = (routeCounts[route] || 0) + 1;
+            });
+
+            let sortedRoutes = Object.keys(routeCounts).map(r => ({ route: r, count: routeCounts[r] })).sort((a, b) => b.count - a.count).slice(0, 5);
+            if (document.getElementById('repRoutesList')) document.getElementById('repRoutesList').innerHTML = sortedRoutes.length > 0 ? sortedRoutes.map((r, idx) => `<div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                <div style="font-weight: 500; color: #0f172a;"><span style="color: #94a3b8; margin-right: 8px;">#${idx + 1}</span> ${r.route}</div>
+                <div style="font-weight: 600; color: #2563eb;">${r.count} <span style="font-size: 0.8rem; font-weight: 500; color: #64748b;">Sold</span></div>
+            </div>`).join('') : `<div style="text-align: center; color: var(--text-muted); padding: 20px;">No routes sold this month.</div>`;
+
+            let clientRevenue = {};
+            invoices.forEach(inv => {
+                if (inv.date && inv.date.includes(shortMonth)) {
+                    let cName = inv.client_name || "Unknown Client";
+                    clientRevenue[cName] = (clientRevenue[cName] || 0) + parseFloat(inv.amount || inv.selling_price || 0);
+                }
+            });
+
+            let sortedClients = Object.keys(clientRevenue).map(c => ({ client: c, revenue: clientRevenue[c] })).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+            if (document.getElementById('repClientsList')) document.getElementById('repClientsList').innerHTML = sortedClients.length > 0 ? sortedClients.map((c, idx) => `<div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                <div style="font-weight: 500; color: #0f172a;"><span style="color: #94a3b8; margin-right: 8px;">#${idx + 1}</span> ${c.client}</div>
+                <div style="font-weight: 600; color: #16a34a;">${Format.currency(c.revenue)}</div>
+            </div>`).join('') : `<div style="text-align: center; color: var(--text-muted); padding: 20px;">No clients served this month.</div>`;
+
+            if (document.getElementById('reportResults')) document.getElementById('reportResults').style.display = 'block';
+        };
+
+        if (document.getElementById('reportMonth')) {
+            document.getElementById('reportMonth').value = new Date().toISOString().slice(0, 7);
+            generateReport();
+        }
+        window.moduleRenderers = window.moduleRenderers || {};
+        window.moduleRenderers.reports = generateReport;
+    },
+
+    suppliers: function () {
+        const renderTable = () => {
+            const tableBody = document.getElementById("suppliersTableBody");
+            if (!tableBody) return;
+            let suppliers = Storage.get("aat_suppliers");
+            if (suppliers.length > 0) {
+                tableBody.innerHTML = suppliers.sort((a, b) => (b.balance_payable || 0) - (a.balance_payable || 0)).map(s => `<tr>
+                    <td style="font-weight: 600;">${s.supplier_name}</td>
+                    <td>${s.airline || '-'}</td>
+                    <td>${s.total_tickets || 0} Tickets</td>
+                    <td>${Format.currency(s.total_cost)}</td>
+                    <td style="color: var(--danger); font-weight: 600;">${Format.currency(s.balance_payable)}</td>
+                </tr>`).join('');
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px;">No suppliers recorded yet.</td></tr>`;
+            }
+        };
+        renderTable();
+        window.moduleRenderers = window.moduleRenderers || {};
+        window.moduleRenderers.suppliers = renderTable;
+    },
+
+    'supplier-payments': function () {
+        const renderData = () => {
+            const tableBody = document.getElementById("suppliersTableBody");
+            const selectDropdown = document.getElementById("supplierSelect");
+            if (!tableBody || !selectDropdown) return;
+
+            let suppliers = Storage.get("aat_suppliers");
+            tableBody.innerHTML = "";
+            selectDropdown.innerHTML = '<option value="" disabled selected>Select Supplier</option>';
+
+            if (suppliers.length > 0) {
+                suppliers.sort((a, b) => (b.balance_payable || 0) - (a.balance_payable || 0)).forEach(s => {
+                    let totalBilled = s.total_cost || 0;
+                    let balanceRemaining = s.balance_payable || 0;
+                    let amountPaid = s.amount_paid !== undefined ? s.amount_paid : (totalBilled - balanceRemaining);
+
+                    tableBody.innerHTML += `<tr>
+                        <td style="font-weight: 600;">${s.supplier_name}</td>
+                        <td>${s.airline || '-'}</td>
+                        <td>${Format.currency(totalBilled)}</td>
+                        <td style="color: var(--success); font-weight: 600;">${Format.currency(amountPaid)}</td>
+                        <td style="color: var(--danger); font-weight: 600;">${Format.currency(balanceRemaining)}</td>
+                    </tr>`;
+
+                    if (balanceRemaining > 0) {
+                        selectDropdown.innerHTML += `<option value="${s.supplier_name}">${s.supplier_name} (Owes: ${Format.currency(balanceRemaining)})</option>`;
+                    }
+                });
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px;">No suppliers recorded yet.</td></tr>`;
+                selectDropdown.innerHTML = '<option value="" disabled>No suppliers found</option>';
+            }
+        };
+        if (document.getElementById('paymentDate')) document.getElementById('paymentDate').valueAsDate = new Date();
+        renderData();
+        window.moduleRenderers = window.moduleRenderers || {};
+        window.moduleRenderers['supplier-payments'] = renderData;
+    },
+
+    backup: function () {
+        const backupInput = document.getElementById('backupFileInput');
+        if (backupInput) {
+            backupInput.addEventListener('change', function (e) {
+                let file = e.target.files[0];
+                if (!file) return;
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    try {
+                        let importedData = JSON.parse(e.target.result);
+                        if (importedData._metadata) {
+                            if (confirm(`This backup is from ${new Date(importedData._metadata.timestamp).toLocaleString()}.\n\nRestoring it will overwrite current portal data completely. Are you absolutely sure you want to proceed?`)) {
+                                Object.keys(importedData).forEach(k => {
+                                    if (k.startsWith('aat_')) {
+                                        localStorage.setItem(k, JSON.stringify(importedData[k]));
+                                    }
+                                });
+                                showAlert('System successfully restored. Reloading page...', 'success');
+                                setTimeout(() => { window.location.reload(); }, 1500);
+                            }
+                        } else {
+                            showAlert('Invalid backup file. Missing system metadata.', 'danger');
+                        }
+                    } catch (err) {
+                        showAlert('Failed to parse JSON file.', 'danger');
+                    }
+                };
+                reader.readAsText(file);
+                this.value = null;
+            });
+        }
+    }
 };
 
 // ----------------------------------------------------
@@ -489,6 +736,60 @@ document.addEventListener('submit', function (e) {
         // Reset read only fields
         if (document.getElementById('profitAmount')) document.getElementById('profitAmount').value = '';
         if (document.getElementById('balanceAmount')) document.getElementById('balanceAmount').value = '';
+    }
+
+    // ---- ADD STAFF FORM ----
+    if (e.target.id === 'newStaffForm') {
+        e.preventDefault();
+        const staff = {
+            staff_id: 'STF-' + Date.now().toString().slice(-4),
+            name: document.getElementById('staffName').value.trim(),
+            email: document.getElementById('staffEmail').value.trim(),
+            role: document.getElementById('staffRole').value,
+            password: document.getElementById('staffPassword').value,
+            status: 'Active'
+        };
+        Storage.add('aat_staff', staff);
+        e.target.reset();
+        showAlert("Staff account successfully created.", "success");
+        if (window.moduleRenderers && window.moduleRenderers.staff) window.moduleRenderers.staff();
+    }
+
+    // ---- RECORD SUPPLIER PAYMENT FORM ----
+    if (e.target.id === 'paymentForm') {
+        e.preventDefault();
+        let selectedName = document.getElementById('supplierSelect').value;
+        let amount = parseFloat(document.getElementById('paymentAmount').value);
+        let date = document.getElementById('paymentDate').value;
+        let note = document.getElementById('paymentNote').value;
+
+        let suppliers = Storage.get("aat_suppliers");
+        let supIndex = suppliers.findIndex(s => s.supplier_name === selectedName);
+        if (supIndex !== -1) {
+            let s = suppliers[supIndex];
+            let currentBalance = s.balance_payable || 0;
+            if (amount > currentBalance) {
+                showAlert(`Error: Payment amount (Rs ${amount}) cannot exceed the balance due (Rs ${currentBalance}).`, 'danger');
+                return;
+            }
+            s.balance_payable = currentBalance - amount;
+            s.amount_paid = (s.amount_paid || (s.total_cost - currentBalance)) + amount;
+            Storage.save("aat_suppliers", suppliers);
+
+            Storage.add("aat_ledger", {
+                entry_id: "PAY-" + Date.now().toString().slice(-4),
+                type: "Supplier Payment",
+                amount: amount,
+                client_name: selectedName,
+                description: note || "Supplier Payment",
+                date: date
+            });
+
+            e.target.reset();
+            if (document.getElementById('paymentDate')) document.getElementById('paymentDate').valueAsDate = new Date();
+            showAlert(`Payment of Rs ${amount.toLocaleString()} successfully recorded for ${selectedName}.`, 'success');
+            if (window.moduleRenderers && window.moduleRenderers['supplier-payments']) window.moduleRenderers['supplier-payments']();
+        }
     }
 });
 
