@@ -19,7 +19,7 @@
             window.location.href = "login.html";
         }
     </script>
-    <script src="js/auth-guard.js"></script>`n
+    <script src="js/auth-guard.js"></script>
 </head>
 
 <body data-page="backup">
@@ -76,7 +76,7 @@
                         Download a complete JSON snapshot of all tickets, clients, suppliers, invoices, expenses, and
                         staff accounts. This file acts as your master system backup. Keep it secure.
                     </p>
-                    <button class="btn" style="font-size: 1.1rem; padding: 12px 32px;" onclick="exportData()"><i
+                    <button id="exportDataBtn" class="btn" style="font-size: 1.1rem; padding: 12px 32px;"><i
                             class="fas fa-download"></i> Download Full Backup</button>
                 </div>
 
@@ -91,9 +91,9 @@
                     </p>
 
                     <input type="file" id="backupFileInput" accept=".json" style="display: none;">
-                    <button class="btn btn-outline"
-                        style="font-size: 1.1rem; padding: 12px 32px; border-color: #f59e0b; color: #d97706;"
-                        onclick="document.getElementById('backupFileInput').click()"><i class="fas fa-upload"></i>
+                    <button id="importDataBtn" class="btn btn-outline"
+                        style="font-size: 1.1rem; padding: 12px 32px; border-color: #f59e0b; color: #d97706;"><i
+                            class="fas fa-upload"></i>
                         Select Backup File</button>
                 </div>
 
@@ -102,98 +102,8 @@
 
     </div>
 
-    <script>
-        const alertBox = document.getElementById("alertMessage");
-
-        function showAlert(msg, type) {
-            alertBox.textContent = msg;
-            alertBox.className = `alert alert-${type}`;
-            alertBox.style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => { alertBox.style.display = 'none'; }, 5000);
-        }
-
-        // Export Function
-        window.exportData = function () {
-            const keys = [
-                'aat_tickets',
-                'aat_clients',
-                'aat_invoices',
-                'aat_ledger',
-                'aat_expenses',
-                'aat_suppliers',
-                'aat_staff'
-            ];
-
-            let backupObj = {};
-            keys.forEach(k => {
-                backupObj[k] = JSON.parse(localStorage.getItem(k)) || [];
-            });
-
-            // Add metadata
-            backupObj._metadata = {
-                timestamp: new Date().toISOString(),
-                exported_by: JSON.parse(localStorage.getItem('portal_logged_in_user'))?.name || 'Admin',
-                version: '1.0'
-            };
-
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", `AAT_Backup_${new Date().toISOString().split('T')[0]}.json`);
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-
-            showAlert('Backup successfully exported to your device.', 'success');
-        };
-
-        // Restore Setup
-        document.getElementById('backupFileInput').addEventListener('change', function (e) {
-            let file = e.target.files[0];
-            if (!file) return;
-
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                try {
-                    let importedData = JSON.parse(e.target.result);
-
-                    if (importedData._metadata) {
-                        const confirmStatus = confirm(`This backup is from ${new Date(importedData._metadata.timestamp).toLocaleString()}.\n\nRestoring it will overwrite current portal data completely. Are you absolutely sure you want to proceed?`);
-
-                        if (confirmStatus) {
-                            // Loop and overwrite
-                            Object.keys(importedData).forEach(k => {
-                                if (k.startsWith('aat_')) {
-                                    localStorage.setItem(k, JSON.stringify(importedData[k]));
-                                }
-                            });
-
-                            showAlert('System successfully restored. Reloading page...', 'success');
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 1500);
-                        }
-                    } else {
-                        showAlert('Invalid backup file. Missing system metadata.', 'danger');
-                    }
-                } catch (err) {
-                    showAlert('Failed to parse JSON file. The file might be corrupted.', 'danger');
-                }
-            };
-            reader.readAsText(file);
-            // reset file input
-            this.value = null;
-        });
-
-        function logout() {
-            localStorage.removeItem("portal_logged_in");
-            window.location.href = "login.html";
-        }
-    </script>
-    <script src="js/global-search.js"></script>`n
-
-<script src="../assets/js/portal.js"></script>
+    <script src="js/global-search.js"></script>
+    <script src="../assets/js/portal.js"></script>
 </body>
 
 </html>
