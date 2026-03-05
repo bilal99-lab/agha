@@ -19,7 +19,8 @@
             window.location.href = "login.html";
         }
     </script>
-<script src="js/auth-guard.js"></script>`n</head>
+    <script src="js/auth-guard.js"></script>`n
+</head>
 
 <body>
 
@@ -37,7 +38,8 @@
                 <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
                 <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
                 <a href="expenses.html" class="nav-item"><i class="fas fa-receipt"></i> Expenses</a>
-                <a href="staff.html" class="nav-item"><i class="fas fa-user-shield"></i> Staff Accounts</a>`n                <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
+                <a href="staff.html" class="nav-item"><i class="fas fa-user-shield"></i> Staff Accounts</a>`n <a
+                    href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
                 <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
                     Logout</a>
             </div>
@@ -60,11 +62,49 @@
                 <div class="card">
                     <div class="section-header">
                         <h3>New Umrah Package Record</h3>
-                        <button class="btn"><i class="fas fa-save"></i> Save Package</button>
+                        <button class="btn btn-save" id="btnSaveUmrah"><i class="fas fa-save"></i> Save Entry</button>
                     </div>
-                    <div class="chart-placeholder">
-                        [ Umrah Form Fields Placeholder ]
-                    </div>
+
+                    <form id="umrahForm">
+                        <div id="umrahAlert" class="alert" style="display: none; margin-bottom: 24px;"></div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Client Name *</label>
+                                <input type="text" id="umrahClient" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number *</label>
+                                <input type="text" id="umrahPhone" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Passport Number</label>
+                                <input type="text" id="umrahPassport" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Package Name *</label>
+                                <input type="text" id="umrahPackage" class="form-control"
+                                    placeholder="e.g. 15 Days Star Package" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Travel Date *</label>
+                                <input type="date" id="umrahDate" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Cost Price (Rs) *</label>
+                                <input type="number" id="umrahCost" class="form-control" value="0" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Selling Price (Rs) *</label>
+                                <input type="number" id="umrahSelling" class="form-control" value="0" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Profit (Rs)</label>
+                                <input type="text" id="umrahProfit" class="form-control" readonly
+                                    style="background: #f8fafc; font-weight: 600;">
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -77,6 +117,7 @@
             window.location.href = "login.html";
         }
     </script>
-<script src="js/global-search.js"></script>`n</body>
+    <script src="js/global-search.js"></script>`n
+</body>
 
 </html>
