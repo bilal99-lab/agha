@@ -218,9 +218,15 @@
             // Update DOM
             document.getElementById("statTodaySales").textContent = "Rs " + todaySales.toLocaleString();
             document.getElementById("statTotalReceivable").textContent = "Rs " + totalReceivable.toLocaleString();
-            document.getElementById("statMonthProfit").textContent = "Rs " + monthProfit.toLocaleString();
             document.getElementById("statTotalExpenses").textContent = "Rs " + totalExpenses.toLocaleString();
-            document.getElementById("statNetProfit").textContent = "Rs " + netProfit.toLocaleString();
+
+            let monthProfitBadge = monthProfit >= 0 ? "bg-success-light" : "bg-danger-light";
+            document.getElementById("statMonthProfit").innerHTML = `<span class="status-badge ${monthProfitBadge}" style="font-size: 1.1rem; padding: 4px 12px;">Rs ${monthProfit.toLocaleString()}</span>`;
+
+            let netProfitBadge = netProfit >= 0 ? "bg-success-light" : "bg-danger-light";
+            // keep the custom purple color if positive, otherwise red
+            let netProfitColor = netProfit >= 0 ? "#8b5cf6" : "var(--danger)";
+            document.getElementById("statNetProfit").innerHTML = `<span class="status-badge ${netProfitBadge}" style="color: ${netProfitColor}; font-size: 1.1rem; padding: 4px 12px;">Rs ${netProfit.toLocaleString()}</span>`;
 
             if (tickets.length > 0) {
                 tableBody.innerHTML = ""; // Clear mock data
