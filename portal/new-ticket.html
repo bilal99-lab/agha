@@ -216,6 +216,7 @@
                     document.getElementById('clientPassport').value = foundTicket.clientPassport || '';
                     document.getElementById('pnr').value = foundTicket.pnr || '';
                     document.getElementById('airline').value = foundTicket.airline || '';
+                    document.getElementById('supplierName').value = foundTicket.supplier_name || foundTicket.supplierName || '';
                     document.getElementById('outboundFlight').value = foundTicket.outbound || foundTicket.route || '';
                     document.getElementById('inboundFlight').value = foundTicket.inbound || '';
                     costPrice.value = foundTicket.cost_price || foundTicket.cost || '';
@@ -295,6 +296,7 @@
                     clientPassport: document.getElementById('clientPassport').value,
                     pnr: document.getElementById('pnr').value,
                     airline: document.getElementById('airline').value,
+                    supplier_name: document.getElementById('supplierName').value,
                     outbound: document.getElementById('outboundFlight').value,
                     inbound: document.getElementById('inboundFlight').value,
                     route: document.getElementById('outboundFlight').value, // user spec
@@ -352,6 +354,8 @@
                     passport: newTicket.clientPassport,
                     total_spent: newTicket.selling_price, // user spec map
                     total_tickets: 1, // user spec map
+                    total_profit_generated: newTicket.profit,
+                    last_travel_date: newTicket.date,
                     status: 'Active'
                 };
 
@@ -361,6 +365,8 @@
                     if (existingClient) {
                         existingClient.total_spent += newTicket.selling_price;
                         existingClient.total_tickets += 1;
+                        existingClient.total_profit_generated = (existingClient.total_profit_generated || 0) + newTicket.profit;
+                        existingClient.last_travel_date = newTicket.date;
                     } else {
                         clients.push(newClient);
                     }
@@ -368,6 +374,26 @@
                     clients.push(newClient);
                 }
                 localStorage.setItem("aat_clients", JSON.stringify(clients));
+
+                // Save Supplier logic
+                let suppliers = JSON.parse(localStorage.getItem("aat_suppliers")) || [];
+                if (newTicket.supplier_name) {
+                    let existingSupplier = suppliers.find(s => s.supplier_name.toLowerCase() === newTicket.supplier_name.toLowerCase());
+                    if (existingSupplier) {
+                        existingSupplier.total_tickets = (existingSupplier.total_tickets || 0) + 1;
+                        existingSupplier.total_cost = (existingSupplier.total_cost || 0) + newTicket.cost_price;
+                        existingSupplier.balance_payable = (existingSupplier.balance_payable || 0) + newTicket.cost_price;
+                    } else {
+                        suppliers.push({
+                            supplier_name: newTicket.supplier_name,
+                            airline: newTicket.airline,
+                            total_tickets: 1,
+                            total_cost: newTicket.cost_price,
+                            balance_payable: newTicket.cost_price
+                        });
+                    }
+                    localStorage.setItem("aat_suppliers", JSON.stringify(suppliers));
+                }
 
                 // Save Ledger transaction
                 if (receivedVal > 0) {
