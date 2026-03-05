@@ -19,7 +19,8 @@
             window.location.href = "login.html";
         }
     </script>
-<script src="js/auth-guard.js"></script>`n</head>
+    <script src="js/auth-guard.js"></script>`n
+</head>
 
 <body data-page="expenses">
 
@@ -38,7 +39,8 @@
                 <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
                 <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
                 <a href="expenses.html" class="nav-item active"><i class="fas fa-receipt"></i> Expenses</a>
-                <a href="staff.html" class="nav-item"><i class="fas fa-user-shield"></i> Staff Accounts</a>`n                <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
+                <a href="staff.html" class="nav-item"><i class="fas fa-user-shield"></i> Staff Accounts</a>`n <a
+                    href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
                 <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
                     Logout</a>
             </div>
@@ -112,39 +114,159 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-        </div>
+                    <!DOCTYPE html>
+                    <html lang="en">
 
-    </div>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Expenses - AAT Portal</title>
+                        <!-- Google Fonts -->
+                        <link rel="preconnect" href="https://fonts.googleapis.com">
+                        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+                            rel="stylesheet">
+                        <!-- Font Awesome -->
+                        <link rel="stylesheet"
+                            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                        <link rel="stylesheet" href="css/portal.css">
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Set default date to today
-            document.getElementById('expDate').valueAsDate = new Date();
+                        <script src="js/auth-guard.js"></script>`n
+                    </head>
 
-            const form = document.getElementById("expenseForm");
-            const tableBody = document.getElementById("expenseTableBody");
-            const alertMessage = document.getElementById("alertMessage");
+                    <body data-page="expenses">
 
-            let expenses = JSON.parse(localStorage.getItem("aat_expenses")) || [];
+                        <div class="wrapper">
 
-            function renderTable() {
-                if (expenses.length > 0) {
-                    tableBody.innerHTML = "";
+                            <!-- Sidebar -->
+                            <div class="sidebar">
+                                <div class="sidebar-brand">
+                                    AAT Portal
+                                </div>
+                                <div class="sidebar-nav">
+                                    <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+                                    <a href="new-ticket.html" class="nav-item"><i class="fas fa-ticket-alt"></i> New
+                                        Ticket</a>
+                                    <a href="invoices.html" class="nav-item"><i class="fas fa-file-invoice"></i>
+                                        Invoices</a>
+                                    <a href="umrah-entry.html" class="nav-item"><i class="fas fa-kaaba"></i> Umrah
+                                        Entry</a>
+                                    <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
+                                    <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
+                                    <a href="expenses.html" class="nav-item active"><i class="fas fa-receipt"></i>
+                                        Expenses</a>
+                                    <a href="staff.html" class="nav-item"><i class="fas fa-user-shield"></i> Staff
+                                        Accounts</a>`n <a href="reports.html" class="nav-item"><i
+                                            class="fas fa-chart-line"></i> Reports</a>
+                                    <a href="#" class="nav-item nav-logout" onclick="logout()"><i
+                                            class="fas fa-sign-out-alt"></i>
+                                        Logout</a>
+                                </div>
+                            </div>
 
-                    // Sort by date descending
-                    const sortedExps = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
+                            <!-- Main Content -->
+                            <div class="main-content">
 
-                    sortedExps.forEach(exp => {
-                        let catColor = "#64748b"; // Misc Default
-                        if (exp.category === 'Office Rent') catColor = '#2563eb';
-                        if (exp.category === 'Salary') catColor = '#8b5cf6';
-                        if (exp.category === 'Marketing') catColor = '#f59e0b';
+                                <!-- Topbar -->
+                                <div class="topbar">
+                                    <div class="page-title">Expense Management</div>
+                                    <div class="user-profile">
+                                        <span class="avatar">A</span>
+                                        <span>Admin User</span>
+                                    </div>
+                                </div>
 
-                        let badgeHtml = `<span style="background: ${catColor}15; color: ${catColor}; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">${exp.category}</span>`;
+                                <!-- Content Area -->
+                                <div class="content-area">
+                                    <div class="card">
+                                        <div class="section-header">
+                                            <h3>Monthly Office Expenses</h3>
+                                        </div>
 
-                        tableBody.innerHTML += `
+                                        <div id="alertMessage" class="alert"></div>
+
+                                        <form id="expenseForm"
+                                            style="margin-bottom: 30px; background: #f8fafc; padding: 24px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                            <div class="form-grid">
+                                                <div class="form-group">
+                                                    <label class="form-label">Expense Title *</label>
+                                                    <input type="text" id="expTitle" class="form-control" required
+                                                        placeholder="e.g. Electricity Bill">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Amount (Rs) *</label>
+                                                    <input type="number" id="expAmount" class="form-control" required
+                                                        min="1">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Category *</label>
+                                                    <select id="expCategory" class="form-control" required>
+                                                        <option value="Office Rent">Office Rent</option>
+                                                        <option value="Salary">Salary</option>
+                                                        <option value="Marketing">Marketing</option>
+                                                        <option value="Miscellaneous" selected>Miscellaneous</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Date *</label>
+                                                    <input type="date" id="expDate" class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div style="margin-top: 16px; text-align: right;">
+                                                <button type="submit" class="btn" id="btnSaveExpense"><i
+                                                        class="fas fa-plus"></i> Add
+                                                    Expense</button>
+                                            </div>
+                                        </form>
+
+                                        <div class="table-container">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Expense Title</th>
+                                                        <th>Category</th>
+                                                        <th>Amount (Rs)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="expenseTableBody">
+                                                    <!-- Populated dynamically -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                // Set default date to today
+                                document.getElementById('expDate').valueAsDate = new Date();
+
+                                const form = document.getElementById("expenseForm");
+                                const tableBody = document.getElementById("expenseTableBody");
+                                const alertMessage = document.getElementById("alertMessage");
+
+                                let expenses = JSON.parse(localStorage.getItem("aat_expenses")) || [];
+
+                                function renderTable() {
+                                    if (expenses.length > 0) {
+                                        tableBody.innerHTML = "";
+
+                                        // Sort by date descending
+                                        const sortedExps = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                                        sortedExps.forEach(exp => {
+                                            let catColor = "#64748b"; // Misc Default
+                                            if (exp.category === 'Office Rent') catColor = '#2563eb';
+                                            if (exp.category === 'Salary') catColor = '#8b5cf6';
+                                            if (exp.category === 'Marketing') catColor = '#f59e0b';
+
+                                            let badgeHtml = `<span style="background: ${catColor}15; color: ${catColor}; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">${exp.category}</span>`;
+
+                                            tableBody.innerHTML += `
                             <tr>
                                 <td>${formatDisplayDate(exp.date)}</td>
                                 <td style="font-weight: 500;">${exp.title}</td>
@@ -152,61 +274,61 @@
                                 <td style="color: var(--danger); font-weight: 600;">Rs ${parseFloat(exp.amount).toLocaleString()}</td>
                             </tr>
                         `;
-                    });
-                } else {
-                    tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 32px;">No expenses recorded yet.</td></tr>`;
-                }
-            }
+                                        });
+                                    } else {
+                                        tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 32px;">No expenses recorded yet.</td></tr>`;
+                                    }
+                                }
 
-            renderTable();
+                                renderTable();
 
-            form.addEventListener("submit", function (e) {
-                e.preventDefault();
+                                form.addEventListener("submit", function (e) {
+                                    e.preventDefault();
 
-                const newExp = {
-                    id: "EXP-" + Date.now(),
-                    title: document.getElementById('expTitle').value,
-                    amount: parseFloat(document.getElementById('expAmount').value) || 0,
-                    category: document.getElementById('expCategory').value,
-                    date: document.getElementById('expDate').value // YYYY-MM-DD format from input=date
-                };
+                                    const newExp = {
+                                        id: "EXP-" + Date.now(),
+                                        title: document.getElementById('expTitle').value,
+                                        amount: parseFloat(document.getElementById('expAmount').value) || 0,
+                                        category: document.getElementById('expCategory').value,
+                                        date: document.getElementById('expDate').value // YYYY-MM-DD format from input=date
+                                    };
 
-                expenses.push(newExp);
-                localStorage.setItem("aat_expenses", JSON.stringify(expenses));
+                                    expenses.push(newExp);
+                                    localStorage.setItem("aat_expenses", JSON.stringify(expenses));
 
-                renderTable();
+                                    renderTable();
 
-                // Reset form slightly
-                document.getElementById('expTitle').value = '';
-                document.getElementById('expAmount').value = '';
-                document.getElementById('expTitle').focus();
+                                    // Reset form slightly
+                                    document.getElementById('expTitle').value = '';
+                                    document.getElementById('expAmount').value = '';
+                                    document.getElementById('expTitle').focus();
 
-                showAlert('Expense successfully recorded.', 'success');
-            });
+                                    showAlert('Expense successfully recorded.', 'success');
+                                });
 
-            function showAlert(msg, type) {
-                alertMessage.textContent = msg;
-                alertMessage.className = `alert alert-${type}`;
-                alertMessage.style.display = 'block';
-                setTimeout(() => {
-                    alertMessage.style.display = 'none';
-                }, 3000);
-            }
+                                function showAlert(msg, type) {
+                                    alertMessage.textContent = msg;
+                                    alertMessage.className = `alert alert-${type}`;
+                                    alertMessage.style.display = 'block';
+                                    setTimeout(() => {
+                                        alertMessage.style.display = 'none';
+                                    }, 3000);
+                                }
 
-            function formatDisplayDate(dateString) {
-                if (!dateString) return "-";
-                const d = new Date(dateString);
-                return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-            }
-        });
+                                function formatDisplayDate(dateString) {
+                                    if (!dateString) return "-";
+                                    const d = new Date(dateString);
+                                    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                                }
+                            });
 
-        function logout() {
-            localStorage.removeItem("portal_logged_in");
-            window.location.href = "login.html";
-        }
-    </script>
-<script src="js/global-search.js"></script>`n
-<script src="../assets/js/portal.js"></script>
-</body>
+                            function logout() {
+                                localStorage.removeItem("portal_logged_in");
+                                window.location.href = "login.html";
+                            }
+                        </script>
+                        <script src="js/global-search.js"></script>`n
+                        <script src="../assets/js/portal.js"></script>
+                    </body>
 
-</html>
+                    </html>
