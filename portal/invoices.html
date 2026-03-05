@@ -158,7 +158,8 @@
             }
         }
     </style>
-<script src="js/auth-guard.js"></script>`n</head>
+    <script src="js/auth-guard.js"></script>`n
+</head>
 
 <body>
     <!-- Default Invoice Print Area -->
@@ -263,7 +264,8 @@
                 <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
                 <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
                 <a href="expenses.html" class="nav-item"><i class="fas fa-receipt"></i> Expenses</a>
-                <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
+                <a href="staff.html" class="nav-item"><i class="fas fa-user-shield"></i> Staff Accounts</a>`n <a
+                    href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
                 <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
                     Logout</a>
             </div>
@@ -328,10 +330,12 @@
 
                         actionBtns += `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px; color: #2563eb; border-color: #bfdbfe;" onclick="printTicketPdf('${inv.invoice_id}')" title="Download Ticket PDF"><i class="fas fa-ticket-alt"></i></button>`;
 
-                        actionBtns += `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px; color: #16a34a; border-color: #bbf7d0;" onclick="sendWhatsApp('${inv.invoice_id}')" title="Send WhatsApp"><i class="fab fa-whatsapp"></i></button>`;
-
-                        if (inv.payment_status === "Pending") {
+                        if (inv.payment_status === "Pending" || inv.payment_status === "unpaid") {
+                            actionBtns += `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px; color: #16a34a; border-color: #bbf7d0;" onclick="sendWhatsAppReminder('${inv.invoice_id}')" title="Payment Reminder WhatsApp"><i class="fab fa-whatsapp"></i></button>`;
                             actionBtns += `<button class="btn" style="padding: 4px 8px; font-size: 0.8rem;" onclick="markPaid('${inv.invoice_id}')"><i class="fas fa-check"></i> Pay</button>`;
+                        } else {
+                            // Paid
+                            actionBtns += `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px; color: #16a34a; border-color: #bbf7d0;" onclick="sendWhatsApp('${inv.invoice_id}')" title="Send WhatsApp"><i class="fab fa-whatsapp"></i></button>`;
                         }
 
                         tableBody.innerHTML += `
@@ -423,20 +427,34 @@
             window.sendWhatsApp = function (invoiceId) {
                 let targetInv = invoices.find(i => i.invoice_id === invoiceId);
                 if (targetInv) {
-                    // Locate client phone from aat_clients mapping
+                    let clientName = targetInv.client_name;
+                    let amount = "Rs " + (targetInv.amount || 0).toLocaleString();
+
                     let clients = JSON.parse(localStorage.getItem('aat_clients')) || [];
-                    let targetClient = clients.find(c => c.client_name === targetInv.client_name || c.name === targetInv.client_name);
-                    let phoneStr = targetClient ? targetClient.phone : "";
+                    let clientProfile = clients.find(c => (c.client_name === clientName) || (c.name === clientName));
+                    let phoneStr = clientProfile && clientProfile.phone ? clientProfile.phone.replace(/[^0-9]/g, '') : "0000000000";
 
-                    // Clean phone number formats (strip spaces/plus if simple wa.me requirement)
-                    if (phoneStr) {
-                        phoneStr = phoneStr.replace(/\D/g, '');
-                    }
+                    let msg = `Hello ${clientName}, this is Agha Air Travel. Attached is your generated Invoice (${invoiceId}) for the amount of ${amount}. Please review and contact us for any concerns.`;
 
-                    let message = `Hello ${targetInv.client_name},\n\nYour ticket invoice from Agha Air Travel.\n\nInvoice ID: ${targetInv.invoice_id}\nAmount: PKR ${(targetInv.amount || 0).toLocaleString()}\n\nThank you for choosing us!`;
+                    let waLink = `https://wa.me/${phoneStr}?text=${encodeURIComponent(msg)}`;
+                    window.open(waLink, '_blank');
+                }
+            };
 
-                    let url = `https://wa.me/${phoneStr}?text=${encodeURIComponent(message)}`;
-                    window.open(url, '_blank');
+            window.sendWhatsAppReminder = function (invoiceId) {
+                let targetInv = invoices.find(i => i.invoice_id === invoiceId);
+                if (targetInv) {
+                    let clientName = targetInv.client_name;
+                    let amount = "Rs " + (targetInv.amount || 0).toLocaleString();
+
+                    let clients = JSON.parse(localStorage.getItem('aat_clients')) || [];
+                    let clientProfile = clients.find(c => (c.client_name === clientName) || (c.name === clientName));
+                    let phoneStr = clientProfile && clientProfile.phone ? clientProfile.phone.replace(/[^0-9]/g, '') : "0000000000";
+
+                    let msg = `Hello ${clientName},\n\nReminder from Agha Air Travel.\nInvoice ID: ${invoiceId}\nAmount Due: ${amount}\n\nPlease clear the payment at your earliest convenience. Thank you.`;
+
+                    let waLink = `https://wa.me/${phoneStr}?text=${encodeURIComponent(msg)}`;
+                    window.open(waLink, '_blank');
                 }
             };
         });
@@ -446,6 +464,7 @@
             window.location.href = "login.html";
         }
     </script>
-<script src="js/global-search.js"></script>`n</body>
+    <script src="js/global-search.js"></script>`n
+</body>
 
 </html>

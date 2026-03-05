@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ledger - AAT Portal</title>
+    <title>Staff Accounts - AAT Portal</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +19,8 @@
             window.location.href = "login.html";
         }
     </script>
-<script src="js/auth-guard.js"></script>`n</head>
+    <script src="js/auth-guard.js"></script>`n
+</head>
 
 <body>
 
@@ -36,9 +37,14 @@
                 <a href="invoices.html" class="nav-item"><i class="fas fa-file-invoice"></i> Invoices</a>
                 <a href="umrah-entry.html" class="nav-item"><i class="fas fa-kaaba"></i> Umrah Entry</a>
                 <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
-                <a href="ledger.html" class="nav-item active"><i class="fas fa-book"></i> Ledger</a>
+                <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
+                <a href="suppliers.html" class="nav-item"><i class="fas fa-building"></i> Suppliers</a>
+                <a href="supplier-payments.html" class="nav-item"><i class="fas fa-money-check-alt"></i> Supplier
+                    Payments</a>
                 <a href="expenses.html" class="nav-item"><i class="fas fa-receipt"></i> Expenses</a>
+                <a href="staff.html" class="nav-item active"><i class="fas fa-user-shield"></i> Staff Accounts</a>
                 <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
+                <a href="backup.html" class="nav-item"><i class="fas fa-database"></i> Backup & Restore</a>
                 <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
                     Logout</a>
             </div>
@@ -49,7 +55,7 @@
 
             <!-- Topbar -->
             <div class="topbar">
-                <div class="page-title">Ledger & Accounts</div>
+                <div class="page-title">Staff Management</div>
                 <div class="user-profile">
                     <span class="avatar">A</span>
                     <span>Admin User</span>
@@ -58,23 +64,60 @@
 
             <!-- Content Area -->
             <div class="content-area">
+
+                <div id="alertMessage" class="alert" style="display: none; margin-bottom: 24px;"></div>
+
+                <!-- Add Staff Form -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="section-header">
+                        <h3>Add New Staff</h3>
+                    </div>
+                    <form id="staffForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Full Name *</label>
+                                <input type="text" id="staffName" class="form-control" required
+                                    placeholder="e.g. Ali Raza">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address * (Login ID)</label>
+                                <input type="email" id="staffEmail" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password *</label>
+                                <input type="text" id="staffPassword" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Role *</label>
+                                <select id="staffRole" class="form-control">
+                                    <option value="Staff" selected>Staff (Read Only, Ticket Entry)</option>
+                                    <option value="Admin">Admin (Full Access)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="text-align: right; margin-top: 16px;">
+                            <button type="submit" class="btn"><i class="fas fa-user-plus"></i> Create Account</button>
+                        </div>
+                    </form>
+                </div>
+
                 <div class="card">
                     <div class="section-header">
-                        <h3>General Ledger</h3>
-                        <button class="btn btn-outline"><i class="fas fa-filter"></i> Filter</button>
+                        <h3>Active Accounts</h3>
                     </div>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Entry ID</th>
-                                    <th>Date</th>
-                                    <th>Client / Description</th>
-                                    <th>Type</th>
-                                    <th>Amount</th>
+                                    <th>Staff ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="ledgerTableBody">
+                            <tbody id="staffTableBody">
                                 <!-- Entries will load here -->
                             </tbody>
                         </table>
@@ -87,36 +130,92 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const tableBody = document.getElementById("ledgerTableBody");
-            let ledger = JSON.parse(localStorage.getItem("aat_ledger")) || [];
+            const tableBody = document.getElementById("staffTableBody");
+            const alertBox = document.getElementById("alertMessage");
+            const form = document.getElementById("staffForm");
 
-            if (ledger.length > 0) {
-                // Sort by newest first assuming appended chronologically
-                ledger.reverse().forEach(entry => {
-                    let badgeClass = "bg-success-light";
-                    if (entry.type === "Expense" || entry.type === "ticket_sale_refund") {
-                        badgeClass = "bg-danger-light";
+            function renderTable() {
+                let staffList = JSON.parse(localStorage.getItem("aat_staff")) || [];
+                tableBody.innerHTML = "";
+
+                if (staffList.length > 0) {
+                    staffList.forEach(s => {
+                        let badgeClass = s.role === 'Admin' ? 'bg-primary-light' : 'bg-success-light';
+                        if (s.status === 'Disabled') badgeClass = 'bg-danger-light';
+
+                        let displayStatus = s.status === 'Disabled' ? 'Disabled' : 'Active';
+                        let toggleBtnText = s.status === 'Disabled' ? 'Activate' : 'Disable';
+
+                        tableBody.innerHTML += `
+                            <tr>
+                                <td style="font-weight: 500;">${s.staff_id}</td>
+                                <td>${s.name}</td>
+                                <td>${s.email}</td>
+                                <td><span class="status-badge ${badgeClass}">${s.role}</span></td>
+                                <td><span class="status-badge" style="background: transparent; color: var(--text-muted);">${displayStatus}</span></td>
+                                <td style="text-align: right;">
+                                    <button class="btn btn-outline" onclick="toggleStaffStatus('${s.staff_id}')" style="padding: 4px 10px; font-size: 0.8rem;">${toggleBtnText}</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 32px;">No staff records found.</td></tr>`;
+                }
+            }
+
+            renderTable();
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                let staffList = JSON.parse(localStorage.getItem("aat_staff")) || [];
+
+                const email = document.getElementById('staffEmail').value.trim();
+                if (staffList.find(s => s.email === email)) {
+                    showAlert('Error: This email already exists in the system.', 'danger');
+                    return;
+                }
+
+                const newStaff = {
+                    staff_id: "STAFF-" + (staffList.length + 1),
+                    name: document.getElementById('staffName').value.trim(),
+                    email: email,
+                    password: document.getElementById('staffPassword').value.trim(),
+                    role: document.getElementById('staffRole').value,
+                    status: 'Active'
+                };
+
+                staffList.push(newStaff);
+                localStorage.setItem("aat_staff", JSON.stringify(staffList));
+
+                renderTable();
+                form.reset();
+                showAlert('New staff account successfully created.', 'success');
+            });
+
+            window.toggleStaffStatus = function (staffId) {
+                let staffList = JSON.parse(localStorage.getItem("aat_staff")) || [];
+                let staffIndex = staffList.findIndex(s => s.staff_id === staffId);
+
+                if (staffIndex !== -1) {
+                    // Prevent disabling self or only admin
+                    if (staffList[staffIndex].email === 'admin@aat.com') {
+                        showAlert('Cannot disable the primary system administrator.', 'danger');
+                        return;
                     }
 
-                    // Handle missing/legacy keys gracefully
-                    let clientDisplay = entry.client_name ? `<strong>${entry.client_name}</strong><br>` : '';
-                    let descDisplay = entry.description || 'No description';
+                    staffList[staffIndex].status = staffList[staffIndex].status === 'Disabled' ? 'Active' : 'Disabled';
+                    localStorage.setItem("aat_staff", JSON.stringify(staffList));
+                    renderTable();
+                    showAlert('Staff account status toggled.', 'success');
+                }
+            }
 
-                    tableBody.innerHTML += `
-                        <tr>
-                            <td>${entry.entry_id || entry.id || '#---'}</td>
-                            <td>${entry.date || '-'}</td>
-                            <td>
-                                ${clientDisplay}
-                                <span class="text-muted" style="font-size: 0.8rem;">${descDisplay}</span>
-                            </td>
-                            <td><span class="status-badge ${badgeClass}">${entry.type}</span></td>
-                            <td>Rs ${(entry.amount || 0).toLocaleString()}</td>
-                        </tr>
-                    `;
-                });
-            } else {
-                tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px;">No transactions recorded yet.</td></tr>`;
+            function showAlert(msg, type) {
+                alertBox.textContent = msg;
+                alertBox.className = `alert alert-${type}`;
+                alertBox.style.display = 'block';
+                setTimeout(() => { alertBox.style.display = 'none'; }, 3000);
             }
         });
 
@@ -125,6 +224,7 @@
             window.location.href = "login.html";
         }
     </script>
-<script src="js/global-search.js"></script>`n</body>
+    <script src="js/global-search.js"></script>`n
+</body>
 
 </html>

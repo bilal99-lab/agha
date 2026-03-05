@@ -21,7 +21,8 @@
             window.location.href = "login.html";
         }
     </script>
-<script src="js/auth-guard.js"></script>`n</head>
+    <script src="js/auth-guard.js"></script>`n
+</head>
 
 <body>
 
@@ -40,7 +41,8 @@
                 <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
                 <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
                 <a href="expenses.html" class="nav-item"><i class="fas fa-receipt"></i> Expenses</a>
-                <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
+                <a href="staff.html" class="nav-item"><i class="fas fa-user-shield"></i> Staff Accounts</a>`n <a
+                    href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
                 <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
                     Logout</a>
             </div>
@@ -118,25 +120,26 @@
                     </div>
                 </div>
 
-                <!-- Intelligence Stats Grid -->
+                <!-- Secondary Intelligence Stats Grid -->
                 <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 24px;">
-                    <div class="card stat-card" style="border-left: 4px solid #3b82f6;">
+                    <div class="card stat-card" style="border-left: 4px solid #ef4444;">
                         <div class="stat-info">
-                            <h4 style="color: #64748b;">Total Tickets Sold</h4>
-                            <div class="value" id="statTotalTickets" style="color: #0f172a;">0</div>
+                            <h4 style="color: #64748b;">Pending Payment Invoices</h4>
+                            <div class="value" id="statPendingInvoices" style="color: #0f172a; font-size: 1.4rem;">0
+                            </div>
                         </div>
                     </div>
-                    <div class="card stat-card" style="border-left: 4px solid #10b981;">
+                    <div class="card stat-card" style="border-left: 4px solid #f97316;">
                         <div class="stat-info">
-                            <h4 style="color: #64748b;">Top Client<span id="statTopClientSpend"
-                                    style="font-size:0.8rem; margin-left: 8px; color: #10b981;"></span></h4>
-                            <div class="value" id="statTopClient" style="color: #0f172a; font-size: 1.4rem;">-</div>
+                            <h4 style="color: #64748b;">Supplier Payables</h4>
+                            <div class="value" id="statSupplierPayables" style="color: #0f172a; font-size: 1.4rem;">Rs 0
+                            </div>
                         </div>
                     </div>
-                    <div class="card stat-card" style="border-left: 4px solid #f59e0b;">
+                    <div class="card stat-card" style="border-left: 4px solid #8b5cf6;">
                         <div class="stat-info">
-                            <h4 style="color: #64748b;">Top Route</h4>
-                            <div class="value" id="statTopRoute" style="color: #0f172a; font-size: 1.4rem;">-</div>
+                            <h4 style="color: #64748b;">Active Staff Accounts</h4>
+                            <div class="value" id="statActiveStaff" style="color: #0f172a; font-size: 1.4rem;">0</div>
                         </div>
                     </div>
                 </div>
@@ -280,6 +283,31 @@
             // Total Tickets
             document.getElementById("statTotalTickets").textContent = tickets.length;
 
+            // Phase 16 New Widgets Logic
+            let suppliers = JSON.parse(localStorage.getItem("aat_suppliers")) || [];
+            let staffList = JSON.parse(localStorage.getItem("aat_staff")) || [];
+
+            let pendingInvoiceCount = 0;
+            invoices.forEach(i => {
+                if (i.payment_status === 'Pending' || i.payment_status === 'unpaid') pendingInvoiceCount++;
+            });
+            document.getElementById('statPendingInvoices').textContent = pendingInvoiceCount + " Unpaid";
+
+            let totalSupplierPayable = 0;
+            suppliers.forEach(s => {
+                totalSupplierPayable += (s.balance_payable || 0);
+            });
+            document.getElementById('statSupplierPayables').textContent = "Rs " + totalSupplierPayable.toLocaleString();
+
+            let activeStaffCount = 0;
+            staffList.forEach(s => {
+                if (s.status === 'Active') activeStaffCount++;
+            });
+            // If empty, admin is technically always seeded as 1
+            if (activeStaffCount === 0 && staffList.length === 0) activeStaffCount = 1;
+            document.getElementById('statActiveStaff').textContent = activeStaffCount;
+
+
             // Top Route
             let routeCounts = {};
             tickets.forEach(t => {
@@ -405,6 +433,7 @@
             window.location.href = "login.html";
         }
     </script>
-<script src="js/global-search.js"></script>`n</body>
+    <script src="js/global-search.js"></script>`n
+</body>
 
 </html>
