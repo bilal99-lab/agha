@@ -77,6 +77,7 @@
                                     <th>Total Tickets</th>
                                     <th>Total Spent</th>
                                     <th>Status</th>
+                                    <th style="text-align: right;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="clientsTableBody">
@@ -118,6 +119,7 @@
                             <td>${c.total_tickets || 1} Tickets</td>
                             <td>Rs ${(c.total_spent || c.totalPurchases || 0).toLocaleString()}</td>
                             <td><span class="status-badge bg-success-light">${c.status || 'Active'}</span></td>
+                            <td style="text-align: right;"><a href="client-details.html?phone=${encodeURIComponent(c.phone)}" class="btn btn-outline" style="padding: 4px 12px; font-size: 0.8rem;">View Profile</a></td>
                         </tr>
                     `;
                 });
