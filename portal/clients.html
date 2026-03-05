@@ -24,7 +24,7 @@
             window.location.href = "login.html";
         }
     </script>
-    <script src="js/auth-guard.js"></script>`n
+    <script src="js/auth-guard.js"></script>
 </head>
 
 <body>
@@ -44,8 +44,8 @@
                 <a href="clients.html" class="nav-item active"><i class="fas fa-users"></i> Clients</a>
                 <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
                 <a href="expenses.html" class="nav-item"><i class="fas fa-receipt"></i> Expenses</a>
-                <a href="staff.html" class="nav-item"><i class="fas fa-user-shield"></i> Staff Accounts</a>`n <a
-                    href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
+                <a href="staff.html" class="nav-item"><i class="fas fa-user-shield"></i> Staff Accounts</a>
+                <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
                 <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
                     Logout</a>
             </div>
@@ -57,29 +57,73 @@
             <!-- Topbar -->
             <div class="topbar">
                 <div class="page-title">Client Directory</div>
-                const tableBody = document.getElementById("clientsTableBody");
-                let clients = JSON.parse(localStorage.getItem("aat_clients")) || [];
+                <div class="user-profile">
+                    <span class="avatar">A</span>
+                    <span>Admin User</span>
+                </div>
+            </div>
 
-                if (clients.length > 0) {
-                tableBody.innerHTML = ""; // Clear mock data
-                clients.forEach(c => {
-                tableBody.innerHTML += `
-                <tr>
-                    <td>${c.client_name || c.name}</td>
-                    <td>${c.phone}</td>
-                    <td>${c.total_tickets || 1} Tickets</td>
-                    <td>Rs ${(c.total_spent || c.totalPurchases || 0).toLocaleString()}</td>
-                    <td><span class="status-badge bg-success-light">${c.status || 'Active'}</span></td>
-                    <td style="text-align: right;"><a href="client-details.html?phone=${encodeURIComponent(c.phone)}"
-                            class="btn btn-outline" style="padding: 4px 12px; font-size: 0.8rem;">View Profile</a></td>
-                </tr>
-                `;
-                });
-                }
-                });
-                </script>
-                <script src="js/global-search.js"></script>`n
-                <script src="../assets/js/portal.js"></script>
+            <!-- Content Area -->
+            <div class="content-area" style="position: relative;">
+                <div id="clientAlert" class="alert" style="display: none; margin-bottom: 24px;"></div>
+                <div class="card">
+                    <div class="section-header">
+                        <h3>All Clients</h3>
+                        <button class="btn" id="addClientBtn"><i class="fas fa-plus"></i> Add New Client</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Total Tickets</th>
+                                    <th>Total Spent</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientsTableBody">
+                                <!-- Populated dynamically by portal.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Add Client Modal -->
+                <div id="clientModal"
+                    style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+                    <div class="card"
+                        style="width: 100%; max-width: 500px; padding: 32px; animation: fadeUpIn 0.3s ease;">
+                        <h3 style="margin-bottom: 24px;">Add New Client</h3>
+                        <form id="newClientForm">
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label class="form-label">Client Name *</label>
+                                <input type="text" id="newClientName" class="form-control" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label class="form-label">Phone Number *</label>
+                                <input type="text" id="newClientPhone" class="form-control" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 24px;">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="newClientEmail" class="form-control">
+                            </div>
+                            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                                <button type="button" id="cancelClientBtn" class="btn btn-outline">Cancel</button>
+                                <button type="submit" id="saveClientBtn" class="btn"><i class="fas fa-save"></i> Save
+                                    Client</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/global-search.js"></script>
+    <script src="../assets/js/portal.js"></script>
 </body>
 
 </html>
