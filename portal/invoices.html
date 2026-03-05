@@ -317,23 +317,24 @@
             function renderTable() {
                 if (invoices.length > 0) {
                     tableBody.innerHTML = "";
-                    let badgeClass = inv.payment_status === "Paid" ? "bg-success-light" : "bg-warning-light";
+                    invoices.reverse().forEach((inv, index) => {
+                        let badgeClass = inv.payment_status === "Paid" ? "bg-success-light" : "bg-warning-light";
 
-                    let profitVal = parseFloat(inv.profit) || 0;
-                    let profitBadge = profitVal >= 0 ? "bg-success-light" : "bg-danger-light";
+                        let profitVal = parseFloat(inv.profit) || 0;
+                        let profitBadge = profitVal >= 0 ? "bg-success-light" : "bg-danger-light";
 
-                    // Action buttons logic
-                    let actionBtns = `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px;" onclick="printInvoice('${inv.invoice_id}')" title="Print Invoice"><i class="fas fa-file-invoice"></i></button>`;
+                        // Action buttons logic
+                        let actionBtns = `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px;" onclick="printInvoice('${inv.invoice_id}')" title="Print Invoice"><i class="fas fa-file-invoice"></i></button>`;
 
-                    actionBtns += `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px; color: #2563eb; border-color: #bfdbfe;" onclick="printTicketPdf('${inv.invoice_id}')" title="Download Ticket PDF"><i class="fas fa-ticket-alt"></i></button>`;
+                        actionBtns += `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px; color: #2563eb; border-color: #bfdbfe;" onclick="printTicketPdf('${inv.invoice_id}')" title="Download Ticket PDF"><i class="fas fa-ticket-alt"></i></button>`;
 
-                    actionBtns += `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px; color: #16a34a; border-color: #bbf7d0;" onclick="sendWhatsApp('${inv.invoice_id}')" title="Send WhatsApp"><i class="fab fa-whatsapp"></i></button>`;
+                        actionBtns += `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem; margin-right: 4px; color: #16a34a; border-color: #bbf7d0;" onclick="sendWhatsApp('${inv.invoice_id}')" title="Send WhatsApp"><i class="fab fa-whatsapp"></i></button>`;
 
-                    if (inv.payment_status === "Pending") {
-                        actionBtns += `<button class="btn" style="padding: 4px 8px; font-size: 0.8rem;" onclick="markPaid('${inv.invoice_id}')"><i class="fas fa-check"></i> Pay</button>`;
-                    }
+                        if (inv.payment_status === "Pending") {
+                            actionBtns += `<button class="btn" style="padding: 4px 8px; font-size: 0.8rem;" onclick="markPaid('${inv.invoice_id}')"><i class="fas fa-check"></i> Pay</button>`;
+                        }
 
-                    tableBody.innerHTML += `
+                        tableBody.innerHTML += `
                             <tr>
                                 <td style="font-weight: 600;">${inv.invoice_id}</td>
                                 <td>${inv.date}</td>
@@ -344,100 +345,100 @@
                                 <td style="text-align: right;">${actionBtns}</td>
                             </tr>
                         `;
-                });
+                    });
                 } else {
-            tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 32px;">No invoices generated yet. Create a ticket to auto-generate an invoice.</td></tr>`;
-        }
-            }
-
-        renderTable();
-
-        window.markPaid = function (invoiceId) {
-            // Update Invoice array
-            let targetInv = invoices.find(i => i.invoice_id === invoiceId);
-            if (targetInv) {
-                targetInv.payment_status = "Paid";
-                localStorage.setItem("aat_invoices", JSON.stringify(invoices));
-
-                // Also attempt to update the corresponding Ticket if found
-                let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
-                let targetTicket = tickets.find(t => t.ticket_id === targetInv.ticket_id);
-                if (targetTicket) {
-                    targetTicket.payment_status = "Paid";
-                    targetTicket.balance = 0;
-                    targetTicket.received = targetTicket.selling_price; // Assuming full payment
-                    localStorage.setItem("aat_tickets", JSON.stringify(tickets));
+                    tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 32px;">No invoices generated yet. Create a ticket to auto-generate an invoice.</td></tr>`;
                 }
-
-                // Reload UI
-                renderTable();
             }
-        };
 
-        window.printInvoice = function (invoiceId) {
-            let targetInv = invoices.find(i => i.invoice_id === invoiceId);
-            if (targetInv) {
-                // Hide ticket, show invoice
-                document.getElementById('printTicketArea').style.display = 'none';
-                document.getElementById('printArea').style.display = 'block';
+            renderTable();
 
-                // Populate print template
-                document.getElementById('printInvoiceId').textContent = targetInv.invoice_id;
-                document.getElementById('printClientName').textContent = targetInv.client_name;
-                document.getElementById('printDate').textContent = targetInv.date;
-                document.getElementById('printRoute').textContent = 'Ref: Ticket ' + targetInv.ticket_id;
-                document.getElementById('printAmount').textContent = 'Rs ' + (targetInv.amount || 0).toLocaleString();
-                document.getElementById('printTotalAmount').textContent = 'Rs ' + (targetInv.amount || 0).toLocaleString();
+            window.markPaid = function (invoiceId) {
+                // Update Invoice array
+                let targetInv = invoices.find(i => i.invoice_id === invoiceId);
+                if (targetInv) {
+                    targetInv.payment_status = "Paid";
+                    localStorage.setItem("aat_invoices", JSON.stringify(invoices));
 
-                window.print();
-            }
-        };
+                    // Also attempt to update the corresponding Ticket if found
+                    let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
+                    let targetTicket = tickets.find(t => t.ticket_id === targetInv.ticket_id);
+                    if (targetTicket) {
+                        targetTicket.payment_status = "Paid";
+                        targetTicket.balance = 0;
+                        targetTicket.received = targetTicket.selling_price; // Assuming full payment
+                        localStorage.setItem("aat_tickets", JSON.stringify(tickets));
+                    }
 
-        window.printTicketPdf = function (invoiceId) {
-            let targetInv = invoices.find(i => i.invoice_id === invoiceId);
-            if (targetInv) {
-                // Pull full PNR/Route data from tickets array
-                let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
-                let targetTicket = tickets.find(t => t.ticket_id === targetInv.ticket_id);
-
-                let pnr = targetTicket ? (targetTicket.pnr || "N/A") : "N/A";
-                let route = targetTicket ? (targetTicket.route || targetTicket.outbound || "N/A") : "N/A";
-
-                // Hide invoice, show ticket
-                document.getElementById('printArea').style.display = 'none';
-                document.getElementById('printTicketArea').style.display = 'block';
-
-                // Populate ticket template
-                document.getElementById('tktPrintDate').textContent = targetInv.date;
-                document.getElementById('tktPrintName').textContent = targetInv.client_name;
-                document.getElementById('tktPrintPnr').textContent = pnr;
-                document.getElementById('tktPrintRoute').textContent = route;
-                document.getElementById('tktPrintAmount').textContent = 'Rs ' + (targetInv.amount || 0).toLocaleString();
-                document.getElementById('tktPrintInv').textContent = targetInv.invoice_id;
-
-                window.print();
-            }
-        };
-
-        window.sendWhatsApp = function (invoiceId) {
-            let targetInv = invoices.find(i => i.invoice_id === invoiceId);
-            if (targetInv) {
-                // Locate client phone from aat_clients mapping
-                let clients = JSON.parse(localStorage.getItem('aat_clients')) || [];
-                let targetClient = clients.find(c => c.client_name === targetInv.client_name || c.name === targetInv.client_name);
-                let phoneStr = targetClient ? targetClient.phone : "";
-
-                // Clean phone number formats (strip spaces/plus if simple wa.me requirement)
-                if (phoneStr) {
-                    phoneStr = phoneStr.replace(/\D/g, '');
+                    // Reload UI
+                    renderTable();
                 }
+            };
 
-                let message = `Hello ${targetInv.client_name},\n\nYour ticket invoice from Agha Air Travel.\n\nInvoice ID: ${targetInv.invoice_id}\nAmount: PKR ${(targetInv.amount || 0).toLocaleString()}\n\nThank you for choosing us!`;
+            window.printInvoice = function (invoiceId) {
+                let targetInv = invoices.find(i => i.invoice_id === invoiceId);
+                if (targetInv) {
+                    // Hide ticket, show invoice
+                    document.getElementById('printTicketArea').style.display = 'none';
+                    document.getElementById('printArea').style.display = 'block';
 
-                let url = `https://wa.me/${phoneStr}?text=${encodeURIComponent(message)}`;
-                window.open(url, '_blank');
-            }
-        };
+                    // Populate print template
+                    document.getElementById('printInvoiceId').textContent = targetInv.invoice_id;
+                    document.getElementById('printClientName').textContent = targetInv.client_name;
+                    document.getElementById('printDate').textContent = targetInv.date;
+                    document.getElementById('printRoute').textContent = 'Ref: Ticket ' + targetInv.ticket_id;
+                    document.getElementById('printAmount').textContent = 'Rs ' + (targetInv.amount || 0).toLocaleString();
+                    document.getElementById('printTotalAmount').textContent = 'Rs ' + (targetInv.amount || 0).toLocaleString();
+
+                    window.print();
+                }
+            };
+
+            window.printTicketPdf = function (invoiceId) {
+                let targetInv = invoices.find(i => i.invoice_id === invoiceId);
+                if (targetInv) {
+                    // Pull full PNR/Route data from tickets array
+                    let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
+                    let targetTicket = tickets.find(t => t.ticket_id === targetInv.ticket_id);
+
+                    let pnr = targetTicket ? (targetTicket.pnr || "N/A") : "N/A";
+                    let route = targetTicket ? (targetTicket.route || targetTicket.outbound || "N/A") : "N/A";
+
+                    // Hide invoice, show ticket
+                    document.getElementById('printArea').style.display = 'none';
+                    document.getElementById('printTicketArea').style.display = 'block';
+
+                    // Populate ticket template
+                    document.getElementById('tktPrintDate').textContent = targetInv.date;
+                    document.getElementById('tktPrintName').textContent = targetInv.client_name;
+                    document.getElementById('tktPrintPnr').textContent = pnr;
+                    document.getElementById('tktPrintRoute').textContent = route;
+                    document.getElementById('tktPrintAmount').textContent = 'Rs ' + (targetInv.amount || 0).toLocaleString();
+                    document.getElementById('tktPrintInv').textContent = targetInv.invoice_id;
+
+                    window.print();
+                }
+            };
+
+            window.sendWhatsApp = function (invoiceId) {
+                let targetInv = invoices.find(i => i.invoice_id === invoiceId);
+                if (targetInv) {
+                    // Locate client phone from aat_clients mapping
+                    let clients = JSON.parse(localStorage.getItem('aat_clients')) || [];
+                    let targetClient = clients.find(c => c.client_name === targetInv.client_name || c.name === targetInv.client_name);
+                    let phoneStr = targetClient ? targetClient.phone : "";
+
+                    // Clean phone number formats (strip spaces/plus if simple wa.me requirement)
+                    if (phoneStr) {
+                        phoneStr = phoneStr.replace(/\D/g, '');
+                    }
+
+                    let message = `Hello ${targetInv.client_name},\n\nYour ticket invoice from Agha Air Travel.\n\nInvoice ID: ${targetInv.invoice_id}\nAmount: PKR ${(targetInv.amount || 0).toLocaleString()}\n\nThank you for choosing us!`;
+
+                    let url = `https://wa.me/${phoneStr}?text=${encodeURIComponent(message)}`;
+                    window.open(url, '_blank');
+                }
+            };
         });
 
         function logout() {
