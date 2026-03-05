@@ -83,150 +83,91 @@
                                 <label class="form-label">Email Address * (Login ID)</label>
                                 <input type="email" id="staffEmail" class="form-control" required>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Password *</label>
-                                <input type="text" id="staffPassword" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Role *</label>
-                                <select id="staffRole" class="form-control">
-                                    <option value="Staff" selected>Staff (Read Only, Ticket Entry)</option>
-                                    <option value="Admin">Admin (Full Access)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div style="text-align: right; margin-top: 16px;">
-                            <button type="submit" class="btn"><i class="fas fa-user-plus"></i> Create Account</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <div class="section-header">
-                        <h3>Active Accounts</h3>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Staff ID</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th style="text-align: right;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="staffTableBody">
-                                <!-- Entries will load here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const tableBody = document.getElementById("staffTableBody");
-            const alertBox = document.getElementById("alertMessage");
-            const form = document.getElementById("staffForm");
-
-            function renderTable() {
-                let staffList = JSON.parse(localStorage.getItem("aat_staff")) || [];
-                tableBody.innerHTML = "";
-
-                if (staffList.length > 0) {
-                    staffList.forEach(s => {
-                        let badgeClass = s.role === 'Admin' ? 'bg-primary-light' : 'bg-success-light';
-                        if (s.status === 'Disabled') badgeClass = 'bg-danger-light';
-
-                        let displayStatus = s.status === 'Disabled' ? 'Disabled' : 'Active';
-                        let toggleBtnText = s.status === 'Disabled' ? 'Activate' : 'Disable';
-
-                        tableBody.innerHTML += `
-                            <tr>
-                                <td style="font-weight: 500;">${s.staff_id}</td>
-                                <td>${s.name}</td>
-                                <td>${s.email}</td>
-                                <td><span class="status-badge ${badgeClass}">${s.role}</span></td>
-                                <td><span class="status-badge" style="background: transparent; color: var(--text-muted);">${displayStatus}</span></td>
-                                <td style="text-align: right;">
-                                    <button class="btn btn-outline" onclick="toggleStaffStatus('${s.staff_id}')" style="padding: 4px 10px; font-size: 0.8rem;">${toggleBtnText}</button>
-                                </td>
+                            <td>${s.name}</td>
+                            <td>${s.email}</td>
+                            <td><span class="status-badge ${badgeClass}">${s.role}</span></td>
+                            <td><span class="status-badge"
+                                    style="background: transparent; color: var(--text-muted);">${displayStatus}</span>
+                            </td>
+                            <td style="text-align: right;">
+                                <button class="btn btn-outline" onclick="toggleStaffStatus('${s.staff_id}')"
+                                    style="padding: 4px 10px; font-size: 0.8rem;">${toggleBtnText}</button>
+                            </td>
                             </tr>
-                        `;
-                    });
-                } else {
-                    tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 32px;">No staff records found.</td></tr>`;
-                }
-            }
+                            `;
+                            });
+                            } else {
+                            tableBody.innerHTML = `<tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 32px;">No
+                                    staff records found.</td>
+                            </tr>`;
+                            }
+                            }
 
-            renderTable();
+                            renderTable();
 
-            form.addEventListener("submit", function (e) {
-                e.preventDefault();
-                let staffList = JSON.parse(localStorage.getItem("aat_staff")) || [];
+                            form.addEventListener("submit", function (e) {
+                            e.preventDefault();
+                            let staffList = JSON.parse(localStorage.getItem("aat_staff")) || [];
 
-                const email = document.getElementById('staffEmail').value.trim();
-                if (staffList.find(s => s.email === email)) {
-                    showAlert('Error: This email already exists in the system.', 'danger');
-                    return;
-                }
+                            const email = document.getElementById('staffEmail').value.trim();
+                            if (staffList.find(s => s.email === email)) {
+                            showAlert('Error: This email already exists in the system.', 'danger');
+                            return;
+                            }
 
-                const newStaff = {
-                    staff_id: "STAFF-" + (staffList.length + 1),
-                    name: document.getElementById('staffName').value.trim(),
-                    email: email,
-                    password: document.getElementById('staffPassword').value.trim(),
-                    role: document.getElementById('staffRole').value,
-                    status: 'Active'
-                };
+                            const newStaff = {
+                            staff_id: "STAFF-" + (staffList.length + 1),
+                            name: document.getElementById('staffName').value.trim(),
+                            email: email,
+                            password: document.getElementById('staffPassword').value.trim(),
+                            role: document.getElementById('staffRole').value,
+                            status: 'Active'
+                            };
 
-                staffList.push(newStaff);
-                localStorage.setItem("aat_staff", JSON.stringify(staffList));
+                            staffList.push(newStaff);
+                            localStorage.setItem("aat_staff", JSON.stringify(staffList));
 
-                renderTable();
-                form.reset();
-                showAlert('New staff account successfully created.', 'success');
-            });
+                            renderTable();
+                            form.reset();
+                            showAlert('New staff account successfully created.', 'success');
+                            });
 
-            window.toggleStaffStatus = function (staffId) {
-                let staffList = JSON.parse(localStorage.getItem("aat_staff")) || [];
-                let staffIndex = staffList.findIndex(s => s.staff_id === staffId);
+                            window.toggleStaffStatus = function (staffId) {
+                            let staffList = JSON.parse(localStorage.getItem("aat_staff")) || [];
+                            let staffIndex = staffList.findIndex(s => s.staff_id === staffId);
 
-                if (staffIndex !== -1) {
-                    // Prevent disabling self or only admin
-                    if (staffList[staffIndex].email === 'admin@aat.com') {
-                        showAlert('Cannot disable the primary system administrator.', 'danger');
-                        return;
-                    }
+                            if (staffIndex !== -1) {
+                            // Prevent disabling self or only admin
+                            if (staffList[staffIndex].email === 'admin@aat.com') {
+                            showAlert('Cannot disable the primary system administrator.', 'danger');
+                            return;
+                            }
 
-                    staffList[staffIndex].status = staffList[staffIndex].status === 'Disabled' ? 'Active' : 'Disabled';
-                    localStorage.setItem("aat_staff", JSON.stringify(staffList));
-                    renderTable();
-                    showAlert('Staff account status toggled.', 'success');
-                }
-            }
+                            staffList[staffIndex].status = staffList[staffIndex].status === 'Disabled' ? 'Active' :
+                            'Disabled';
+                            localStorage.setItem("aat_staff", JSON.stringify(staffList));
+                            renderTable();
+                            showAlert('Staff account status toggled.', 'success');
+                            }
+                            }
 
-            function showAlert(msg, type) {
-                alertBox.textContent = msg;
-                alertBox.className = `alert alert-${type}`;
-                alertBox.style.display = 'block';
-                setTimeout(() => { alertBox.style.display = 'none'; }, 3000);
-            }
-        });
+                            function showAlert(msg, type) {
+                            alertBox.textContent = msg;
+                            alertBox.className = `alert alert-${type}`;
+                            alertBox.style.display = 'block';
+                            setTimeout(() => { alertBox.style.display = 'none'; }, 3000);
+                            }
+                            });
 
-        function logout() {
-            localStorage.removeItem("portal_logged_in");
-            window.location.href = "login.html";
-        }
-    </script>
-    <script src="js/global-search.js"></script>`n
+                            function logout() {
+                            localStorage.removeItem("portal_logged_in");
+                            window.location.href = "login.html";
+                            }
+                            </script>
+                            <script src="js/global-search.js"></script>`n
 
-<script src="../assets/js/portal.js"></script>
+                            <script src="../assets/js/portal.js"></script>
 </body>
 
 </html>
