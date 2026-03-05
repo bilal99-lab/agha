@@ -53,24 +53,54 @@
         document.addEventListener("DOMContentLoaded", () => {
             const loginForm = document.getElementById("loginForm");
             const loginError = document.getElementById("loginError");
-
             // Redirect if already logged in
             if (localStorage.getItem("portal_logged_in") === "true") {
                 window.location.href = "dashboard.html";
             }
 
-            loginForm.addEventListener("submit", (e) => {
+            document.getElementById('loginForm').addEventListener('submit', function (e) {
                 e.preventDefault();
+                const email = document.getElementById('email').value.trim();
+                const pass = document.getElementById('password').value.trim();
+                const alertBox = document.getElementById('alertMsg');
 
-                const email = document.getElementById("email").value;
-                const password = document.getElementById("password").value;
+                // Initialize Staff if empty
+                let staffList = JSON.parse(localStorage.getItem('aat_staff')) || [];
+                if (staffList.length === 0) {
+                    staffList.push({
+                        staff_id: 'STAFF-1',
+                        name: 'System Admin',
+                        email: 'admin@aat.com',
+                        role: 'Admin',
+                        password: '123'
+                    });
+                    localStorage.setItem('aat_staff', JSON.stringify(staffList));
+                }
 
-                if (email === "admin@aat.com" && password === "123456") {
-                    localStorage.setItem("portal_logged_in", "true");
-                    window.location.href = "dashboard.html";
+                const user = staffList.find(s => s.email === email && s.password === pass);
+
+                if (user) {
+                    if (user.status === 'Disabled') {
+                        alertBox.textContent = 'Account depends on admin approval. Disabled.';
+                        alertBox.style.display = 'block';
+                        return;
+                    }
+
+                    // Login Success
+                    localStorage.setItem('portal_logged_in', 'true');
+                    localStorage.setItem('portal_logged_in_user', JSON.stringify(user));
+
+                    // Animate success
+                    alertBox.className = 'alert alert-success';
+                    alertBox.textContent = 'Login successful. Redirecting...';
+                    alertBox.style.display = 'block';
+
+                    setTimeout(() => {
+                        window.location.href = "dashboard.html";
+                    }, 800);
                 } else {
-                    loginError.textContent = "Invalid email or password.";
-                    loginError.style.display = "block";
+                    alertBox.textContent = 'Invalid email or password.';
+                    alertBox.style.display = 'block';
                 }
             });
         });
