@@ -409,6 +409,87 @@ document.addEventListener('submit', function (e) {
         e.target.reset();
         showAlert("Umrah package recorded successfully.", "success");
     }
+
+    // ---- NEW TICKET FORM ----
+    if (e.target.id === 'ticketForm') {
+        e.preventDefault();
+
+        let costVal = parseFloat(document.getElementById('costPrice').value) || 0;
+        let sellingVal = parseFloat(document.getElementById('sellingPrice').value) || 0;
+        let receivedVal = parseFloat(document.getElementById('amountReceived').value) || 0;
+        let paymentStatus = document.getElementById('paymentStatus').value;
+
+        const newTicket = {
+            ticket_id: "#TKT-" + Math.floor(1000 + Math.random() * 9000),
+            date: new Date().toISOString().split('T')[0],
+            client_name: document.getElementById('clientName').value.trim(),
+            clientPhone: document.getElementById('clientPhone').value.trim(),
+            clientPassport: document.getElementById('clientPassport').value.trim(),
+            pnr: document.getElementById('pnr').value.trim(),
+            airline: document.getElementById('airlineName').value.trim(),
+            supplier_name: document.getElementById('supplierName')?.value?.trim() || '',
+            outbound: document.getElementById('outboundFlight')?.value?.trim() || '',
+            inbound: document.getElementById('inboundFlight')?.value?.trim() || '',
+            route: document.getElementById('flightRoute').value.trim(),
+            cost_price: costVal,
+            selling_price: sellingVal,
+            profit: parseFloat(document.getElementById('profitAmount')?.value) || (sellingVal - costVal),
+            received: receivedVal,
+            payment_status: paymentStatus === 'Paid' ? 'Paid' : 'Pending',
+            balance: parseFloat(document.getElementById('balanceAmount')?.value) || (sellingVal - receivedVal)
+        };
+
+        Storage.add('aat_tickets', newTicket);
+
+        // Auto Generate Invoice
+        let currentYear = new Date().getFullYear();
+        let invoices = Storage.get('aat_invoices');
+        let yearInvoices = invoices.filter(i => i.invoice_id && i.invoice_id.includes(`INV-${currentYear}-`));
+        let lastInvNumber = yearInvoices.length > 0 ? (parseInt(yearInvoices[yearInvoices.length - 1].invoice_id.split('-')[2]) || 0) : 0;
+
+        const newInvoice = {
+            invoice_id: `INV-${currentYear}-${String(lastInvNumber + 1).padStart(4, '0')}`,
+            ticket_id: newTicket.ticket_id,
+            client_name: newTicket.client_name,
+            date: newTicket.date,
+            amount: newTicket.selling_price,
+            cost_price: newTicket.cost_price,
+            profit: newTicket.profit,
+            payment_status: newTicket.payment_status
+        };
+        Storage.add('aat_invoices', newInvoice);
+
+        // Update Client Insights
+        let clients = Storage.get('aat_clients');
+        let existingClient = clients.find(c => c.phone === newTicket.clientPhone || c.client_name === newTicket.client_name);
+        if (existingClient) {
+            Storage.update('aat_clients', c => c.phone === newTicket.clientPhone || c.client_name === newTicket.client_name, c => {
+                c.total_spent = (parseFloat(c.total_spent) || 0) + newTicket.selling_price;
+                c.total_tickets = (parseInt(c.total_tickets) || 0) + 1;
+                c.total_profit_generated = (parseFloat(c.total_profit_generated) || 0) + newTicket.profit;
+                c.last_travel_date = newTicket.date;
+                return c;
+            });
+        } else {
+            Storage.add('aat_clients', {
+                client_name: newTicket.client_name,
+                phone: newTicket.clientPhone,
+                passport: newTicket.clientPassport,
+                total_spent: newTicket.selling_price,
+                total_tickets: 1,
+                total_profit_generated: newTicket.profit,
+                last_travel_date: newTicket.date,
+                status: 'Active'
+            });
+        }
+
+        showAlert('Ticket generated and saved successfully!', 'success');
+        e.target.reset();
+
+        // Reset read only fields
+        if (document.getElementById('profitAmount')) document.getElementById('profitAmount').value = '';
+        if (document.getElementById('balanceAmount')) document.getElementById('balanceAmount').value = '';
+    }
 });
 
 // ----------------------------------------------------
