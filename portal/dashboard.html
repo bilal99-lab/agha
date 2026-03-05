@@ -95,6 +95,29 @@
                     </div>
                 </div>
 
+                <!-- Intelligence Stats Grid -->
+                <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 24px;">
+                    <div class="card stat-card" style="border-left: 4px solid #3b82f6;">
+                        <div class="stat-info">
+                            <h4 style="color: #64748b;">Total Tickets Sold</h4>
+                            <div class="value" id="statTotalTickets" style="color: #0f172a;">0</div>
+                        </div>
+                    </div>
+                    <div class="card stat-card" style="border-left: 4px solid #10b981;">
+                        <div class="stat-info">
+                            <h4 style="color: #64748b;">Top Client<span id="statTopClientSpend"
+                                    style="font-size:0.8rem; margin-left: 8px; color: #10b981;"></span></h4>
+                            <div class="value" id="statTopClient" style="color: #0f172a; font-size: 1.4rem;">-</div>
+                        </div>
+                    </div>
+                    <div class="card stat-card" style="border-left: 4px solid #f59e0b;">
+                        <div class="stat-info">
+                            <h4 style="color: #64748b;">Top Route</h4>
+                            <div class="value" id="statTopRoute" style="color: #0f172a; font-size: 1.4rem;">-</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Main Row -->
                 <div class="dashboard-row">
                     <div class="card" style="padding: 0;">
@@ -227,6 +250,28 @@
             // keep the custom purple color if positive, otherwise red
             let netProfitColor = netProfit >= 0 ? "#8b5cf6" : "var(--danger)";
             document.getElementById("statNetProfit").innerHTML = `<span class="status-badge ${netProfitBadge}" style="color: ${netProfitColor}; font-size: 1.1rem; padding: 4px 12px;">Rs ${netProfit.toLocaleString()}</span>`;
+
+            // Calculate Dashboard Intelligence Highlights
+            let clients = JSON.parse(localStorage.getItem("aat_clients")) || [];
+
+            // Total Tickets
+            document.getElementById("statTotalTickets").textContent = tickets.length;
+
+            // Top Route
+            let routeCounts = {};
+            tickets.forEach(t => {
+                let r = t.route || t.outbound || "Unknown Route";
+                routeCounts[r] = (routeCounts[r] || 0) + 1;
+            });
+            let sortedRoutes = Object.keys(routeCounts).sort((a, b) => routeCounts[b] - routeCounts[a]);
+            document.getElementById("statTopRoute").textContent = sortedRoutes.length > 0 ? sortedRoutes[0] : "-";
+
+            // Top Client
+            let sortedClients = [...clients].sort((a, b) => (b.total_spent || 0) - (a.total_spent || 0));
+            if (sortedClients.length > 0) {
+                document.getElementById("statTopClient").textContent = sortedClients[0].client_name || sortedClients[0].name || "-";
+                document.getElementById("statTopClientSpend").textContent = "(Rs " + (sortedClients[0].total_spent || 0).toLocaleString() + ")";
+            }
 
             if (tickets.length > 0) {
                 tableBody.innerHTML = ""; // Clear mock data

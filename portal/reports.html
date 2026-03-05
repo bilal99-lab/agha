@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expenses - AAT Portal</title>
+    <title>Reports - AAT Portal</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,8 +37,9 @@
                 <a href="umrah-entry.html" class="nav-item"><i class="fas fa-kaaba"></i> Umrah Entry</a>
                 <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
                 <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
-                <a href="expenses.html" class="nav-item active"><i class="fas fa-receipt"></i> Expenses</a>
-                <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
+                <a href="suppliers.html" class="nav-item"><i class="fas fa-building"></i> Suppliers</a>
+                <a href="expenses.html" class="nav-item"><i class="fas fa-receipt"></i> Expenses</a>
+                <a href="reports.html" class="nav-item active"><i class="fas fa-chart-line"></i> Reports</a>
                 <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
                     Logout</a>
             </div>
@@ -49,7 +50,7 @@
 
             <!-- Topbar -->
             <div class="topbar">
-                <div class="page-title">Expense Management</div>
+                <div class="page-title">Automated Reports</div>
                 <div class="user-profile">
                     <span class="avatar">A</span>
                     <span>Admin User</span>
@@ -58,146 +59,183 @@
 
             <!-- Content Area -->
             <div class="content-area">
-                <div class="card">
+
+                <div class="card" style="margin-bottom: 24px;">
                     <div class="section-header">
-                        <h3>Monthly Office Expenses</h3>
+                        <h3>Generate Monthly Report</h3>
                     </div>
+                    <div class="form-grid" style="align-items: end;">
+                        <div class="form-group">
+                            <label class="form-label">Select Month</label>
+                            <input type="month" id="reportMonth" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn" id="btnGenerate" style="width: 100%;"><i class="fas fa-sync"></i>
+                                Generate Analytics</button>
+                        </div>
+                    </div>
+                </div>
 
-                    <div id="alertMessage" class="alert"></div>
+                <!-- Report Results Wrapper -->
+                <div id="reportResults" style="display: none;">
 
-                    <form id="expenseForm"
-                        style="margin-bottom: 30px; background: #f8fafc; padding: 24px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label class="form-label">Expense Title *</label>
-                                <input type="text" id="expTitle" class="form-control" required
-                                    placeholder="e.g. Electricity Bill">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Amount (Rs) *</label>
-                                <input type="number" id="expAmount" class="form-control" required min="1">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Category *</label>
-                                <select id="expCategory" class="form-control" required>
-                                    <option value="Office Rent">Office Rent</option>
-                                    <option value="Salary">Salary</option>
-                                    <option value="Marketing">Marketing</option>
-                                    <option value="Miscellaneous" selected>Miscellaneous</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Date *</label>
-                                <input type="date" id="expDate" class="form-control" required>
+                    <div class="stats-grid" style="margin-bottom: 24px;">
+                        <div class="card stat-card">
+                            <div class="stat-info">
+                                <h4>Monthly Sales</h4>
+                                <div class="value" id="repSales">Rs 0</div>
                             </div>
                         </div>
-                        <div style="margin-top: 16px; text-align: right;">
-                            <button type="submit" class="btn" id="btnSaveExpense"><i class="fas fa-plus"></i> Add
-                                Expense</button>
+                        <div class="card stat-card c-success">
+                            <div class="stat-info">
+                                <h4>Gross Profit</h4>
+                                <div class="value" id="repProfit">Rs 0</div>
+                            </div>
                         </div>
-                    </form>
-
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Expense Title</th>
-                                    <th>Category</th>
-                                    <th>Amount (Rs)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="expenseTableBody">
-                                <!-- Populated dynamically -->
-                            </tbody>
-                        </table>
+                        <div class="card stat-card c-danger">
+                            <div class="stat-info">
+                                <h4>Total Expenses</h4>
+                                <div class="value" id="repExpenses">Rs 0</div>
+                            </div>
+                        </div>
+                        <div class="card stat-card" style="border-left: 4px solid #8b5cf6;">
+                            <div class="stat-info">
+                                <h4 style="color: #64748b;">Net Profit</h4>
+                                <div class="value" id="repNetProfit" style="color: #8b5cf6;">Rs 0</div>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="form-grid">
+                        <!-- Top Routes -->
+                        <div class="card">
+                            <div class="section-header" style="margin-bottom: 16px;">
+                                <h3>Top Routes Sold</h3>
+                            </div>
+                            <div id="repRoutesList">
+                                <!-- injected -->
+                            </div>
+                        </div>
+
+                        <!-- Top Clients -->
+                        <div class="card">
+                            <div class="section-header" style="margin-bottom: 16px;">
+                                <h3>Top Clients (By Revenue)</h3>
+                            </div>
+                            <div id="repClientsList">
+                                <!-- injected -->
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Set default date to today
-            document.getElementById('expDate').valueAsDate = new Date();
+            // Default to current month
+            document.getElementById('reportMonth').value = new Date().toISOString().slice(0, 7);
 
-            const form = document.getElementById("expenseForm");
-            const tableBody = document.getElementById("expenseTableBody");
-            const alertMessage = document.getElementById("alertMessage");
+            document.getElementById('btnGenerate').addEventListener('click', generateReport);
 
-            let expenses = JSON.parse(localStorage.getItem("aat_expenses")) || [];
+            function generateReport() {
+                const monthVal = document.getElementById('reportMonth').value;
+                if (!monthVal) return;
 
-            function renderTable() {
-                if (expenses.length > 0) {
-                    tableBody.innerHTML = "";
+                const selectedDate = new Date(monthVal + "-01");
+                const shortMonth = selectedDate.toLocaleDateString('en-GB', { month: 'short' }); // "Nov"
+                const yyyy_mm = monthVal; // "YYYY-MM"
 
-                    // Sort by date descending
-                    const sortedExps = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
+                let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
+                let invoices = JSON.parse(localStorage.getItem("aat_invoices")) || [];
+                let expenses = JSON.parse(localStorage.getItem("aat_expenses")) || [];
 
-                    sortedExps.forEach(exp => {
-                        let catColor = "#64748b"; // Misc Default
-                        if (exp.category === 'Office Rent') catColor = '#2563eb';
-                        if (exp.category === 'Salary') catColor = '#8b5cf6';
-                        if (exp.category === 'Marketing') catColor = '#f59e0b';
+                let mSales = 0;
+                let mProfit = 0;
+                let mExpenses = 0;
 
-                        let badgeHtml = `<span style="background: ${catColor}15; color: ${catColor}; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">${exp.category}</span>`;
+                // Filter Tickets for Top Routes & Clients
+                let periodTickets = tickets.filter(t => t.date && t.date.includes(shortMonth));
 
-                        tableBody.innerHTML += `
-                            <tr>
-                                <td>${formatDisplayDate(exp.date)}</td>
-                                <td style="font-weight: 500;">${exp.title}</td>
-                                <td>${badgeHtml}</td>
-                                <td style="color: var(--danger); font-weight: 600;">Rs ${parseFloat(exp.amount).toLocaleString()}</td>
-                            </tr>
-                        `;
+                // Calculate Sales & Profit from Invoices for structured accuracy
+                invoices.forEach(inv => {
+                    if (inv.date && inv.date.includes(shortMonth)) {
+                        mSales += parseFloat(inv.amount || inv.selling_price || 0);
+                        mProfit += parseFloat(inv.profit || 0);
+                    }
+                });
+
+                expenses.forEach(exp => {
+                    if (exp.date && exp.date.startsWith(yyyy_mm)) {
+                        mExpenses += parseFloat(exp.amount || 0);
+                    }
+                });
+
+                let netProfit = mProfit - mExpenses;
+
+                // Render Financials
+                document.getElementById('repSales').textContent = "Rs " + mSales.toLocaleString();
+
+                document.getElementById('repProfit').innerHTML = `<span class="status-badge ${mProfit >= 0 ? 'bg-success-light' : 'bg-danger-light'}" style="font-size: 1.1rem; padding: 4px 12px;">Rs ${mProfit.toLocaleString()}</span>`;
+
+                document.getElementById('repExpenses').textContent = "Rs " + mExpenses.toLocaleString();
+
+                document.getElementById('repNetProfit').innerHTML = `<span class="status-badge ${netProfit >= 0 ? 'bg-success-light' : 'bg-danger-light'}" style="color: ${netProfit >= 0 ? '#8b5cf6' : 'var(--danger)'}; font-size: 1.1rem; padding: 4px 12px;">Rs ${netProfit.toLocaleString()}</span>`;
+
+                // Calculate Top Routes
+                let routeCounts = {};
+                periodTickets.forEach(t => {
+                    let route = t.route || t.outbound || "Unknown Route";
+                    routeCounts[route] = (routeCounts[route] || 0) + 1;
+                });
+
+                let sortedRoutes = Object.keys(routeCounts).map(r => ({ route: r, count: routeCounts[r] })).sort((a, b) => b.count - a.count).slice(0, 5);
+
+                let routesHtml = '';
+                if (sortedRoutes.length > 0) {
+                    sortedRoutes.forEach((r, idx) => {
+                        routesHtml += `<div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                            <div style="font-weight: 500; color: #0f172a;"><span style="color: #94a3b8; margin-right: 8px;">#${idx + 1}</span> ${r.route}</div>
+                            <div style="font-weight: 600; color: #2563eb;">${r.count} <span style="font-size: 0.8rem; font-weight: 500; color: #64748b;">Sold</span></div>
+                        </div>`;
                     });
                 } else {
-                    tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 32px;">No expenses recorded yet.</td></tr>`;
+                    routesHtml = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">No routes sold this month.</div>`;
                 }
+                document.getElementById('repRoutesList').innerHTML = routesHtml;
+
+                // Calculate Top Clients (by invoice revenue this month)
+                let clientRevenue = {};
+                invoices.forEach(inv => {
+                    if (inv.date && inv.date.includes(shortMonth)) {
+                        let cName = inv.client_name || "Unknown Client";
+                        clientRevenue[cName] = (clientRevenue[cName] || 0) + parseFloat(inv.amount || inv.selling_price || 0);
+                    }
+                });
+
+                let sortedClients = Object.keys(clientRevenue).map(c => ({ client: c, revenue: clientRevenue[c] })).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+
+                let clientsHtml = '';
+                if (sortedClients.length > 0) {
+                    sortedClients.forEach((c, idx) => {
+                        clientsHtml += `<div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                            <div style="font-weight: 500; color: #0f172a;"><span style="color: #94a3b8; margin-right: 8px;">#${idx + 1}</span> ${c.client}</div>
+                            <div style="font-weight: 600; color: #16a34a;">Rs ${c.revenue.toLocaleString()}</div>
+                        </div>`;
+                    });
+                } else {
+                    clientsHtml = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">No clients served this month.</div>`;
+                }
+                document.getElementById('repClientsList').innerHTML = clientsHtml;
+
+                // Display Results
+                document.getElementById('reportResults').style.display = 'block';
             }
 
-            renderTable();
-
-            form.addEventListener("submit", function (e) {
-                e.preventDefault();
-
-                const newExp = {
-                    id: "EXP-" + Date.now(),
-                    title: document.getElementById('expTitle').value,
-                    amount: parseFloat(document.getElementById('expAmount').value) || 0,
-                    category: document.getElementById('expCategory').value,
-                    date: document.getElementById('expDate').value // YYYY-MM-DD format from input=date
-                };
-
-                expenses.push(newExp);
-                localStorage.setItem("aat_expenses", JSON.stringify(expenses));
-
-                renderTable();
-
-                // Reset form slightly
-                document.getElementById('expTitle').value = '';
-                document.getElementById('expAmount').value = '';
-                document.getElementById('expTitle').focus();
-
-                showAlert('Expense successfully recorded.', 'success');
-            });
-
-            function showAlert(msg, type) {
-                alertMessage.textContent = msg;
-                alertMessage.className = `alert alert-${type}`;
-                alertMessage.style.display = 'block';
-                setTimeout(() => {
-                    alertMessage.style.display = 'none';
-                }, 3000);
-            }
-
-            function formatDisplayDate(dateString) {
-                if (!dateString) return "-";
-                const d = new Date(dateString);
-                return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-            }
+            // Auto generate initial
+            generateReport();
         });
 
         function logout() {
