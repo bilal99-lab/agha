@@ -19,7 +19,7 @@
             window.location.href = "login.html";
         }
     </script>
-    <script src="js/auth-guard.js"></script>`n
+    <script src="js/auth-guard.js"></script>
 </head>
 
 <body data-page="supplier-payments">
@@ -125,113 +125,8 @@
 
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const tableBody = document.getElementById("suppliersTableBody");
-            const selectDropdown = document.getElementById("supplierSelect");
-            const paymentForm = document.getElementById("paymentForm");
-            const alertBox = document.getElementById("alertMessage");
-
-            // Set default date
-            document.getElementById('paymentDate').valueAsDate = new Date();
-
-            function renderData() {
-                let suppliers = JSON.parse(localStorage.getItem("aat_suppliers")) || [];
-
-                tableBody.innerHTML = "";
-                selectDropdown.innerHTML = '<option value="" disabled selected>Select Supplier</option>';
-
-                if (suppliers.length > 0) {
-                    suppliers.sort((a, b) => (b.balance_payable || 0) - (a.balance_payable || 0)).forEach(s => {
-                        let totalBilled = s.total_cost || 0;
-                        let balanceRemaining = s.balance_payable || 0;
-
-                        // Default compatibility mapping if amount_paid is natively missing
-                        let amountPaid = s.amount_paid !== undefined ? s.amount_paid : (totalBilled - balanceRemaining);
-
-                        // Table row
-                        tableBody.innerHTML += `
-                            <tr>
-                                <td style="font-weight: 600;">${s.supplier_name}</td>
-                                <td>${s.airline || '-'}</td>
-                                <td>Rs ${totalBilled.toLocaleString()}</td>
-                                <td style="color: var(--success); font-weight: 600;">Rs ${amountPaid.toLocaleString()}</td>
-                                <td style="color: var(--danger); font-weight: 600;">Rs ${balanceRemaining.toLocaleString()}</td>
-                            </tr>
-                        `;
-
-                        // Dropdown option (Only include if they owe money)
-                        if (balanceRemaining > 0) {
-                            selectDropdown.innerHTML += `<option value="${s.supplier_name}">${s.supplier_name} (Owes: Rs ${balanceRemaining.toLocaleString()})</option>`;
-                        }
-                    });
-                } else {
-                    tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px;">No suppliers recorded yet.</td></tr>`;
-                    selectDropdown.innerHTML = '<option value="" disabled>No suppliers found</option>';
-                }
-            }
-
-            renderData();
-
-            paymentForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                let suppliers = JSON.parse(localStorage.getItem("aat_suppliers")) || [];
-                let ledger = JSON.parse(localStorage.getItem("aat_ledger")) || [];
-
-                let selectedName = selectDropdown.value;
-                let amount = parseFloat(document.getElementById('paymentAmount').value);
-                let date = document.getElementById('paymentDate').value;
-                let note = document.getElementById('paymentNote').value;
-
-                let supIndex = suppliers.findIndex(s => s.supplier_name === selectedName);
-                if (supIndex !== -1) {
-                    let s = suppliers[supIndex];
-                    let currentBalance = s.balance_payable || 0;
-
-                    if (amount > currentBalance) {
-                        alertBox.textContent = `Error: Payment amount (Rs ${amount}) cannot exceed the balance due (Rs ${currentBalance}).`;
-                        alertBox.className = 'alert alert-danger';
-                        alertBox.style.display = 'block';
-                        return;
-                    }
-
-                    // Update supplier
-                    s.balance_payable = currentBalance - amount;
-                    s.amount_paid = (s.amount_paid || (s.total_cost - currentBalance)) + amount;
-                    localStorage.setItem("aat_suppliers", JSON.stringify(suppliers));
-
-                    // Add to ledger
-                    ledger.push({
-                        entry_id: "PAY-" + Date.now(),
-                        type: "Supplier Payment",
-                        amount: amount,
-                        client_name: selectedName,
-                        description: note || "Supplier Payment",
-                        date: date
-                    });
-                    localStorage.setItem("aat_ledger", JSON.stringify(ledger));
-
-                    // Reset
-                    paymentForm.reset();
-                    document.getElementById('paymentDate').valueAsDate = new Date();
-                    renderData();
-
-                    alertBox.textContent = `Payment of Rs ${amount.toLocaleString()} successfully recorded for ${selectedName}.`;
-                    alertBox.className = 'alert alert-success';
-                    alertBox.style.display = 'block';
-                    setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
-                }
-            });
-        });
-
-        function logout() {
-            localStorage.removeItem("portal_logged_in");
-            window.location.href = "login.html";
-        }
-    </script>
-    <script src="js/global-search.js"></script>`n
-
-<script src="../assets/js/portal.js"></script>
+    <script src="js/global-search.js"></script>
+    <script src="../assets/js/portal.js"></script>
 </body>
 
 </html>

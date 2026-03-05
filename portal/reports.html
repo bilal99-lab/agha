@@ -19,7 +19,8 @@
             window.location.href = "login.html";
         }
     </script>
-<script src="js/auth-guard.js"></script>`n</head>
+    <script src="js/auth-guard.js"></script>
+</head>
 
 <body data-page="reports">
 
@@ -133,118 +134,8 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Default to current month
-            document.getElementById('reportMonth').value = new Date().toISOString().slice(0, 7);
-
-            document.getElementById('btnGenerate').addEventListener('click', generateReport);
-
-            function generateReport() {
-                const monthVal = document.getElementById('reportMonth').value;
-                if (!monthVal) return;
-
-                const selectedDate = new Date(monthVal + "-01");
-                const shortMonth = selectedDate.toLocaleDateString('en-GB', { month: 'short' }); // "Nov"
-                const yyyy_mm = monthVal; // "YYYY-MM"
-
-                let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
-                let invoices = JSON.parse(localStorage.getItem("aat_invoices")) || [];
-                let expenses = JSON.parse(localStorage.getItem("aat_expenses")) || [];
-
-                let mSales = 0;
-                let mProfit = 0;
-                let mExpenses = 0;
-
-                // Filter Tickets for Top Routes & Clients
-                let periodTickets = tickets.filter(t => t.date && t.date.includes(shortMonth));
-
-                // Calculate Sales & Profit from Invoices for structured accuracy
-                invoices.forEach(inv => {
-                    if (inv.date && inv.date.includes(shortMonth)) {
-                        mSales += parseFloat(inv.amount || inv.selling_price || 0);
-                        mProfit += parseFloat(inv.profit || 0);
-                    }
-                });
-
-                expenses.forEach(exp => {
-                    if (exp.date && exp.date.startsWith(yyyy_mm)) {
-                        mExpenses += parseFloat(exp.amount || 0);
-                    }
-                });
-
-                let netProfit = mProfit - mExpenses;
-
-                // Render Financials
-                document.getElementById('repSales').textContent = "Rs " + mSales.toLocaleString();
-
-                document.getElementById('repProfit').innerHTML = `<span class="status-badge ${mProfit >= 0 ? 'bg-success-light' : 'bg-danger-light'}" style="font-size: 1.1rem; padding: 4px 12px;">Rs ${mProfit.toLocaleString()}</span>`;
-
-                document.getElementById('repExpenses').textContent = "Rs " + mExpenses.toLocaleString();
-
-                document.getElementById('repNetProfit').innerHTML = `<span class="status-badge ${netProfit >= 0 ? 'bg-success-light' : 'bg-danger-light'}" style="color: ${netProfit >= 0 ? '#8b5cf6' : 'var(--danger)'}; font-size: 1.1rem; padding: 4px 12px;">Rs ${netProfit.toLocaleString()}</span>`;
-
-                // Calculate Top Routes
-                let routeCounts = {};
-                periodTickets.forEach(t => {
-                    let route = t.route || t.outbound || "Unknown Route";
-                    routeCounts[route] = (routeCounts[route] || 0) + 1;
-                });
-
-                let sortedRoutes = Object.keys(routeCounts).map(r => ({ route: r, count: routeCounts[r] })).sort((a, b) => b.count - a.count).slice(0, 5);
-
-                let routesHtml = '';
-                if (sortedRoutes.length > 0) {
-                    sortedRoutes.forEach((r, idx) => {
-                        routesHtml += `<div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
-                            <div style="font-weight: 500; color: #0f172a;"><span style="color: #94a3b8; margin-right: 8px;">#${idx + 1}</span> ${r.route}</div>
-                            <div style="font-weight: 600; color: #2563eb;">${r.count} <span style="font-size: 0.8rem; font-weight: 500; color: #64748b;">Sold</span></div>
-                        </div>`;
-                    });
-                } else {
-                    routesHtml = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">No routes sold this month.</div>`;
-                }
-                document.getElementById('repRoutesList').innerHTML = routesHtml;
-
-                // Calculate Top Clients (by invoice revenue this month)
-                let clientRevenue = {};
-                invoices.forEach(inv => {
-                    if (inv.date && inv.date.includes(shortMonth)) {
-                        let cName = inv.client_name || "Unknown Client";
-                        clientRevenue[cName] = (clientRevenue[cName] || 0) + parseFloat(inv.amount || inv.selling_price || 0);
-                    }
-                });
-
-                let sortedClients = Object.keys(clientRevenue).map(c => ({ client: c, revenue: clientRevenue[c] })).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
-
-                let clientsHtml = '';
-                if (sortedClients.length > 0) {
-                    sortedClients.forEach((c, idx) => {
-                        clientsHtml += `<div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
-                            <div style="font-weight: 500; color: #0f172a;"><span style="color: #94a3b8; margin-right: 8px;">#${idx + 1}</span> ${c.client}</div>
-                            <div style="font-weight: 600; color: #16a34a;">Rs ${c.revenue.toLocaleString()}</div>
-                        </div>`;
-                    });
-                } else {
-                    clientsHtml = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">No clients served this month.</div>`;
-                }
-                document.getElementById('repClientsList').innerHTML = clientsHtml;
-
-                // Display Results
-                document.getElementById('reportResults').style.display = 'block';
-            }
-
-            // Auto generate initial
-            generateReport();
-        });
-
-        function logout() {
-            localStorage.removeItem("portal_logged_in");
-            window.location.href = "login.html";
-        }
-    </script>
-<script src="js/global-search.js"></script>`n
-<script src="../assets/js/portal.js"></script>
+    <script src="js/global-search.js"></script>
+    <script src="../assets/js/portal.js"></script>
 </body>
 
 </html>
