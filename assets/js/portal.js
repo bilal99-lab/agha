@@ -142,6 +142,61 @@ const PortalModules = {
         } else if (recentBody) {
             recentBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">No recent activity.</td></tr>`;
         }
+
+        // Initialize Charts
+        const initCharts = (currentProfit, currentNetProfit) => {
+            const months = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'];
+
+            const ctxSales = document.getElementById('salesChart');
+            if (!ctxSales) return;
+
+            new Chart(ctxSales.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Monthly Ticket Sales (PKR)',
+                        data: [1200000, 1500000, 1100000, 1800000, 2100000, 1950000, 2400000],
+                        backgroundColor: '#2563eb',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, title: { display: true, text: '6-Month Sales Volume', align: 'start', padding: 20 } },
+                    scales: { y: { beginAtZero: true, border: { dash: [4, 4] }, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                }
+            });
+
+            const ctxProfit = document.getElementById('profitChart');
+            if (!ctxProfit) return;
+
+            new Chart(ctxProfit.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Gross Profit',
+                            data: [150000, 180000, 140000, 220000, 250000, 210000, currentProfit > 0 ? currentProfit : 280000],
+                            borderColor: '#10b981', backgroundColor: '#10b98115', borderWidth: 3, fill: true, tension: 0.4
+                        },
+                        {
+                            label: 'Net Profit',
+                            data: [100000, 120000, 90000, 160000, 180000, 150000, currentNetProfit > 0 ? currentNetProfit : 200000],
+                            borderColor: '#8b5cf6', backgroundColor: 'transparent', borderWidth: 2, borderDash: [5, 5], tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top', align: 'end' }, title: { display: true, text: 'Gross vs Net Profit Trend', align: 'start', padding: 20 } },
+                    scales: { y: { beginAtZero: true, border: { dash: [4, 4] }, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                }
+            });
+        };
+
+        initCharts(totalProfit + umrahProfit, totalProfit + umrahProfit - expenses);
     },
 
     tickets: function () {
