@@ -597,6 +597,114 @@ document.addEventListener('click', function (e) {
     else if (e.target.closest('#createTicketBtn')) {
         window.location.href = 'new-ticket.html';
     }
+
+    // ---- INVOICE ACTIONS ----
+    else if (e.target.closest('[data-action="mark-paid-invoice"]')) {
+        const btn = e.target.closest('[data-action="mark-paid-invoice"]');
+        const id = btn.getAttribute('data-id');
+        if (confirm('Mark this invoice as PAID?')) {
+            Storage.update('aat_invoices', i => i.invoice_id === id, i => { i.payment_status = 'Paid'; return i; });
+            let inv = Storage.get('aat_invoices').find(i => i.invoice_id === id);
+            if (inv && inv.ticket_id) {
+                Storage.update('aat_tickets', t => t.ticket_id === inv.ticket_id, t => { t.payment_status = 'Paid'; t.balance = 0; return t; });
+            }
+            showAlert('Invoice marked as paid.', 'success');
+            if (window.moduleRenderers && window.moduleRenderers.invoices) window.moduleRenderers.invoices();
+        }
+    }
+    else if (e.target.closest('[data-action="print-invoice"]')) {
+        const id = e.target.closest('[data-action="print-invoice"]').getAttribute('data-id');
+        let inv = Storage.get('aat_invoices').find(i => i.invoice_id === id);
+        if (inv) {
+            document.getElementById('printInvoiceId').textContent = inv.invoice_id;
+            document.getElementById('printClientName').textContent = inv.client_name;
+            document.getElementById('printDate').textContent = Format.date(inv.date);
+            document.getElementById('printAmount').textContent = Format.currency(inv.amount);
+            document.getElementById('printTotalAmount').textContent = Format.currency(inv.amount);
+            let tkt = Storage.get('aat_tickets').find(t => t.ticket_id === inv.ticket_id);
+            document.getElementById('printRoute').textContent = tkt ? (tkt.route || tkt.airline) : 'Flight Booking';
+            document.getElementById('printTicketArea').style.display = 'none';
+            document.getElementById('printArea').style.display = 'block';
+            window.print();
+        }
+    }
+    else if (e.target.closest('[data-action="print-ticket"]')) {
+        const tktId = e.target.closest('[data-action="print-ticket"]').getAttribute('data-id');
+        let tkt = Storage.get('aat_tickets').find(t => t.ticket_id === tktId);
+        let inv = Storage.get('aat_invoices').find(i => i.ticket_id === tktId);
+        if (tkt) {
+            document.getElementById('tktPrintDate').textContent = Format.date(tkt.date);
+            document.getElementById('tktPrintName').textContent = tkt.client_name;
+            document.getElementById('tktPrintPnr').textContent = tkt.pnr;
+            document.getElementById('tktPrintRoute').textContent = tkt.route || tkt.airline;
+            document.getElementById('tktPrintAmount').textContent = Format.currency(tkt.selling_price);
+            document.getElementById('tktPrintInv').textContent = inv ? inv.invoice_id : 'N/A';
+            document.getElementById('printArea').style.display = 'none';
+            document.getElementById('printTicketArea').style.display = 'block';
+            window.print();
+        }
+    }
+    else if (e.target.closest('[data-action="whatsapp-invoice"]')) {
+        const id = e.target.closest('[data-action="whatsapp-invoice"]').getAttribute('data-id');
+        let inv = Storage.get('aat_invoices').find(i => i.invoice_id === id);
+        let client = Storage.get('aat_clients').find(c => c.client_name === inv?.client_name);
+        if (inv && client && client.phone) {
+            let phone = client.phone.replace(/[^0-9]/g, '');
+            if (!phone.startsWith('92')) phone = '92' + (phone.startsWith('0') ? phone.slice(1) : phone);
+            let text = encodeURIComponent(`Hello ${inv.client_name},\n\nHere are your invoice details from Agha Air Travel.\nInvoice ID: ${inv.invoice_id}\nAmount: Rs ${inv.amount.toLocaleString()}\nStatus: ${inv.payment_status}\n\nThank you for choosing us.`);
+            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+        } else showAlert('Client phone number not found.', 'danger');
+    }
+    else if (e.target.closest('[data-action="whatsapp-reminder"]')) {
+        const id = e.target.closest('[data-action="whatsapp-reminder"]').getAttribute('data-id');
+        let inv = Storage.get('aat_invoices').find(i => i.invoice_id === id);
+        let client = Storage.get('aat_clients').find(c => c.client_name === inv?.client_name);
+        if (inv && client && client.phone) {
+            let phone = client.phone.replace(/[^0-9]/g, '');
+            if (!phone.startsWith('92')) phone = '92' + (phone.startsWith('0') ? phone.slice(1) : phone);
+            let text = encodeURIComponent(`Reminder: Hello ${inv.client_name},\n\nThis is a gentle reminder regarding your pending payment of Rs ${inv.amount.toLocaleString()} for Invoice ${inv.invoice_id}.\n\nPlease arrange payment at your earliest convenience. Thank you. Agha Air Travel.`);
+            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+        } else showAlert('Client phone number not found.', 'danger');
+    }
+
+    // ---- STAFF ACTIONS ----
+    else if (e.target.closest('[data-action="toggle-staff-status"]')) {
+        const id = e.target.closest('[data-action="toggle-staff-status"]').getAttribute('data-id');
+        Storage.update('aat_staff', s => s.staff_id === id, s => {
+            s.status = s.status === 'Active' ? 'Disabled' : 'Active'; return s;
+        });
+        showAlert('Staff status updated.', 'success');
+        if (window.moduleRenderers && window.moduleRenderers.staff) window.moduleRenderers.staff();
+    }
+    else if (e.target.closest('[data-action="delete-staff"]')) {
+        const id = e.target.closest('[data-action="delete-staff"]').getAttribute('data-id');
+        if (confirm('Are you sure you want to delete this staff account?')) {
+            Storage.remove('aat_staff', s => s.staff_id === id);
+            showAlert('Staff account deleted.', 'success');
+            if (window.moduleRenderers && window.moduleRenderers.staff) window.moduleRenderers.staff();
+        }
+    }
+
+    // ---- BACKUP ACTIONS ----
+    else if (e.target.closest('#exportDataBtn')) {
+        const keys = ['aat_tickets', 'aat_clients', 'aat_invoices', 'aat_ledger', 'aat_expenses', 'aat_suppliers', 'aat_staff'];
+        let backupObj = {};
+        keys.forEach(k => { backupObj[k] = Storage.get(k); });
+        backupObj._metadata = { timestamp: new Date().toISOString(), version: '1.0' };
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", `AAT_Backup_${new Date().toISOString().split('T')[0]}.json`);
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+        showAlert('Backup successfully exported to your device.', 'success');
+    }
+
+    // ---- REPORTS ACTIONS ----
+    else if (e.target.closest('#btnGenerate')) {
+        if (window.moduleRenderers && window.moduleRenderers.reports) window.moduleRenderers.reports();
+    }
 });
 
 // ----------------------------------------------------
