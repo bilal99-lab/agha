@@ -394,7 +394,7 @@ h6 {
 }
 
 /* ---- App Layout ---- */
-.app-layout {
+\.wrapper {
     display: flex;
     min-height: 100vh;
 }
@@ -482,7 +482,7 @@ h6 {
 }
 
 /* Main Content */
-.main-wrapper {
+\.main-content {
     flex: 1;
     margin-left: var(--sidebar-width);
     display: flex;
