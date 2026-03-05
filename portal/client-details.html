@@ -63,37 +63,77 @@
 
             <!-- Content Area -->
             <div class="content-area">
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="section-header">
+                        <h3>Client Profile</h3>
+                        <a href="clients.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back to
+                            Clients</a>
+                    </div>
+                    <div class="form-grid" style="grid-template-columns: repeat(3, 1fr); gap: 24px; padding: 12px 0;">
+                        <div>
+                            <div
+                                style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 600;">
+                                Name</div>
+                            <div id="profName"
+                                style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-top: 4px;">-</div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 600;">
+                                Phone Number</div>
+                            <div id="profPhone"
+                                style="font-size: 1.2rem; font-weight: 600; color: #0f172a; margin-top: 4px;">-</div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 600;">
+                                Last Travel Date</div>
+                            <div id="profLastDate"
+                                style="font-size: 1.2rem; font-weight: 600; color: #0f172a; margin-top: 4px;">-</div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 600;">
+                                Total Tickets Purchased</div>
+                            <div id="profTotalTickets"
+                                style="font-size: 1.2rem; font-weight: 600; color: #0f172a; margin-top: 4px;">-</div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 600;">
+                                Total Business Generated</div>
+                            <div id="profTotalSpent"
+                                style="font-size: 1.2rem; font-weight: 700; color: #2563eb; margin-top: 4px;">Rs 0</div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 600;">
+                                Total Profit Generated</div>
+                            <div id="profTotalProfit"
+                                style="font-size: 1.2rem; font-weight: 700; color: var(--success); margin-top: 4px;">Rs
+                                0</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card">
                     <div class="section-header">
-                        <h3>All Clients</h3>
-                        <button class="btn"><i class="fas fa-plus"></i> Add New Client</button>
+                        <h3>Ticket History</h3>
                     </div>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Phone</th>
-                                    <th>Total Tickets</th>
-                                    <th>Total Spent</th>
+                                    <th>Ticket ID</th>
+                                    <th>Date</th>
+                                    <th>Route</th>
+                                    <th>Airline</th>
+                                    <th>Amount</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
-                            <tbody id="clientsTableBody">
-                                <tr>
-                                    <td>Usman Ali</td>
-                                    <td>0300-1234567</td>
-                                    <td>usman@example.com</td>
-                                    <td>Rs 450,000</td>
-                                    <td><span class="status-badge bg-success-light">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Salman Khan</td>
-                                    <td>0333-7654321</td>
-                                    <td>salman@example.com</td>
-                                    <td>Rs 1,200,000</td>
-                                    <td><span class="status-badge bg-success-light">Active</span></td>
-                                </tr>
+                            <tbody id="historyTableBody">
+                                <!-- JS Injection -->
                             </tbody>
                         </table>
                     </div>
@@ -105,22 +145,60 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const tableBody = document.getElementById("clientsTableBody");
-            let clients = JSON.parse(localStorage.getItem("aat_clients")) || [];
+            const urlParams = new URLSearchParams(window.location.search);
+            const clientPhone = urlParams.get('phone');
 
-            if (clients.length > 0) {
-                tableBody.innerHTML = ""; // Clear mock data
-                clients.forEach(c => {
+            if (!clientPhone) {
+                document.querySelector('.content-area').innerHTML = '<div class="card" style="text-align:center; padding: 40px;"><h3>No client selected.</h3><a href="clients.html" class="btn mt-3">Go Back</a></div>';
+                return;
+            }
+
+            let clients = JSON.parse(localStorage.getItem("aat_clients")) || [];
+            let tickets = JSON.parse(localStorage.getItem("aat_tickets")) || [];
+
+            let client = clients.find(c => c.phone === clientPhone);
+            if (client) {
+                document.getElementById('profName').textContent = client.client_name || client.name;
+                document.getElementById('profPhone').textContent = client.phone;
+                document.getElementById('profLastDate').textContent = client.last_travel_date || '-';
+                document.getElementById('profTotalTickets').textContent = client.total_tickets || 0;
+                document.getElementById('profTotalSpent').textContent = 'Rs ' + (client.total_spent || 0).toLocaleString();
+
+                let profitVal = parseFloat(client.total_profit_generated) || 0;
+                let profElem = document.getElementById('profTotalProfit');
+                profElem.textContent = 'Rs ' + profitVal.toLocaleString();
+                if (profitVal < 0) profElem.style.color = "var(--danger)";
+            }
+
+            const tableBody = document.getElementById("historyTableBody");
+            let clientTickets = tickets.filter(t => t.clientPhone === clientPhone || (client && t.client_name === client.client_name));
+
+            if (clientTickets.length > 0) {
+                tableBody.innerHTML = "";
+                // Sort by ID / latest
+                clientTickets.reverse().forEach(t => {
+                    let badgeClass = "bg-warning-light"; // default Pending
+                    if (t.payment_status === "Paid") badgeClass = "bg-success-light";
+                    if (t.payment_status === "Credit" || t.payment_status === "unpaid") badgeClass = "bg-danger-light";
+
+                    let itemRoute = t.route || t.outbound || '-';
+                    let itemAmount = t.selling_price || t.selling || 0;
+                    let itemStatus = t.payment_status || t.status || 'Pending';
+                    let itemId = t.ticket_id || t.id || '#---';
+
                     tableBody.innerHTML += `
                         <tr>
-                            <td>${c.client_name || c.name}</td>
-                            <td>${c.phone}</td>
-                            <td>${c.total_tickets || 1} Tickets</td>
-                            <td>Rs ${(c.total_spent || c.totalPurchases || 0).toLocaleString()}</td>
-                            <td><span class="status-badge bg-success-light">${c.status || 'Active'}</span></td>
+                            <td style="font-weight: 600;">${itemId}</td>
+                            <td>${t.date}</td>
+                            <td>${itemRoute}</td>
+                            <td>${t.airline || '-'}</td>
+                            <td>Rs ${itemAmount.toLocaleString()}</td>
+                            <td><span class="status-badge ${badgeClass}">${itemStatus}</span></td>
                         </tr>
                     `;
                 });
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 32px;">No ticket history found.</td></tr>`;
             }
         });
     </script>
