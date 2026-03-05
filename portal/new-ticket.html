@@ -19,7 +19,8 @@
             window.location.href = "login.html";
         }
     </script>
-<script src="js/auth-guard.js"></script>`n</head>
+    <script src="js/auth-guard.js"></script>`n
+</head>
 
 <body>
 
@@ -38,7 +39,8 @@
                 <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
                 <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
                 <a href="expenses.html" class="nav-item"><i class="fas fa-receipt"></i> Expenses</a>
-                <a href="staff.html" class="nav-item"><i class="fas fa-user-shield"></i> Staff Accounts</a>`n                <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
+                <a href="staff.html" class="nav-item"><i class="fas fa-user-shield"></i> Staff Accounts</a>`n <a
+                    href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
                 <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
                     Logout</a>
             </div>
@@ -86,6 +88,9 @@
                                     <button type="button" id="btnSearchPnr" class="btn btn-outline"
                                         style="height: 36px; padding: 0 16px;"><i class="fas fa-search"></i>
                                         Search</button>
+                                    <button type="button" id="btnAddPassenger" class="btn btn-outline"
+                                        style="height: 36px; padding: 0 16px;"><i class="fas fa-user-plus"></i> Add
+                                        Passenger</button>
                                 </div>
                             </div>
                             <div class="form-grid">
@@ -106,7 +111,13 @@
 
                         <!-- FLIGHT DETAILS -->
                         <div class="card" style="margin-bottom: 24px; padding: 32px;">
-                            <div class="form-section-title">Flight Details</div>
+                            <div class="form-section-title"
+                                style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>Flight Details</span>
+                                <button type="button" id="btnAddSegment" class="btn btn-outline"
+                                    style="height: 36px; padding: 0 16px;"><i class="fas fa-plane"></i> Add
+                                    Segment</button>
+                            </div>
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label class="form-label">PNR *</label>
@@ -432,8 +443,8 @@
             window.location.href = "login.html";
         }
     </script>
-<script src="js/global-search.js"></script>`n
-<script src="../assets/js/portal.js"></script>
+    <script src="js/global-search.js"></script>`n
+    <script src="../assets/js/portal.js"></script>
 </body>
 
 </html>
