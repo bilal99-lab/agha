@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ledger - AAT Portal</title>
+    <title>Suppliers - AAT Portal</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +36,8 @@
                 <a href="invoices.html" class="nav-item"><i class="fas fa-file-invoice"></i> Invoices</a>
                 <a href="umrah-entry.html" class="nav-item"><i class="fas fa-kaaba"></i> Umrah Entry</a>
                 <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
-                <a href="ledger.html" class="nav-item active"><i class="fas fa-book"></i> Ledger</a>
+                <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
+                <a href="suppliers.html" class="nav-item active"><i class="fas fa-building"></i> Suppliers</a>
                 <a href="expenses.html" class="nav-item"><i class="fas fa-receipt"></i> Expenses</a>
                 <a href="reports.html" class="nav-item"><i class="fas fa-chart-line"></i> Reports</a>
                 <a href="#" class="nav-item nav-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i>
@@ -49,7 +50,7 @@
 
             <!-- Topbar -->
             <div class="topbar">
-                <div class="page-title">Ledger & Accounts</div>
+                <div class="page-title">Supplier Ledger</div>
                 <div class="user-profile">
                     <span class="avatar">A</span>
                     <span>Admin User</span>
@@ -60,21 +61,21 @@
             <div class="content-area">
                 <div class="card">
                     <div class="section-header">
-                        <h3>General Ledger</h3>
-                        <button class="btn btn-outline"><i class="fas fa-filter"></i> Filter</button>
+                        <h3>All Suppliers</h3>
+                        <button class="btn btn-outline"><i class="fas fa-file-export"></i> Export</button>
                     </div>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Entry ID</th>
-                                    <th>Date</th>
-                                    <th>Client / Description</th>
-                                    <th>Type</th>
-                                    <th>Amount</th>
+                                    <th>Supplier Name</th>
+                                    <th>Airline</th>
+                                    <th>Total Tickets</th>
+                                    <th>Total Cost</th>
+                                    <th>Balance Payable</th>
                                 </tr>
                             </thead>
-                            <tbody id="ledgerTableBody">
+                            <tbody id="suppliersTableBody">
                                 <!-- Entries will load here -->
                             </tbody>
                         </table>
@@ -87,36 +88,24 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const tableBody = document.getElementById("ledgerTableBody");
-            let ledger = JSON.parse(localStorage.getItem("aat_ledger")) || [];
+            const tableBody = document.getElementById("suppliersTableBody");
+            let suppliers = JSON.parse(localStorage.getItem("aat_suppliers")) || [];
 
-            if (ledger.length > 0) {
-                // Sort by newest first assuming appended chronologically
-                ledger.reverse().forEach(entry => {
-                    let badgeClass = "bg-success-light";
-                    if (entry.type === "Expense" || entry.type === "ticket_sale_refund") {
-                        badgeClass = "bg-danger-light";
-                    }
-
-                    // Handle missing/legacy keys gracefully
-                    let clientDisplay = entry.client_name ? `<strong>${entry.client_name}</strong><br>` : '';
-                    let descDisplay = entry.description || 'No description';
-
+            if (suppliers.length > 0) {
+                // Sort by balance payable descending
+                suppliers.sort((a, b) => (b.balance_payable || 0) - (a.balance_payable || 0)).forEach(s => {
                     tableBody.innerHTML += `
                         <tr>
-                            <td>${entry.entry_id || entry.id || '#---'}</td>
-                            <td>${entry.date || '-'}</td>
-                            <td>
-                                ${clientDisplay}
-                                <span class="text-muted" style="font-size: 0.8rem;">${descDisplay}</span>
-                            </td>
-                            <td><span class="status-badge ${badgeClass}">${entry.type}</span></td>
-                            <td>Rs ${(entry.amount || 0).toLocaleString()}</td>
+                            <td style="font-weight: 600;">${s.supplier_name}</td>
+                            <td>${s.airline || '-'}</td>
+                            <td>${s.total_tickets || 0} Tickets</td>
+                            <td>Rs ${(s.total_cost || 0).toLocaleString()}</td>
+                            <td style="color: var(--danger); font-weight: 600;">Rs ${(s.balance_payable || 0).toLocaleString()}</td>
                         </tr>
                     `;
                 });
             } else {
-                tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px;">No transactions recorded yet.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px;">No suppliers recorded yet.</td></tr>`;
             }
         });
 
