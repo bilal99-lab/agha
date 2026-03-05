@@ -17,10 +17,18 @@ document.addEventListener("DOMContentLoaded", function () {
         avatar.textContent = currentUser.name.charAt(0).toUpperCase();
     }
 
-    // Role Enforcement: If 'Staff' hide certain links
-    if (currentUser.role === 'Staff') {
-        const restrictedPages = ['ledger.html', 'expenses.html', 'reports.html', 'staff.html', 'supplier-payments.html', 'backup.html', 'suppliers.html'];
+    // Role Enforcement
+    const restrictedForStaff = ['dashboard.html', 'ledger.html', 'expenses.html', 'reports.html', 'staff.html', 'supplier-payments.html', 'backup.html', 'suppliers.html'];
+    const restrictedForManager = ['ledger.html', 'staff.html', 'reports.html', 'supplier-payments.html', 'backup.html'];
 
+    let restrictedPages = [];
+    if (currentUser.role === 'Staff') {
+        restrictedPages = restrictedForStaff;
+    } else if (currentUser.role === 'Manager') {
+        restrictedPages = restrictedForManager;
+    }
+
+    if (restrictedPages.length > 0) {
         // 1. Hide Sidebar Links
         const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
         navItems.forEach(item => {
@@ -36,9 +44,11 @@ document.addEventListener("DOMContentLoaded", function () {
             // Block access
             document.body.innerHTML = `<div style="padding: 50px; text-align: center; color: #0f172a; font-family: sans-serif;">
                 <h1>Access Denied</h1>
-                <p>You do not have permission to view this page. Returning to Dashboard...</p>
+                <p>You do not have permission to view this page. Redirecting...</p>
             </div>`;
-            setTimeout(() => { window.location.href = "dashboard.html"; }, 2000);
+            setTimeout(() => {
+                window.location.href = currentUser.role === 'Staff' ? "new-ticket.html" : "dashboard.html";
+            }, 1000);
         }
     }
 });
