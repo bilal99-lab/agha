@@ -1,324 +1,372 @@
-document.addEventListener("DOMContentLoaded", () => {
+/*
+ * AAT Travel Portal - Global Core Engine
+ * Centralized Module Controller & Data Engine
+ */
 
-    // --- UTILITIES ---
-    function showAlert(msg, type = 'success', elId = 'alertMessage') {
-        const el = document.getElementById(elId);
-        if (el) {
-            el.textContent = msg;
-            el.className = `alert alert-${type}`;
-            el.style.display = 'block';
-            setTimeout(() => { el.style.display = 'none'; }, 3000);
-        } else {
-            alert(msg);
+// ----------------------------------------------------
+// 1. DATA ENGINE (Storage Management)
+// ----------------------------------------------------
+const Storage = {
+    get: (key) => JSON.parse(localStorage.getItem(key)) || [],
+    save: (key, data) => localStorage.setItem(key, JSON.stringify(data)),
+    add: (key, item) => {
+        let data = Storage.get(key);
+        data.push(item);
+        Storage.save(key, data);
+        return data;
+    },
+    update: (key, predicate, updateFn) => {
+        let data = Storage.get(key);
+        let index = data.findIndex(predicate);
+        if (index !== -1) {
+            data[index] = updateFn(data[index]);
+            Storage.save(key, data);
         }
+        return data;
+    },
+    remove: (key, predicate) => {
+        let data = Storage.get(key);
+        let newData = data.filter(item => !predicate(item));
+        Storage.save(key, newData);
+        return newData;
     }
+};
 
-    // --- CLIENTS MODULE ---
-    const addClientBtn = document.getElementById('addClientBtn');
-    if (addClientBtn) {
-        addClientBtn.addEventListener('click', () => {
-            const modal = document.getElementById('clientModal');
-            if (modal) modal.style.display = 'flex';
-        });
+// Formatting utilities
+const Format = {
+    currency: (amount) => 'Rs ' + (parseFloat(amount) || 0).toLocaleString(),
+    date: (dateStr) => {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
     }
+};
 
-    const cancelClientBtn = document.getElementById('cancelClientBtn');
-    if (cancelClientBtn) {
-        cancelClientBtn.addEventListener('click', () => {
-            const modal = document.getElementById('clientModal');
-            if (modal) modal.style.display = 'none';
-        });
+// Global Alert Utility
+function showAlert(msg, type = 'success', containerId = 'globalAlert') {
+    let alertBox = document.getElementById(containerId);
+    if (!alertBox) {
+        alertBox = document.createElement('div');
+        alertBox.id = containerId;
+        alertBox.className = 'alert';
+        alertBox.style.display = 'none';
+        const contentArea = document.querySelector('.content-area') || document.body;
+        contentArea.insertBefore(alertBox, contentArea.firstChild);
     }
+    alertBox.textContent = msg;
+    alertBox.className = `alert alert-${type}`;
+    alertBox.style.display = 'block';
+    setTimeout(() => { alertBox.style.display = 'none'; }, 3000);
+}
 
-    const saveClientBtn = document.getElementById('saveClientBtn');
-    if (saveClientBtn) {
-        saveClientBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('newClientName').value.trim();
-            const phone = document.getElementById('newClientPhone').value.trim();
-            const email = document.getElementById('newClientEmail').value.trim();
+// ----------------------------------------------------
+// 2. MODULE CONTROLLER SYSTEM
+// ----------------------------------------------------
+const PortalModules = {
+    dashboard: function () {
+        // Compute dashboard metrics
+        let totalSales = 0, totalProfit = 0, totalReceivable = 0;
+        let expenses = 0, umrahSales = 0, umrahProfit = 0;
+        const monthStart = new Date();
+        monthStart.setDate(1); monthStart.setHours(0, 0, 0, 0);
+        const todayStr = new Date().toISOString().split('T')[0];
 
-            if (!name || !phone) {
-                showAlert('Name and Phone are required.', 'error', 'clientAlert');
-                return;
-            }
-
-            let clients = JSON.parse(localStorage.getItem('aat_clients')) || [];
-            let existing = clients.find(c => c.phone === phone);
-            if (existing) {
-                showAlert('Client with this phone already exists.', 'error', 'clientAlert');
-                return;
-            }
-
-            clients.push({
-                client_name: name,
-                phone: phone,
-                email: email,
-                total_tickets: 0,
-                total_spent: 0,
-                total_profit_generated: 0,
-                status: 'Active'
-            });
-
-            localStorage.setItem('aat_clients', JSON.stringify(clients));
-            document.getElementById('clientModal').style.display = 'none';
-            if (typeof renderClientTable === 'function') renderClientTable();
-            showAlert('Client saved successfully.');
-        });
-    }
-
-    function renderClientTable() {
-        const tableBody = document.getElementById('clientsTableBody');
-        if (!tableBody) return;
-        let clients = JSON.parse(localStorage.getItem('aat_clients')) || [];
-        tableBody.innerHTML = '';
-        if (clients.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 32px;">No clients found.</td></tr>`;
-            return;
-        }
-
-        clients.forEach((c, index) => {
-            tableBody.innerHTML += `
-                <tr>
-                    <td>${c.client_name || c.name}</td>
-                    <td>${c.phone}</td>
-                    <td>${c.total_tickets || 0} Tickets</td>
-                    <td>Rs ${(c.total_spent || c.totalPurchases || 0).toLocaleString()}</td>
-                    <td><span class="status-badge bg-success-light">${c.status || 'Active'}</span></td>
-                    <td style="text-align: right;">
-                        <a href="client-details.html?phone=${encodeURIComponent(c.phone)}" class="btn btn-outline" style="padding: 4px 12px; font-size: 0.8rem; margin-right: 8px;">Profile</a>
-                        <button class="btn btn-danger" style="padding: 4px 12px; font-size: 0.8rem; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="deleteClient(${index})"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    window.deleteClient = function (index) {
-        if (confirm("Are you sure you want to delete this client?")) {
-            let clients = JSON.parse(localStorage.getItem('aat_clients')) || [];
-            clients.splice(index, 1);
-            localStorage.setItem('aat_clients', JSON.stringify(clients));
-            renderClientTable();
-        }
-    };
-
-    if (document.getElementById('clientsTableBody')) {
-        renderClientTable();
-    }
-
-
-    // --- UMRAH ENTRY MODULE ---
-    const btnSaveUmrah = document.getElementById('btnSaveUmrah');
-    if (btnSaveUmrah) {
-        btnSaveUmrah.addEventListener('click', (e) => {
-            e.preventDefault();
-            const form = document.getElementById('umrahForm');
-            if (form && !form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
-
-            const name = document.getElementById('umrahClient').value.trim();
-            const phone = document.getElementById('umrahPhone').value.trim();
-            const passport = document.getElementById('umrahPassport').value.trim();
-            const pkg = document.getElementById('umrahPackage').value.trim();
-            const date = document.getElementById('umrahDate').value;
-            const cost = parseFloat(document.getElementById('umrahCost').value) || 0;
-            const selling = parseFloat(document.getElementById('umrahSelling').value) || 0;
-            const profit = selling - cost;
-
-            const entry = {
-                entry_id: "UMR-" + Math.floor(1000 + Math.random() * 9000),
-                client_name: name,
-                phone: phone,
-                passport: passport,
-                package_name: pkg,
-                travel_date: date,
-                cost_price: cost,
-                selling_price: selling,
-                profit: profit
-            };
-
-            let umrahEntries = JSON.parse(localStorage.getItem('aat_umrah_entries')) || [];
-            umrahEntries.push(entry);
-            localStorage.setItem('aat_umrah_entries', JSON.stringify(umrahEntries));
-
-            // Add to Ledger
-            let ledger = JSON.parse(localStorage.getItem('aat_ledger')) || [];
-            ledger.push({
-                entry_id: "#LDG-" + Math.floor(1000 + Math.random() * 9000),
-                type: "umrah_sale",
-                amount: selling,
-                client_name: name,
-                date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
-                description: pkg + " Package"
-            });
-            localStorage.setItem('aat_ledger', JSON.stringify(ledger));
-
-            // Sync with clients
-            let clients = JSON.parse(localStorage.getItem('aat_clients')) || [];
-            let existingClient = clients.find(c => c.phone === phone);
-            if (existingClient) {
-                existingClient.total_spent += selling;
-                existingClient.total_tickets += 1;
-                existingClient.total_profit_generated = (existingClient.total_profit_generated || 0) + profit;
-            } else {
-                clients.push({
-                    client_name: name,
-                    phone: phone,
-                    passport: passport,
-                    total_spent: selling,
-                    total_tickets: 1,
-                    total_profit_generated: profit,
-                    status: 'Active'
-                });
-            }
-            localStorage.setItem('aat_clients', JSON.stringify(clients));
-
-            showAlert('Umrah Entry saved successfully!', 'success', 'umrahAlert');
-            form.reset();
-            document.getElementById('umrahProfit').value = "0";
-        });
-    }
-
-    const umrahCost = document.getElementById('umrahCost');
-    const umrahSelling = document.getElementById('umrahSelling');
-    if (umrahCost && umrahSelling) {
-        const updateProfit = () => {
-            const c = parseFloat(umrahCost.value) || 0;
-            const s = parseFloat(umrahSelling.value) || 0;
-            document.getElementById('umrahProfit').value = (s - c).toString();
-        };
-        umrahCost.addEventListener('input', updateProfit);
-        umrahSelling.addEventListener('input', updateProfit);
-    }
-
-
-    // --- EXPENSES MODULE ---
-    const btnSaveExpense = document.getElementById('btnSaveExpense');
-    if (btnSaveExpense && document.getElementById('expenseForm')) {
-        document.getElementById('expenseForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const title = document.getElementById('expTitle').value.trim();
-            const amount = parseFloat(document.getElementById('expAmount').value) || 0;
-            const category = document.getElementById('expCategory').value;
-            const date = document.getElementById('expDate').value;
-
-            let expenses = JSON.parse(localStorage.getItem('aat_expenses')) || [];
-            expenses.push({
-                title: title,
-                amount: amount,
-                category: category,
-                date: date,
-                expense_id: "EXP-" + Math.floor(1000 + Math.random() * 9000)
-            });
-            localStorage.setItem('aat_expenses', JSON.stringify(expenses));
-
-            showAlert('Expense added successfully.');
-            if (typeof renderExpenses === 'function') renderExpenses();
-            else window.location.reload();
-        });
-    }
-
-    // --- TICKET MODULE ---
-    // Make sure Create Ticket button maps appropriately if found
-    const createTicketBtn = document.getElementById('createTicketBtn');
-    if (createTicketBtn) {
-        createTicketBtn.addEventListener('click', () => { window.location.href = 'new-ticket.html'; });
-    }
-
-    const btnSaveForm = document.getElementById('btnSave'); // Found in new-ticket.html
-    if (btnSaveForm) {
-        // Keep existing inline logic for ticket or override here if requested.
-        // User requested "Restore click functionality" to an ID event listener.
-        btnSaveForm.addEventListener('click', (e) => {
-            e.preventDefault();
-            const ticForm = document.getElementById('ticketForm');
-            if (ticForm) ticForm.requestSubmit();
-        });
-    }
-
-    const btnAddPassenger = document.getElementById('btnAddPassenger');
-    if (btnAddPassenger) {
-        btnAddPassenger.addEventListener('click', (e) => {
-            e.preventDefault();
-            showAlert('Passenger field added (mock).', 'success');
-        });
-    }
-
-    const btnAddSegment = document.getElementById('btnAddSegment');
-    if (btnAddSegment) {
-        btnAddSegment.addEventListener('click', (e) => {
-            e.preventDefault();
-            showAlert('Flight segment added (mock).', 'success');
-        });
-    }
-
-
-    // --- DASHBOARD MODULE ---
-    const statTodaySales = document.getElementById('statTodaySales');
-    const statTotalReceivable = document.getElementById('statTotalReceivable');
-    const statMonthProfit = document.getElementById('statMonthProfit');
-    const statTotalExpenses = document.getElementById('statTotalExpenses');
-    const statNetProfit = document.getElementById('statNetProfit');
-
-    if (statTodaySales) { // We are on dashboard
-        let tickets = JSON.parse(localStorage.getItem('aat_tickets')) || [];
-        let invoices = JSON.parse(localStorage.getItem('aat_invoices')) || [];
-        let expenses = JSON.parse(localStorage.getItem('aat_expenses')) || [];
-        let umrahs = JSON.parse(localStorage.getItem('aat_umrah_entries')) || [];
-
-        const todayStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-        const currentMonthNumStr = new Date().toISOString().slice(0, 7); // YYYY-MM
-        const currentMonth = new Date().toLocaleDateString('en-GB', { month: 'short' });
-
-        let tSales = 0;
-        let tRecv = 0;
-        let mProfit = 0;
-        let tExp = 0;
+        const tickets = Storage.get('aat_tickets');
+        const invoices = Storage.get('aat_invoices');
+        const umrahList = Storage.get('aat_umrah_entries');
+        const expenseList = Storage.get('aat_expenses');
+        const supplierList = Storage.get('aat_suppliers');
 
         tickets.forEach(t => {
-            if (t.date === todayStr) tSales += (t.selling_price || 0);
+            if (t.date === todayStr) {
+                totalSales += parseFloat(t.selling_price) || 0;
+            }
         });
 
-        umrahs.forEach(u => {
-            let uDateStr = new Date(u.travel_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-            if (uDateStr === todayStr) tSales += (u.selling_price || 0);
-        });
-
+        // Month profits and total receivables from invoices
         invoices.forEach(inv => {
-            if (inv.payment_status === 'Pending' || inv.payment_status === 'unpaid') {
-                tRecv += (inv.amount || inv.selling_price || 0);
+            if (inv.payment_status?.toLowerCase() === 'pending') {
+                totalReceivable += parseFloat(inv.amount || inv.selling_price) || 0;
             }
-            if (inv.date && inv.date.includes(currentMonth)) {
-                mProfit += (inv.profit || 0);
-            }
-        });
-
-        umrahs.forEach(u => {
-            if (u.travel_date && u.travel_date.startsWith(currentMonthNumStr)) {
-                mProfit += (u.profit || 0);
+            if (new Date(inv.date) >= monthStart) {
+                totalProfit += parseFloat(inv.profit) || 0;
             }
         });
 
-        expenses.forEach(exp => {
-            if (exp.date && exp.date.startsWith(currentMonthNumStr)) {
-                tExp += (exp.amount || 0);
+        expenseList.forEach(exp => {
+            if (new Date(exp.date) >= monthStart) {
+                expenses += parseFloat(exp.amount) || 0;
             }
         });
 
-        let nProfit = mProfit - tExp;
+        umrahList.forEach(u => {
+            if (u.travel_date && u.travel_date === todayStr) {
+                umrahSales += parseFloat(u.selling_price) || 0;
+            }
+            if (u.travel_date && new Date(u.travel_date) >= monthStart) {
+                umrahProfit += parseFloat(u.profit) || 0;
+            }
+        });
 
-        statTodaySales.textContent = "Rs " + tSales.toLocaleString();
-        statTotalReceivable.textContent = "Rs " + tRecv.toLocaleString();
-        statTotalExpenses.textContent = "Rs " + tExp.toLocaleString();
+        let supplierPayables = 0;
+        supplierList.forEach(s => {
+            supplierPayables += parseFloat(s.balance_payable || 0);
+        });
 
-        let profitBadge = mProfit >= 0 ? "bg-success-light" : "bg-danger-light";
-        statMonthProfit.innerHTML = `<span class="status-badge ${profitBadge}" style="font-size: 1.1rem; padding: 4px 12px;">Rs ${mProfit.toLocaleString()}</span>`;
+        let pendingInvoicesCount = invoices.filter(i => i.payment_status?.toLowerCase() === 'pending').length;
 
-        let netProfitBadge = nProfit >= 0 ? "bg-success-light" : "bg-danger-light";
-        let netProfitColor = nProfit >= 0 ? "#8b5cf6" : "var(--danger)";
-        statNetProfit.innerHTML = `<span class="status-badge ${netProfitBadge}" style="color: ${netProfitColor}; font-size: 1.1rem; padding: 4px 12px;">Rs ${nProfit.toLocaleString()}</span>`;
+        // Render Cards safely
+        const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+        setVal("statTodaySales", Format.currency(totalSales + umrahSales));
+        setVal("statTotalReceivable", Format.currency(totalReceivable));
+        setVal("statMonthProfit", Format.currency(totalProfit + umrahProfit));
+        setVal("statTotalExpenses", Format.currency(expenses));
+        setVal("statNetProfit", Format.currency(totalProfit + umrahProfit - expenses));
+        setVal("statPendingInvoices", pendingInvoicesCount);
+        setVal("statSupplierPayables", Format.currency(supplierPayables));
+        setVal("statStaffAccounts", Storage.get('aat_staff').length);
+
+        // Render Recent Activity (using tickets as example)
+        const recentBody = document.getElementById("recentActivityBody");
+        if (recentBody && tickets.length > 0) {
+            recentBody.innerHTML = tickets.slice(-5).reverse().map(t => `
+                <tr>
+                    <td style="font-weight: 500;">${t.ticket_id}</td>
+                    <td>${t.client_name}</td>
+                    <td><span class="status-badge bg-primary-light">Issue</span></td>
+                    <td>${Format.date(t.date)}</td>
+                    <td style="font-weight: 600;">${Format.currency(t.selling_price)}</td>
+                    <td style="text-align: right;"><button class="btn btn-outline" style="padding: 4px 10px; font-size: 0.8rem;">View</button></td>
+                </tr>
+            `).join("");
+        } else if (recentBody) {
+            recentBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">No recent activity.</td></tr>`;
+        }
+    },
+
+    tickets: function () {
+        const calculateProfit = () => {
+            let selling = parseFloat(document.getElementById("sellingPrice")?.value) || 0;
+            let cost = parseFloat(document.getElementById("costPrice")?.value) || 0;
+            let profit = selling - cost;
+            const proElem = document.getElementById("profitAmount");
+            if (proElem) {
+                proElem.value = profit;
+                if (profit > 0) proElem.style.color = 'var(--success)';
+                else if (profit < 0) proElem.style.color = 'var(--danger)';
+                else proElem.style.color = 'var(--text-dark)';
+            }
+
+            let received = parseFloat(document.getElementById("amountReceived")?.value) || 0;
+            let balance = selling - received;
+            const balElem = document.getElementById("balanceAmount");
+            if (balElem) {
+                balElem.value = balance;
+                if (balance > 0) balElem.style.color = 'var(--danger)';
+                else balElem.style.color = 'var(--success)';
+            }
+        };
+
+        ['sellingPrice', 'costPrice', 'amountReceived'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', calculateProfit);
+        });
+
+        const pnrSearchBtn = document.getElementById("btnSearchPnr");
+        if (pnrSearchBtn) {
+            pnrSearchBtn.addEventListener("click", () => {
+                const searchPnr = document.getElementById("searchPnrInput")?.value.trim().toUpperCase();
+                if (!searchPnr) return;
+
+                const ticket = Storage.get('aat_tickets').find(t => t.pnr === searchPnr);
+                if (ticket) {
+                    if (document.getElementById("clientName")) document.getElementById("clientName").value = ticket.client_name || '';
+                    if (document.getElementById("flightRoute")) document.getElementById("flightRoute").value = ticket.route || '';
+                    if (document.getElementById("travelDate")) document.getElementById("travelDate").value = ticket.travel_date || '';
+                    if (document.getElementById("airlineName")) document.getElementById("airlineName").value = ticket.airline || '';
+                    if (document.getElementById("sellingPrice")) document.getElementById("sellingPrice").value = ticket.selling_price || '';
+                    if (document.getElementById("costPrice")) document.getElementById("costPrice").value = ticket.cost_price || '';
+                    calculateProfit();
+                    showAlert("Ticket found and populated.", "success");
+                } else {
+                    showAlert("PNR not found in system.", "danger");
+                }
+            });
+        }
+    },
+
+    clients: function () {
+        const renderTable = () => {
+            const tbody = document.getElementById("clientsTableBody");
+            if (!tbody) return;
+            const clients = Storage.get('aat_clients');
+            if (clients.length > 0) {
+                tbody.innerHTML = clients.map(c => `
+                    <tr>
+                        <td style="font-weight: 500;">${c.client_name || c.name}</td>
+                        <td>${c.phone}</td>
+                        <td>${c.total_tickets || 0}</td>
+                        <td>${Format.currency(c.total_spent || c.totalPurchases || 0)}</td>
+                        <td><span class="status-badge bg-success-light">${c.status || 'Active'}</span></td>
+                        <td style="text-align: right;">
+                            <a href="client-details.html?phone=${encodeURIComponent(c.phone)}" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.8rem;">Profile</a>
+                            <button class="btn btn-outline" style="padding: 4px; color: var(--danger); border-color: var(--danger);" data-action="delete-client" data-phone="${c.phone}"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 30px;">No clients found.</td></tr>`;
+            }
+        };
+        renderTable();
+        // Expose renderTable so global events can trigger it
+        window.moduleRenderers = window.moduleRenderers || {};
+        window.moduleRenderers.clients = renderTable;
+    },
+
+    expenses: function () {
+        const renderTable = () => {
+            const tbody = document.getElementById("expenseTableBody");
+            if (!tbody) return;
+            const exps = Storage.get('aat_expenses');
+            if (exps.length > 0) {
+                tbody.innerHTML = exps.map(e => `
+                    <tr>
+                        <td style="font-weight: 500;">${e.expense_id}</td>
+                        <td>${e.title}</td>
+                        <td>${e.category}</td>
+                        <td style="font-weight: 600;">${Format.currency(e.amount)}</td>
+                        <td>${Format.date(e.date)}</td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px;">No expenses recorded.</td></tr>`;
+            }
+        };
+        renderTable();
+        window.moduleRenderers = window.moduleRenderers || {};
+        window.moduleRenderers.expenses = renderTable;
+    },
+
+    umrah: function () {
+        const calcUmrahProfit = () => {
+            const cost = parseFloat(document.getElementById('umrahCostPrice')?.value) || 0;
+            const sell = parseFloat(document.getElementById('umrahSellPrice')?.value) || 0;
+            const profEl = document.getElementById('umrahProfitAmount');
+            if (profEl) profEl.value = sell - cost;
+        };
+        ['umrahCostPrice', 'umrahSellPrice'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', calcUmrahProfit);
+        });
+    },
+
+    invoices: function () { },
+    ledger: function () { },
+    staff: function () { },
+    reports: function () { },
+    suppliers: function () { },
+    backup: function () { }
+};
+
+// ----------------------------------------------------
+// 3. GLOBAL EVENT DELEGATION SYSTEM
+// ----------------------------------------------------
+document.addEventListener('click', function (e) {
+    // ---- CLIENT MODULE ACTIONS ----
+    if (e.target.closest('#addClientBtn')) {
+        document.getElementById('clientModal').style.display = 'flex';
     }
+    else if (e.target.closest('#cancelClientBtn')) {
+        document.getElementById('clientModal').style.display = 'none';
+        document.getElementById('newClientForm')?.reset();
+    }
+    else if (e.target.closest('[data-action="delete-client"]')) {
+        const btn = e.target.closest('[data-action="delete-client"]');
+        const phone = btn.getAttribute('data-phone');
+        if (confirm('Are you sure you want to delete this client?')) {
+            Storage.remove('aat_clients', c => c.phone === phone);
+            showAlert('Client deleted successfully', 'success');
+            if (window.moduleRenderers.clients) window.moduleRenderers.clients();
+        }
+    }
+
+    // ---- DASHBOARD ACTIONS ----
+    else if (e.target.closest('#createTicketBtn')) {
+        window.location.href = 'new-ticket.html';
+    }
+});
+
+// ----------------------------------------------------
+// 4. GLOBAL FORM DELEGATION
+// ----------------------------------------------------
+document.addEventListener('submit', function (e) {
+    // ---- ADD CLIENT FORM ----
+    if (e.target.id === 'newClientForm') {
+        e.preventDefault();
+        const client = {
+            client_name: document.getElementById('newClientName').value.trim(),
+            phone: document.getElementById('newClientPhone').value.trim(),
+            email: document.getElementById('newClientEmail').value.trim() || '',
+            total_tickets: 0,
+            total_spent: 0,
+            status: 'Active'
+        };
+        Storage.add('aat_clients', client);
+        document.getElementById('clientModal').style.display = 'none';
+        e.target.reset();
+        showAlert('Client successfully added', 'success');
+        if (window.moduleRenderers.clients) window.moduleRenderers.clients();
+    }
+
+    // ---- ADD EXPENSE FORM ----
+    if (e.target.id === 'expenseForm') {
+        e.preventDefault();
+        const expense = {
+            expense_id: 'EXP-' + Date.now().toString().slice(-4),
+            title: document.getElementById('expTitle').value.trim(),
+            amount: parseFloat(document.getElementById('expAmount').value),
+            category: document.getElementById('expCategory').value,
+            date: document.getElementById('expDate').value || new Date().toISOString().split('T')[0]
+        };
+        Storage.add('aat_expenses', expense);
+        e.target.reset();
+        showAlert("Expense recorded successfully.", "success");
+        if (window.moduleRenderers.expenses) window.moduleRenderers.expenses();
+    }
+
+    // ---- UMRAH ENTRY FORM ----
+    if (e.target.id === 'umrahForm') {
+        e.preventDefault();
+        const umrahData = {
+            entry_id: 'UMR-' + Date.now().toString().slice(-4),
+            client_name: document.getElementById('uClientName').value.trim(),
+            phone: document.getElementById('uClientPhone').value.trim(),
+            package_name: document.getElementById('uPackageName').value,
+            travel_date: document.getElementById('uTravelDate').value,
+            cost_price: parseFloat(document.getElementById('umrahCostPrice').value),
+            selling_price: parseFloat(document.getElementById('umrahSellPrice').value),
+            profit: parseFloat(document.getElementById('umrahProfitAmount').value),
+            date: new Date().toISOString().split('T')[0]
+        };
+
+        Storage.add('aat_umrah_entries', umrahData);
+        e.target.reset();
+        showAlert("Umrah package recorded successfully.", "success");
+    }
+});
+
+// ----------------------------------------------------
+// 5. PAGE INITIALIZER
+// ----------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+    // Initialize specific module based on current page
+    const page = document.body.dataset.page;
+    if (page && typeof PortalModules[page] === 'function') {
+        PortalModules[page]();
+    }
+
+    // High level styling overrides safely via JS 
+    document.querySelectorAll('.wrapper').forEach(el => el.classList.replace('wrapper', 'portal-wrapper'));
+    document.querySelectorAll('.main-content').forEach(el => el.classList.replace('main-content', 'main-area'));
 });

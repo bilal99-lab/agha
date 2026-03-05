@@ -394,7 +394,7 @@ h6 {
 }
 
 /* ---- App Layout ---- */
-\.wrapper {
+\.portal-wrapper {
     display: flex;
     min-height: 100vh;
 }
@@ -482,7 +482,7 @@ h6 {
 }
 
 /* Main Content */
-\.main-content {
+\.main-area {
     flex: 1;
     margin-left: var(--sidebar-width);
     display: flex;
@@ -775,4 +775,43 @@ tr:last-child td {
     color: var(--text-light);
     font-size: 0.875rem;
     font-weight: 500;
+}
+
+
+
+/* === CORE REBUILD LAYOUT RULES === */
+.portal-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--bg-light);
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    overflow-y: auto;
+}
+
+.main-area {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.topbar {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.content-area {
+    padding: 30px;
+    flex-grow: 1;
 }
