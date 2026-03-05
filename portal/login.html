@@ -53,29 +53,72 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const loginForm = document.getElementById("loginForm");
-            const loginError = document.getElementById("loginError");
-            // Redirect if already logged in
-            if (localStorage.getItem("portal_logged_in") === "true") {
-                window.location.href = "dashboard.html";
+                                                            <form id="loginForm">
+                                                                <div class="form-group" style="margin-bottom: 16px;">
+                                                                    <label class="form-label" style="color: #334155;">Email Address</label>
+                                                                    <input type="email" id="loginEmail" class="login-input" placeholder="admin@aat.com" required
+                                                                        autofocus>
+                                                                </div>
+
+                                                                <div class="form-group" style="margin-bottom: 20px;">
+                                                                    <label class="form-label" style="color: #334155;">Password</label>
+                                                                    <input type="password" id="loginPassword" class="login-input" placeholder="Enter secure password"
+                                                                        required>
+                                                                </div>
+                                                                <button type="submit" class="login-btn">Access Portal</button>
+                                                            </form>
+
+                                                            <div class="login-footer">
+                                                                Agha Air Travel &bull; Internal System
+                                                            </div>
+                                                        </div >
+                                                    </div >
+
+                <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const loginForm = document.getElementById("loginForm");
+                    const loginError = document.getElementById("loginError");
+                    // Redirect if already logged in
+                    if (localStorage.getItem("portal_logged_in") === "true") {
+                        window.location.href = "dashboard.html";
             }
 
-            document.getElementById('loginForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-                const email = document.getElementById('loginEmail').value.trim();
-                const pass = document.getElementById('loginPassword').value.trim();
+                    document.getElementById('loginForm').addEventListener('submit', function (e) {
+                        e.preventDefault();
+                    const email = document.getElementById('loginEmail').value.trim();
+                    const pass = document.getElementById('loginPassword').value.trim();
 
-                if (email === "admin@aat.com" && pass === "123456") {
+                    let staffList = JSON.parse(localStorage.getItem('aat_staff')) || [];
+                let user = staffList.find(s => s.email === email && s.password === pass);
+
+                    // Hardcoded fallback per system requirement
+                    if (!user && email === "admin@aat.com" && pass === "123456") {
+                        user = { name: 'System Admin', email: 'admin@aat.com', role: 'Admin', status: 'Active' };
+                }
+
+                    if (user) {
+                    if (user.status === 'Disabled') {
+                        loginError.textContent = 'Account disabled by Administrator.';
+                    loginError.style.display = 'block';
+                    return;
+                    }
+
                     localStorage.setItem('portal_logged_in', 'true');
-                    window.location.href = "dashboard.html";
+                    localStorage.setItem('portal_logged_in_user', JSON.stringify(user));
+
+                    if (user.role === 'Staff') {
+                        window.location.href = "new-ticket.html";
+                    } else {
+                        window.location.href = "dashboard.html";
+                    }
                 } else {
-                    loginError.textContent = 'Invalid email or password';
+                        loginError.textContent = 'Invalid email or password';
                     loginError.style.display = 'block';
                 }
             });
         });
     </script>
 
-<script src="../assets/js/portal.js"></script>
-</body>
+    <script src="../assets/js/portal.js"></script>
 
 </html>
