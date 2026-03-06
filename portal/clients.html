@@ -53,17 +53,23 @@
 
         <!-- Main Content -->
         <div class="main-area">
-
             <!-- Topbar -->
             <div class="topbar">
-                <div class="page-title">Client Directory</div>
-                <div class="user-profile">
-                    <span class="avatar">A</span>
-                    <span>Admin User</span>
+                <div class="page-title">Client Management</div>
+                <div class="global-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="globalSearchInput" placeholder="Search tickets, clients, invoices..." autocomplete="off">
+                    <div class="search-dropdown" id="searchDropdown"></div>
+                </div>
+                <div class="topbar-actions">
+                    <button class="topbar-icon-btn"><i class="fas fa-bell"></i><span class="notif-badge"></span></button>
+                    <div class="user-profile">
+                        <span class="avatar">A</span>
+                        <span>Admin</span>
+                    </div>
                 </div>
             </div>
-
-            <!-- Content Area -->
+<!-- Content Area -->
             <div class="content-area" style="position: relative;">
                 <div id="clientAlert" class="alert" style="display: none; margin-bottom: 24px;"></div>
                 <div class="card">
