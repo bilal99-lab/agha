@@ -57,5 +57,10 @@ document.addEventListener("DOMContentLoaded", Portal.init);
 
 // Optional: Global Event Delegation Hook
 document.addEventListener("click", function (e) {
-    // Intercept any app-wide global elements here
+    // Logout handler
+    if (e.target.closest('#logoutBtn')) {
+        e.preventDefault();
+        localStorage.removeItem('portal_logged_in');
+        window.location.href = 'login.html';
+    }
 });
