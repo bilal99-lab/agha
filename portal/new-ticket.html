@@ -37,28 +37,34 @@
             </div>
             <div class="sidebar-nav">
                 <div class="nav-section">
-                    <div class="nav-section-header" onclick="this.parentElement.classList.toggle('collapsed')">Operations <i class="fas fa-chevron-down chevron"></i></div>
+                    <div class="nav-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
+                        Operations <i class="fas fa-chevron-down chevron"></i></div>
                     <div class="nav-section-items">
                         <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
                     </div>
                 </div>
                 <div class="nav-section">
-                    <div class="nav-section-header" onclick="this.parentElement.classList.toggle('collapsed')">Ticketing <i class="fas fa-chevron-down chevron"></i></div>
+                    <div class="nav-section-header" onclick="this.parentElement.classList.toggle('collapsed')">Ticketing
+                        <i class="fas fa-chevron-down chevron"></i></div>
                     <div class="nav-section-items">
-                        <a href="new-ticket.html" class="nav-item active"><i class="fas fa-ticket-alt"></i> New Ticket</a>
+                        <a href="new-ticket.html" class="nav-item active"><i class="fas fa-ticket-alt"></i> New
+                            Ticket</a>
                         <a href="umrah-entry.html" class="nav-item"><i class="fas fa-kaaba"></i> Umrah Entry</a>
                     </div>
                 </div>
                 <div class="nav-section">
-                    <div class="nav-section-header" onclick="this.parentElement.classList.toggle('collapsed')">Businesses &amp; Network <i class="fas fa-chevron-down chevron"></i></div>
+                    <div class="nav-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
+                        Businesses &amp; Network <i class="fas fa-chevron-down chevron"></i></div>
                     <div class="nav-section-items">
                         <a href="clients.html" class="nav-item"><i class="fas fa-users"></i> Clients</a>
                         <a href="suppliers.html" class="nav-item"><i class="fas fa-boxes"></i> Suppliers</a>
-                        <a href="supplier-payments.html" class="nav-item"><i class="fas fa-money-check-alt"></i> Supplier Payments</a>
+                        <a href="supplier-payments.html" class="nav-item"><i class="fas fa-money-check-alt"></i>
+                            Supplier Payments</a>
                     </div>
                 </div>
                 <div class="nav-section">
-                    <div class="nav-section-header" onclick="this.parentElement.classList.toggle('collapsed')">Finance &amp; Accounts <i class="fas fa-chevron-down chevron"></i></div>
+                    <div class="nav-section-header" onclick="this.parentElement.classList.toggle('collapsed')">Finance
+                        &amp; Accounts <i class="fas fa-chevron-down chevron"></i></div>
                     <div class="nav-section-items">
                         <a href="invoices.html" class="nav-item"><i class="fas fa-file-invoice-dollar"></i> Invoices</a>
                         <a href="ledger.html" class="nav-item"><i class="fas fa-book"></i> Ledger</a>
@@ -66,13 +72,15 @@
                     </div>
                 </div>
                 <div class="nav-section">
-                    <div class="nav-section-header" onclick="this.parentElement.classList.toggle('collapsed')">Reports <i class="fas fa-chevron-down chevron"></i></div>
+                    <div class="nav-section-header" onclick="this.parentElement.classList.toggle('collapsed')">Reports
+                        <i class="fas fa-chevron-down chevron"></i></div>
                     <div class="nav-section-items">
                         <a href="reports.html" class="nav-item"><i class="fas fa-chart-bar"></i> Reports</a>
                     </div>
                 </div>
                 <div class="nav-section">
-                    <div class="nav-section-header" onclick="this.parentElement.classList.toggle('collapsed')">System <i class="fas fa-chevron-down chevron"></i></div>
+                    <div class="nav-section-header" onclick="this.parentElement.classList.toggle('collapsed')">System <i
+                            class="fas fa-chevron-down chevron"></i></div>
                     <div class="nav-section-items">
                         <a href="staff.html" class="nav-item"><i class="fas fa-user-shield"></i> Staff Accounts</a>
                         <a href="backup.html" class="nav-item"><i class="fas fa-database"></i> Backup</a>
@@ -89,149 +97,325 @@
                 <div class="page-title">New Ticket Entry</div>
                 <div class="global-search">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="globalSearchInput" placeholder="Search tickets, clients, invoices..." autocomplete="off">
+                    <input type="text" id="globalSearchInput" placeholder="Search tickets, clients, invoices..."
+                        autocomplete="off">
                     <div class="search-dropdown" id="searchDropdown"></div>
                 </div>
                 <div class="topbar-actions">
-                    <button class="topbar-icon-btn"><i class="fas fa-bell"></i><span class="notif-badge"></span></button>
+                    <button class="topbar-icon-btn"><i class="fas fa-bell"></i><span
+                            class="notif-badge"></span></button>
                     <div class="user-profile">
                         <span class="avatar">A</span>
                         <span>Admin</span>
                     </div>
                 </div>
             </div>
-<!-- Content Area -->
+            <!-- Content Area -->
             <div class="content-area">
-                <div style="max-width: 900px; margin: 0 auto; width: 100%;">
 
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+                <!-- Page Header -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+                    <div>
+                        <h2 style="margin-bottom: 4px;">Create Ticket Invoice</h2>
+                        <p class="text-muted" style="margin: 0;">Create a new airline ticket invoice for your customers
+                        </p>
+                    </div>
+                </div>
+
+                <div id="alertMessage" class="alert"></div>
+
+                <form id="ticketForm" autocomplete="off">
+
+                    <div style="display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start;">
+
+                        <!-- LEFT COLUMN: Main Form -->
                         <div>
-                            <h2 style="margin-bottom: 6px; font-size: 1.5rem;">New Ticket Entry</h2>
-                            <p class="text-muted" style="margin: 0;">Create a structured passenger and itinerary record.
-                            </p>
+
+                            <!-- SECTION 1: Invoice Details -->
+                            <div class="card" style="margin-bottom: 20px;">
+                                <div class="form-section-title"><i class="fas fa-file-invoice"
+                                        style="margin-right: 8px; color: var(--accent);"></i> Invoice Details</div>
+                                <div style="margin-bottom: 16px;">
+                                    <label class="form-label">Selling To</label>
+                                    <div style="display: flex; gap: 8px;" id="sellingToToggle">
+                                        <button type="button" class="btn toggle-btn active" data-value="agency">Agency /
+                                            Sub-Company</button>
+                                        <button type="button" class="btn toggle-btn" data-value="walkin">Walk-in
+                                            Customer</button>
+                                    </div>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">Customer (Company) *</label>
+                                        <select id="invoiceClient" class="form-control" required>
+                                            <option value="">Select Customer...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Vendor / Agency</label>
+                                        <select id="invoiceVendor" class="form-control">
+                                            <option value="">Select Vendor...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Invoice Number</label>
+                                        <input type="text" id="invoiceNumber" class="form-control"
+                                            placeholder="Auto-generated">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Issue Date *</label>
+                                        <input type="date" id="issueDate" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Payment Due Date</label>
+                                        <input type="date" id="dueDate" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Status</label>
+                                        <select id="invoiceStatus" class="form-control">
+                                            <option value="Hold">Hold</option>
+                                            <option value="Pending" selected>Pending</option>
+                                            <option value="Confirmed">Confirmed</option>
+                                            <option value="Cancelled">Cancelled</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Meal Included</label>
+                                        <select id="mealIncluded" class="form-control">
+                                            <option value="No">No</option>
+                                            <option value="Yes">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SECTION 2: Passengers -->
+                            <div class="card" style="margin-bottom: 20px;">
+                                <div class="form-section-title"
+                                    style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span><i class="fas fa-users" style="margin-right: 8px; color: var(--accent);"></i>
+                                        Passengers</span>
+                                    <button type="button" class="btn" id="btnAddPassenger"
+                                        style="padding: 6px 14px; font-size: 0.75rem;"><i class="fas fa-plus"
+                                            style="margin-right: 4px;"></i> Add Passenger</button>
+                                </div>
+                                <div class="table-container">
+                                    <table id="passengerTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Given Name</th>
+                                                <th>Surname</th>
+                                                <th>Type</th>
+                                                <th>Passport</th>
+                                                <th>Expiry</th>
+                                                <th>DOB</th>
+                                                <th>PNR</th>
+                                                <th>Ticket #</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="passengerBody">
+                                            <!-- Dynamic rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- SECTION 3: Outbound Flights -->
+                            <div class="card" style="margin-bottom: 20px;">
+                                <div class="form-section-title"
+                                    style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span><i class="fas fa-plane-departure"
+                                            style="margin-right: 8px; color: var(--success);"></i> Outbound
+                                        Flights</span>
+                                    <button type="button" class="btn" id="btnAddOutbound"
+                                        style="padding: 6px 14px; font-size: 0.75rem;"><i class="fas fa-plus"
+                                            style="margin-right: 4px;"></i> Add Segment</button>
+                                </div>
+                                <div class="table-container">
+                                    <table id="outboundTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Airline</th>
+                                                <th>Flight #</th>
+                                                <th>Sector</th>
+                                                <th>Departure</th>
+                                                <th>Arrival</th>
+                                                <th>Baggage</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="outboundBody">
+                                            <!-- Dynamic rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- SECTION 4: Inbound Flights -->
+                            <div class="card" style="margin-bottom: 20px;">
+                                <div class="form-section-title"
+                                    style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span><i class="fas fa-plane-arrival"
+                                            style="margin-right: 8px; color: var(--warning);"></i> Inbound
+                                        Flights</span>
+                                    <button type="button" class="btn" id="btnAddInbound"
+                                        style="padding: 6px 14px; font-size: 0.75rem;"><i class="fas fa-plus"
+                                            style="margin-right: 4px;"></i> Add Segment</button>
+                                </div>
+                                <div class="table-container">
+                                    <table id="inboundTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Airline</th>
+                                                <th>Flight #</th>
+                                                <th>Sector</th>
+                                                <th>Departure</th>
+                                                <th>Arrival</th>
+                                                <th>Baggage</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="inboundBody">
+                                            <tr id="inboundEmpty">
+                                                <td colspan="7"
+                                                    style="text-align: center; color: var(--text-muted); padding: 20px;">
+                                                    No inbound segments added.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- SECTION 5: Financials -->
+                            <div class="card" style="margin-bottom: 20px;">
+                                <div class="form-section-title"><i class="fas fa-calculator"
+                                        style="margin-right: 8px; color: var(--purple);"></i> Fare Breakdown</div>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Pax Type</th>
+                                                <th>Qty</th>
+                                                <th>Rate (PKR)</th>
+                                                <th>Cost (PKR)</th>
+                                                <th>Total Rate</th>
+                                                <th>Total Cost</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="font-weight:500;">Adults</td>
+                                                <td><input type="number" class="form-control fare-input" id="adultQty"
+                                                        min="0" value="1" style="width:70px;padding:6px 8px;"></td>
+                                                <td><input type="number" class="form-control fare-input" id="adultRate"
+                                                        min="0" value="0" style="width:120px;padding:6px 8px;"></td>
+                                                <td><input type="number" class="form-control fare-input" id="adultCost"
+                                                        min="0" value="0" style="width:120px;padding:6px 8px;"></td>
+                                                <td id="adultTotalRate" style="font-weight:600;">Rs 0</td>
+                                                <td id="adultTotalCost" style="font-weight:600;">Rs 0</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:500;">Children</td>
+                                                <td><input type="number" class="form-control fare-input" id="childQty"
+                                                        min="0" value="0" style="width:70px;padding:6px 8px;"></td>
+                                                <td><input type="number" class="form-control fare-input" id="childRate"
+                                                        min="0" value="0" style="width:120px;padding:6px 8px;"></td>
+                                                <td><input type="number" class="form-control fare-input" id="childCost"
+                                                        min="0" value="0" style="width:120px;padding:6px 8px;"></td>
+                                                <td id="childTotalRate" style="font-weight:600;">Rs 0</td>
+                                                <td id="childTotalCost" style="font-weight:600;">Rs 0</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:500;">Infants</td>
+                                                <td><input type="number" class="form-control fare-input" id="infantQty"
+                                                        min="0" value="0" style="width:70px;padding:6px 8px;"></td>
+                                                <td><input type="number" class="form-control fare-input" id="infantRate"
+                                                        min="0" value="0" style="width:120px;padding:6px 8px;"></td>
+                                                <td><input type="number" class="form-control fare-input" id="infantCost"
+                                                        min="0" value="0" style="width:120px;padding:6px 8px;"></td>
+                                                <td id="infantTotalRate" style="font-weight:600;">Rs 0</td>
+                                                <td id="infantTotalCost" style="font-weight:600;">Rs 0</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="form-grid" style="margin-top: 16px;">
+                                    <div class="form-group">
+                                        <label class="form-label">Service Fee (PKR)</label>
+                                        <input type="number" class="form-control fare-input" id="serviceFee" min="0"
+                                            value="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Discount (PKR)</label>
+                                        <input type="number" class="form-control fare-input" id="discountAmount" min="0"
+                                            value="0">
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
-                        <button class="btn btn-save" id="btnSave"
-                            onclick="document.getElementById('ticketForm').requestSubmit();"><i class="fas fa-save"
-                                style="margin-right: 8px;"></i> Save Ticket</button>
+
+                        <!-- RIGHT COLUMN: Summary Panel -->
+                        <div style="position: sticky; top: 80px;">
+                            <div class="card" style="border-top: 3px solid var(--accent);">
+                                <h3 style="margin-bottom: 16px; font-size: 0.9375rem;"><i class="fas fa-receipt"
+                                        style="margin-right: 8px; color: var(--accent);"></i> Invoice Summary</h3>
+
+                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                                    <div
+                                        style="display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
+                                        <span class="text-muted">Total Fare</span>
+                                        <span style="font-weight: 600;" id="sumTotalFare">Rs 0</span>
+                                    </div>
+                                    <div
+                                        style="display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
+                                        <span class="text-muted">Service Fee</span>
+                                        <span style="font-weight: 500;" id="sumServiceFee">Rs 0</span>
+                                    </div>
+                                    <div
+                                        style="display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
+                                        <span class="text-muted">Discount</span>
+                                        <span style="font-weight: 500; color: var(--danger);" id="sumDiscount">- Rs
+                                            0</span>
+                                    </div>
+                                    <div
+                                        style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 2px solid var(--accent); font-size: 1.05rem;">
+                                        <span style="font-weight: 700;">Grand Total</span>
+                                        <span style="font-weight: 700; color: var(--accent);" id="sumGrandTotal">Rs
+                                            0</span>
+                                    </div>
+                                    <div
+                                        style="display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
+                                        <span class="text-muted">Total Cost</span>
+                                        <span style="font-weight: 600;" id="sumTotalCost">Rs 0</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 12px 14px; border-radius: var(--radius-sm);"
+                                        id="profitRow">
+                                        <span style="font-weight: 700;">Net Profit</span>
+                                        <span style="font-weight: 700;" id="sumNetProfit">Rs 0</span>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 20px;">
+                                    <button type="submit" class="btn" id="btnSaveInvoice"
+                                        style="background: linear-gradient(135deg, #2ea043, #3fb950); padding: 12px; font-weight: 600;"><i
+                                            class="fas fa-save" style="margin-right: 6px;"></i> Save Invoice</button>
+                                    <button type="button" class="btn" id="btnGeneratePdf"
+                                        style="background: var(--accent); padding: 10px;"><i class="fas fa-file-pdf"
+                                            style="margin-right: 6px;"></i> Generate PDF</button>
+                                    <button type="button" class="btn" id="btnWhatsapp"
+                                        style="background: #25d366; padding: 10px;"><i class="fab fa-whatsapp"
+                                            style="margin-right: 6px;"></i> Send WhatsApp</button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div id="alertMessage" class="alert"></div>
+                </form>
 
-                    <form id="ticketForm">
-                        <!-- CLIENT INFO -->
-                        <div class="card" style="margin-bottom: 24px; padding: 32px;">
-                            <div class="form-section-title"
-                                style="display: flex; justify-content: space-between; align-items: center;">
-                                <span>Client Information</span>
-                                <div style="display: flex; gap: 8px;">
-                                    <input type="text" id="searchPnrInput" class="form-control"
-                                        placeholder="Search PNR..." style="height: 36px; width: 200px;">
-                                    <button type="button" id="btnSearchPnr" class="btn btn-outline"
-                                        style="height: 36px; padding: 0 16px;"><i class="fas fa-search"></i>
-                                        Search</button>
-                                    <button type="button" id="btnAddPassenger" class="btn btn-outline"
-                                        style="height: 36px; padding: 0 16px;"><i class="fas fa-user-plus"></i> Add
-                                        Passenger</button>
-                                </div>
-                            </div>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label class="form-label">Client Name *</label>
-                                    <input type="text" id="clientName" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Phone Number *</label>
-                                    <input type="text" id="clientPhone" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Passport Number</label>
-                                    <input type="text" id="clientPassport" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- FLIGHT DETAILS -->
-                        <div class="card" style="margin-bottom: 24px; padding: 32px;">
-                            <div class="form-section-title"
-                                style="display: flex; justify-content: space-between; align-items: center;">
-                                <span>Flight Details</span>
-                                <button type="button" id="btnAddSegment" class="btn btn-outline"
-                                    style="height: 36px; padding: 0 16px;"><i class="fas fa-plane"></i> Add
-                                    Segment</button>
-                            </div>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label class="form-label">PNR *</label>
-                                    <input type="text" id="pnr" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Airline *</label>
-                                    <input type="text" id="airline" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Supplier *</label>
-                                    <input type="text" id="supplierName" class="form-control" required>
-                                </div>
-                                <div class="form-group full-width">
-                                    <label class="form-label">Outbound Flight (From - To - Date) *</label>
-                                    <input type="text" id="outboundFlight" class="form-control"
-                                        placeholder="e.g. KHI - DXB - 12 Nov 2026" required>
-                                </div>
-                                <div class="form-group full-width">
-                                    <label class="form-label">Inbound Flight (From - To - Date)</label>
-                                    <input type="text" id="inboundFlight" class="form-control"
-                                        placeholder="e.g. DXB - KHI - 25 Nov 2026">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- FARE DETAILS -->
-                        <div class="card" style="margin-bottom: 24px; padding: 32px;">
-                            <div class="form-section-title">Fare Details</div>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label class="form-label">Cost Price (Rs) *</label>
-                                    <input type="number" id="costPrice" class="form-control" min="0" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Selling Price (Rs) *</label>
-                                    <input type="number" id="sellingPrice" class="form-control" min="0" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Profit (Rs)</label>
-                                    <input type="text" id="profit" class="form-control" readonly
-                                        style="background: #f8fafc; font-weight: 600;">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- PAYMENT SECTION -->
-                        <div class="card" style="margin-bottom: 24px; padding: 32px;">
-                            <div class="form-section-title">Payment Section</div>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label class="form-label">Amount Received (Rs) *</label>
-                                    <input type="number" id="amountReceived" class="form-control" min="0" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Payment Status</label>
-                                    <select id="paymentStatus" class="form-control">
-                                        <option value="Credit">Credit</option>
-                                        <option value="Partial">Partial</option>
-                                        <option value="Paid">Paid</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Remaining Balance (Rs)</label>
-                                    <input type="text" id="remainingBalance" class="form-control" readonly
-                                        style="background: #f8fafc; font-weight: 600;">
-                                </div>
-                            </div>
-                        </div>
-
-                    </form>
-                </div> <!-- End Centered Max Width -->
             </div>
         </div>
 
