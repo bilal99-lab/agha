@@ -61,6 +61,7 @@ document.addEventListener("click", function (e) {
     if (e.target.closest('#logoutBtn')) {
         e.preventDefault();
         localStorage.removeItem('portal_logged_in');
+        localStorage.removeItem('portal_logged_in_user');
         window.location.href = 'login.html';
     }
 });
