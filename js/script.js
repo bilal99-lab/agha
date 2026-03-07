@@ -1,153 +1,55 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Agha Air Travel — Shared Futuristic Scripts
+// Particle Grid + Nav + Scroll Reveal
 
-    // --- Navbar Scroll Effect ---
-    const navbar = document.getElementById('navbar');
+// ---- Particle Grid ----
+(function () {
+    const c = document.getElementById('particleCanvas');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    let W, H, particles = [];
 
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
+    function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class P {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * W;
+            this.y = Math.random() * H;
+            this.s = Math.random() * 1.5 + 0.3;
+            this.vy = Math.random() * 0.3 + 0.05;
+            this.o = Math.random() * 0.5 + 0.1;
         }
-    });
-
-    // --- Mobile Menu Toggle ---
-    const mobileBtn = document.getElementById('mobile-btn');
-    const navLinks = document.getElementById('nav-links');
-    const links = navLinks.querySelectorAll('a');
-
-    mobileBtn.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = mobileBtn.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.classList.remove('fa-bars');
-            icon.classList.add('fa-times');
-        } else {
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
-        }
-    });
-
-    // Close menu on link click
-    links.forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            const icon = mobileBtn.querySelector('i');
-            if (icon) {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            }
-        });
-    });
-
-    // --- Active Link Updates on Scroll ---
-    const sections = document.querySelectorAll('section, header.hero');
-
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            if (window.scrollY >= (sectionTop - 200)) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        links.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
-            }
-        });
-    });
-
-    // --- Intersection Observer for Scroll Animations ---
-    const animatedElements = document.querySelectorAll('.fade-up, .fade-left, .fade-right');
-
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.15
-    };
-
-    const scrollObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Add the class that triggers the animation
-                entry.target.classList.add('in-view');
-                // Optional: stop observing once animated
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    animatedElements.forEach(el => {
-        scrollObserver.observe(el);
-    });
-
-    // --- Fallback check for items already in view on load ---
-    setTimeout(() => {
-        animatedElements.forEach(el => {
-            const rect = el.getBoundingClientRect();
-            if (rect.top <= window.innerHeight && rect.bottom >= 0) {
-                el.classList.add('in-view');
-            }
-        });
-    }, 100);
-
-    // --- Testimonial Slider Functionality ---
-    const track = document.getElementById('testimonial-track');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-
-    if (track && prevBtn && nextBtn) {
-        // Calculate scroll amount based on card width
-        const scrollAmount = () => {
-            const card = track.querySelector('.testimonial-card');
-            return card ? card.offsetWidth + 30 : 380; // width + gap
-        };
-
-        nextBtn.addEventListener('click', () => {
-            track.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
-        });
-
-        prevBtn.addEventListener('click', () => {
-            track.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
-        });
+        update() { this.y -= this.vy; if (this.y < -5) { this.y = H + 5; this.x = Math.random() * W; } }
+        draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.s, 0, Math.PI * 2); ctx.fillStyle = `rgba(0,229,255,${this.o})`; ctx.fill(); }
     }
 
-    // --- Animated Counting Effect for Trust Stats ---
-    const statNumbers = document.querySelectorAll('.stat-number');
-    let hasAnimatedStats = false;
+    for (let i = 0; i < 100; i++) particles.push(new P());
 
-    const statsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !hasAnimatedStats) {
-                hasAnimatedStats = true;
-                statNumbers.forEach(stat => {
-                    const target = +stat.getAttribute('data-target');
-                    const duration = 2000; // ms
-                    const increment = target / (duration / 16); // 60fps
-
-                    let current = 0;
-
-                    const updateCounter = () => {
-                        current += increment;
-                        if (current < target) {
-                            stat.innerText = Math.ceil(current) + (target > 50 ? '+' : '');
-                            requestAnimationFrame(updateCounter);
-                        } else {
-                            stat.innerText = target + (target > 50 ? '+' : '');
-                        }
-                    };
-                    updateCounter();
-                });
+    (function loop() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach(p => { p.update(); p.draw(); });
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+                const d = Math.sqrt(dx * dx + dy * dy);
+                if (d < 110) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = `rgba(0,229,255,${0.04 * (1 - d / 110)})`; ctx.lineWidth = 0.5; ctx.stroke(); }
             }
-        });
-    }, { threshold: 0.5 });
+        }
+        requestAnimationFrame(loop);
+    })();
+})();
 
-    const statsSection = document.querySelector('.stats-strip');
-    if (statsSection && statNumbers.length > 0) {
-        statsObserver.observe(statsSection);
-    }
+// ---- Nav Scroll ----
+window.addEventListener('scroll', () => { document.getElementById('mainNav')?.classList.toggle('scrolled', window.scrollY > 60); });
+
+// ---- Mobile Toggle ----
+document.getElementById('navToggle')?.addEventListener('click', () => {
+    const l = document.getElementById('navLinks');
+    l.style.display = l.style.display === 'flex' ? 'none' : 'flex';
 });
+
+// ---- Scroll Reveal ----
+const ro = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
