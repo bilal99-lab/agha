@@ -1247,3 +1247,12 @@ tr:hover td {
     border-color: var(--accent);
     box-shadow: 0 0 0 2px var(--accent-glow);
 }
+
+/* Ticket Invoice Page - Single Column */
+.ticket-page {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    max-width: 960px;
+}
