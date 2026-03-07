@@ -4,534 +4,455 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agha Air Travel | Air Tickets & Umrah Services in Karachi</title>
+    <title>Agha Air Travel — Premium Travel Agency</title>
     <meta name="description"
-        content="Agha Air Travel offers premium international and domestic air tickets, Umrah packages, and visa services in Karachi, Pakistan. Fast, trusted, and transparent.">
-
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="Agha Air Travel | Air Tickets & Umrah Services in Karachi">
-    <meta property="og:description"
-        content="Agha Air Travel offers premium international and domestic air tickets, Umrah packages, and visa services in Karachi, Pakistan. Fast, trusted, and transparent.">
-    <meta property="og:image" content="https://example.com/logo.png">
-    <meta property="og:type" content="website">
-
-    <!-- JSON-LD Schema -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "TravelAgency",
-      "name": "Agha Air Travel",
-      "image": "https://example.com/logo.png",
-      "telephone": "03058107136",
-      "email": "aghairtravel101@gmail.com",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Office #1,2 Faizan Market, Main Dawood Chorangi, Landhi",
-        "addressLocality": "Karachi",
-        "addressCountry": "PK"
-      }
-    }
-    </script>
-    <!-- Font Preloading & Optimization -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap"
-        rel="stylesheet">
-    <!-- Font Awesome -->
+        content="Agha Air Travel offers premium flight booking, Umrah packages, visa assistance and global travel services. Fly smarter, travel better.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-    <!-- Glass Navbar -->
-    <nav class="navbar glass-nav" id="navbar">
-        <div class="container nav-content">
-            <a href="#" class="brand">
-                <div class="logo-wrapper">
-                    <!-- Text logo fallback in case image is missing -->
-                    <span class="logo-text">AAT</span>
-                </div>
-                <span class="brand-name">Agha Air Travel</span>
+    <!-- ═══════════ NAVIGATION ═══════════ -->
+    <nav class="nav" id="mainNav">
+        <div class="container">
+            <a href="index.html" class="nav-brand">
+                <div class="nav-brand-icon"><i class="fas fa-plane"></i></div>
+                Agha Air Travel
             </a>
-
-            <div class="nav-links" id="nav-links">
-                <a href="#home" class="active">Home</a>
-                <a href="#services">Services</a>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html" class="active">Home</a>
+                <a href="services.html">Services</a>
                 <a href="air-ticket.html">Air Tickets</a>
-                <a href="umrah.html">Umrah</a>
-                <a href="#benefits">Why Us</a>
-                <a href="#contact">Contact</a>
-                <a href="portal/dashboard.html" class="btn btn-outline">Login</a>
+                <a href="umrah.html">Umrah Packages</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="portal/login.html" class="nav-cta">Agent Portal</a>
             </div>
-
-            <button class="mobile-menu-btn" id="mobile-btn">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button class="nav-mobile-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="hero-bg-gradient"></div>
-        <div class="container hero-grid">
-            <div class="hero-text fade-up">
-                <div class="badge">Trusted Partner in Travel</div>
-                <h1>Elevate Your Journey<br>With <span>Agha Air Travel</span></h1>
-                <p>Professional travel solutions with reliable service, competitive fares, and complete support.
-                    Experience the modern way to book your flights and Umrah packages.</p>
-                <div class="hero-cta">
-                    <a href="#contact" class="btn btn-primary btn-lg">
-                        Book Ticket <i class="fas fa-arrow-right"></i>
-                    </a>
-                    <a href="#umrah" class="btn btn-glass btn-lg">
-                        Explore Umrah
-                    </a>
+    <!-- ═══════════ HERO ═══════════ -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge"><i class="fas fa-bolt"></i> Trusted by 10,000+ travelers</div>
+                <h1 class="hero-title">
+                    Fly Smarter.<br>
+                    <span class="line2">Travel Better.</span>
+                </h1>
+                <p class="hero-sub">Premium flight booking, Umrah packages and global travel services — powered by 15+
+                    years of expertise.</p>
+                <div class="hero-buttons">
+                    <a href="air-ticket.html" class="btn-primary"><i class="fas fa-ticket-alt"></i> Book Ticket</a>
+                    <a href="umrah.html" class="btn-secondary"><i class="fas fa-kaaba"></i> Explore Umrah Packages</a>
                 </div>
             </div>
-            <div class="hero-visual fade-left">
-                <!-- Floating airplane graphic -->
-                <div class="floating-plane">
-                    <i class="fas fa-plane"></i>
-                </div>
-                <div class="glass-card hero-stat-card">
-                    <div class="stat-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-info">
-                        <h4>10k+</h4>
-                        <p>Happy Travelers</p>
+            <div class="hero-visual">
+                <div class="hero-plane"><i class="fas fa-plane"></i></div>
+
+                <div class="hero-float-card fc-1">
+                    <div class="icon-wrap"><i class="fas fa-tags"></i></div>
+                    <div class="fc-text">
+                        <h4>Best Fares</h4>
+                        <p>Save up to 40% on flights</p>
                     </div>
                 </div>
-                <div class="glass-card hero-stat-card secondary">
-                    <div class="stat-icon"><i class="fas fa-kaaba"></i></div>
-                    <div class="stat-info">
-                        <h4>5.0 ★</h4>
-                        <p>Umrah Ratings</p>
+
+                <div class="hero-float-card fc-2">
+                    <div class="icon-wrap"><i class="fas fa-smile-beam"></i></div>
+                    <div class="fc-text">
+                        <h4>Happy Travelers</h4>
+                        <p>10,000+ satisfied customers</p>
+                    </div>
+                </div>
+
+                <div class="hero-float-card fc-3">
+                    <div class="icon-wrap"><i class="fas fa-star"></i></div>
+                    <div class="fc-text">
+                        <h4>5-Star Rated</h4>
+                        <p>Trusted travel agency</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Trust Badge Strip -->
-    <div class="trust-strip">
-        <div class="container trust-content">
-            <p>Trusted by global partners & airlines</p>
-            <div class="partner-logos">
-                <i class="fab fa-avianex"></i>
-                <i class="fas fa-plane-departure"></i>
-                <i class="fas fa-globe"></i>
-                <i class="fas fa-passport"></i>
-                <i class="fas fa-plane-arrival"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Services Section -->
-    <section id="services" class="section bg-light-blue">
+    <!-- ═══════════ FEATURES ═══════════ -->
+    <section class="section section-alt" id="features">
         <div class="container">
-            <div class="section-header fade-up">
-                <h2 class="gradient-text">Premium Services</h2>
-                <p>Curated solutions designed for seamless global connectivity.</p>
+            <div class="section-header reveal">
+                <div class="section-label"><i class="fas fa-star"></i> What We Offer</div>
+                <h2 class="section-title">Everything You Need to <span class="grad">Travel the World</span></h2>
+                <p class="section-subtitle">From flight tickets to complete travel packages, we've got every aspect of
+                    your journey covered.</p>
             </div>
-
-            <div class="services-grid">
-                <div class="service-card modern fade-up">
-                    <div class="card-icon"><i class="fas fa-plane"></i></div>
-                    <h3>Global Air Tickets</h3>
-                    <p>Securing the most competitive fares across international and domestic routes with top-tier
-                        airlines.</p>
-                    <a href="air-ticket.html" class="card-link">Learn more <i class="fas fa-chevron-right"></i></a>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <div class="feature-icon fi-1"><i class="fas fa-plane-departure"></i></div>
+                    <h3>Flight Booking</h3>
+                    <p>Domestic and international flights at the best prices with instant confirmation and flexible
+                        booking options.</p>
                 </div>
-
-                <div class="service-card modern fade-up" style="transition-delay: 100ms;">
-                    <div class="card-icon feature-icon"><i class="fas fa-kaaba"></i></div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon fi-2"><i class="fas fa-kaaba"></i></div>
                     <h3>Umrah Packages</h3>
-                    <p>Comprehensive spiritual journeys handling everything from visa generation to ground transport.
-                    </p>
-                    <a href="#umrah" class="card-link">Learn more <i class="fas fa-chevron-right"></i></a>
+                    <p>Complete Umrah packages including flights, hotels, transport and Ziyarat with guided spiritual
+                        experiences.</p>
                 </div>
-
-                <div class="service-card modern fade-up" style="transition-delay: 200ms;">
-                    <div class="card-icon"><i class="fas fa-passport"></i></div>
-                    <h3>Visa Processing</h3>
-                    <p>Streamlined and expedited visa assistance for tourist and business travel worldwide.</p>
-                    <a href="#" class="card-link">Learn more <i class="fas fa-chevron-right"></i></a>
+                <div class="feature-card reveal">
+                    <div class="feature-icon fi-3"><i class="fas fa-passport"></i></div>
+                    <h3>Visa Assistance</h3>
+                    <p>Expert visa processing for all countries with high approval rates and hassle-free documentation
+                        support.</p>
                 </div>
-
-                <div class="service-card modern fade-up" style="transition-delay: 300ms;">
-                    <div class="card-icon"><i class="fas fa-user-tie"></i></div>
-                    <h3>Travel Consultancy</h3>
-                    <p>Expert itinerary planning and corporate travel management tailored to your specific needs.</p>
-                    <a href="#" class="card-link">Learn more <i class="fas fa-chevron-right"></i></a>
+                <div class="feature-card reveal">
+                    <div class="feature-icon fi-4"><i class="fas fa-building"></i></div>
+                    <h3>Corporate Travel</h3>
+                    <p>Dedicated corporate travel solutions with negotiated rates, priority booking and expense
+                        management.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon fi-5"><i class="fas fa-users"></i></div>
+                    <h3>Group Tours</h3>
+                    <p>Customized group travel packages for families, friends and organizations with special group
+                        discounts.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon fi-6"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Travel Insurance</h3>
+                    <p>Comprehensive travel insurance covering medical emergencies, trip cancellation and baggage
+                        protection.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Feature Highlight Section (Two-Column) -->
-    <section id="benefits" class="section">
+    <!-- ═══════════ DESTINATIONS ═══════════ -->
+    <section class="section section-dark" id="destinations">
         <div class="container">
-            <div class="feature-split layout-reverse">
-                <div class="feature-content fade-right">
-                    <div class="badge badge-blue">Why Choose Us</div>
-                    <h2>The Modern Standard in Travel Management</h2>
-                    <p class="lead-text">We combine technology with personalized service to deliver an unmatched travel
-                        experience.</p>
+            <div class="section-header reveal">
+                <div class="section-label"><i class="fas fa-globe-asia"></i> Top Destinations</div>
+                <h2 class="section-title">Explore <span class="grad">Popular Destinations</span></h2>
+                <p class="section-subtitle">Discover breathtaking destinations handpicked by our travel experts for
+                    unforgettable experiences.</p>
+            </div>
+            <div class="dest-grid reveal">
+                <div class="dest-card">
+                    <img src="images/dubai.png" alt="Dubai">
+                    <div class="dest-overlay">
+                        <h3>Dubai</h3>
+                        <p>UAE • From PKR 85,000</p>
+                    </div>
+                </div>
+                <div class="dest-card">
+                    <img src="images/turkey.png" alt="Turkey">
+                    <div class="dest-overlay">
+                        <h3>Turkey</h3>
+                        <p>Istanbul • From PKR 120,000</p>
+                    </div>
+                </div>
+                <div class="dest-card">
+                    <img src="images/saudi.png" alt="Saudi Arabia">
+                    <div class="dest-overlay">
+                        <h3>Saudi Arabia</h3>
+                        <p>Jeddah / Madinah • From PKR 95,000</p>
+                    </div>
+                </div>
+                <div class="dest-card">
+                    <img src="images/malaysia.png" alt="Malaysia">
+                    <div class="dest-overlay">
+                        <h3>Malaysia</h3>
+                        <p>Kuala Lumpur • From PKR 110,000</p>
+                    </div>
+                </div>
+                <div class="dest-card">
+                    <img src="images/thailand.png" alt="Thailand">
+                    <div class="dest-overlay">
+                        <h3>Thailand</h3>
+                        <p>Bangkok • From PKR 100,000</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                    <ul class="benefit-list">
-                        <li>
-                            <div class="check-icon"><i class="fas fa-check"></i></div>
-                            <div>
-                                <h4>Transparent Pricing</h4>
-                                <p>No hidden fees or surprise charges. What you see is exactly what you pay.</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="check-icon"><i class="fas fa-check"></i></div>
-                            <div>
-                                <h4>24/7 Personalized Support</h4>
-                                <p>Our dedicated travel consultants are available round the clock for emergencies.</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="check-icon"><i class="fas fa-check"></i></div>
-                            <div>
-                                <h4>Global Network</h4>
-                                <p>Direct partnerships with trusted global vendors and premium hotel chains.</p>
-                            </div>
-                        </li>
+    <!-- ═══════════ WHY CHOOSE US ═══════════ -->
+    <section class="section section-alt" id="why">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-label"><i class="fas fa-award"></i> Why Us</div>
+                <h2 class="section-title">Why Travelers <span class="grad">Choose Us</span></h2>
+            </div>
+            <div class="why-grid">
+                <div class="why-card reveal">
+                    <div class="why-icon"><i class="fas fa-tag"></i></div>
+                    <h4>Best Prices</h4>
+                    <p>Guaranteed competitive fares</p>
+                </div>
+                <div class="why-card reveal">
+                    <div class="why-icon" style="background: var(--grad-secondary);"><i class="fas fa-handshake"></i>
+                    </div>
+                    <h4>Trusted Agents</h4>
+                    <p>15+ years of experience</p>
+                </div>
+                <div class="why-card reveal">
+                    <div class="why-icon" style="background: var(--grad-accent);"><i class="fas fa-headset"></i></div>
+                    <h4>24/7 Support</h4>
+                    <p>Always here when you need us</p>
+                </div>
+                <div class="why-card reveal">
+                    <div class="why-icon"><i class="fas fa-bolt"></i></div>
+                    <h4>Fast Booking</h4>
+                    <p>Instant confirmation</p>
+                </div>
+                <div class="why-card reveal">
+                    <div class="why-icon" style="background: var(--grad-secondary);"><i class="fas fa-lock"></i></div>
+                    <h4>Secure Payments</h4>
+                    <p>100% safe transactions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ STATS ═══════════ -->
+    <section class="section section-dark">
+        <div class="container">
+            <div class="stats-bar reveal">
+                <div class="stat-item">
+                    <div class="stat-num" data-target="10000">0</div>
+                    <div class="stat-label">Happy Travelers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num" data-target="15">0</div>
+                    <div class="stat-label">Years Experience</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num" data-target="500">0</div>
+                    <div class="stat-label">Destinations</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num" data-target="24">0</div>
+                    <div class="stat-label">/ 7 Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ TESTIMONIALS ═══════════ -->
+    <section class="section section-alt" id="testimonials">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-label"><i class="fas fa-quote-left"></i> Testimonials</div>
+                <h2 class="section-title">What Our <span class="grad">Clients Say</span></h2>
+            </div>
+            <div class="testimonial-track reveal">
+                <div class="testimonial-card">
+                    <div class="tc-header">
+                        <div class="tc-avatar">A</div>
+                        <div>
+                            <div class="tc-name">Ahmed Khan</div>
+                            <div class="tc-role">Business Traveler</div>
+                        </div>
+                    </div>
+                    <div class="tc-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                            class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="tc-text">"Agha Air Travel made my corporate trips seamless. Their attention to detail and
+                        competitive pricing is unmatched. Highly recommend!"</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="tc-header">
+                        <div class="tc-avatar" style="background: var(--grad-secondary);">F</div>
+                        <div>
+                            <div class="tc-name">Fatima Rizvi</div>
+                            <div class="tc-role">Umrah Pilgrim</div>
+                        </div>
+                    </div>
+                    <div class="tc-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                            class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="tc-text">"Our Umrah experience was spiritually fulfilling thanks to their excellent
+                        package. Everything was perfectly organized from start to finish."</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="tc-header">
+                        <div class="tc-avatar" style="background: var(--grad-accent);">M</div>
+                        <div>
+                            <div class="tc-name">Muhammad Ali</div>
+                            <div class="tc-role">Family Traveler</div>
+                        </div>
+                    </div>
+                    <div class="tc-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                            class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="tc-text">"Took my family to Turkey for the first time. Agha Air Travel handled everything
+                        beautifully. The kids loved it and so did we!"</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="tc-header">
+                        <div class="tc-avatar">S</div>
+                        <div>
+                            <div class="tc-name">Sara Malik</div>
+                            <div class="tc-role">Solo Traveler</div>
+                        </div>
+                    </div>
+                    <div class="tc-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                            class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="tc-text">"As a solo female traveler, safety and reliability are my top priorities. Agha
+                        Air Travel delivered on both with their excellent service."</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="tc-header">
+                        <div class="tc-avatar" style="background: var(--grad-secondary);">U</div>
+                        <div>
+                            <div class="tc-name">Usman Sheikh</div>
+                            <div class="tc-role">Group Tour Leader</div>
+                        </div>
+                    </div>
+                    <div class="tc-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                            class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="tc-text">"Organized a group tour of 25 people to Malaysia. Agha Air Travel handled
+                        logistics perfectly. Will definitely book again!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ CTA ═══════════ -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content reveal">
+                <h2 class="cta-title">Start Your Journey <span class="line2">Today</span></h2>
+                <p class="cta-sub">Let us take care of your travel plans while you focus on making memories.</p>
+                <div class="cta-buttons">
+                    <a href="air-ticket.html" class="btn-primary"><i class="fas fa-plane-departure"></i> Book Flight</a>
+                    <a href="contact.html" class="btn-secondary"><i class="fas fa-headset"></i> Contact Agent</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">
+                        <div class="nav-brand-icon"><i class="fas fa-plane"></i></div>
+                        Agha Air Travel
+                    </div>
+                    <p class="footer-desc">Premium travel services since 2010. We make your travel dreams a reality with
+                        expert planning and unbeatable prices.</p>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="portal/login.html">Agent Portal</a></li>
                     </ul>
                 </div>
-                <div class="feature-image fade-left">
-                    <div class="dashboard-mockup">
-                        <div class="mockup-header">
-                            <div class="mockup-dots">
-                                <span></span><span></span><span></span>
-                            </div>
-                            <div class="mockup-title">AAT Booking Portal</div>
-                        </div>
-                        <div class="mockup-body">
-                            <div class="mockup-sidebar">
-                                <div class="nav-item active"></div>
-                                <div class="nav-item"></div>
-                                <div class="nav-item"></div>
-                            </div>
-                            <div class="mockup-content">
-                                <div class="mockup-card flight-card">
-                                    <div class="flight-route">
-                                        <span class="city">KHI</span>
-                                        <i class="fas fa-plane"></i>
-                                        <span class="city">JED</span>
-                                    </div>
-                                    <div class="flight-details">
-                                        <div class="line"></div>
-                                        <div class="line short"></div>
-                                    </div>
-                                    <div class="flight-price">$450</div>
-                                </div>
-                                <div class="mockup-card flight-card tooltip-visible">
-                                    <div class="flight-route">
-                                        <span class="city">KHI</span>
-                                        <i class="fas fa-plane"></i>
-                                        <span class="city">DXB</span>
-                                    </div>
-                                    <div class="flight-details">
-                                        <div class="line"></div>
-                                        <div class="line short"></div>
-                                    </div>
-                                    <div class="flight-price">$120</div>
-                                    <div class="price-tooltip">Best Value</div>
-                                </div>
-                                <div class="mockup-chart">
-                                    <div class="chart-bar h-1"></div>
-                                    <div class="chart-bar h-2"></div>
-                                    <div class="chart-bar h-3 highlight"></div>
-                                    <div class="chart-bar h-4"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div>
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="air-ticket.html">Air Tickets</a></li>
+                        <li><a href="umrah.html">Umrah Packages</a></li>
+                        <li><a href="services.html">Visa Assistance</a></li>
+                        <li><a href="services.html">Corporate Travel</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="tel:+923001234567"><i class="fas fa-phone" style="margin-right: 6px;"></i> +92 300
+                                1234567</a></li>
+                        <li><a href="mailto:info@aghaairtravel.com"><i class="fas fa-envelope"
+                                    style="margin-right: 6px;"></i> info@aghaairtravel.com</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt" style="margin-right: 6px;"></i> Karachi,
+                                Pakistan</a></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Minimal Umrah Section -->
-    <section id="umrah" class="section minimal-umrah bg-light-blue">
-        <div class="container">
-            <div class="minimal-header fade-up">
-                <div class="badge badge-gradient">Premium Packages</div>
-                <h2 class="gradient-text">Sacred Journeys, Perfected.</h2>
-                <p>Experience complete peace of mind with our all-inclusive Umrah packages, designed for ultimate
-                    spiritual focus.</p>
-            </div>
-
-            <div class="process-cards fade-up" style="transition-delay: 150ms;">
-                <div class="process-card">
-                    <div class="process-icon">
-                        <i class="fas fa-passport"></i>
-                    </div>
-                    <h4>1. Visa Processing</h4>
-                    <p>Fast, guaranteed e-visa issuance</p>
-                </div>
-                <div class="process-card">
-                    <div class="process-icon">
-                        <i class="fas fa-hotel"></i>
-                    </div>
-                    <h4>2. Premium Stay</h4>
-                    <p>Luxury hotels & VIP transport</p>
-                </div>
-                <div class="process-card">
-                    <div class="process-icon">
-                        <i class="fas fa-mosque"></i>
-                    </div>
-                    <h4>3. Guided Ziarat</h4>
-                    <p>Expert-led tours of sacred sites</p>
-                </div>
-            </div>
-
-            <div class="minimal-cta fade-up" style="transition-delay: 300ms;">
-                <a href="#contact" class="btn btn-primary btn-lg">Request Custom Umrah Quote <i
-                        class="fas fa-arrow-right"></i></a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonial Form/Slider Area -->
-    <section class="section bg-light-blue overflow-hidden">
-        <div class="container">
-            <div class="section-header fade-up">
-                <h2>What Our Travelers Say</h2>
-            </div>
-
-            <div class="testimonial-slider-container fade-up" style="transition-delay: 100ms;">
-                <div class="testimonial-track" id="testimonial-track">
-                    <div class="testimonial-card">
-                        <div class="stars">★★★★★</div>
-                        <p class="quote">"Agha Air Travel handled our family's Umrah perfectly. The hotels were exactly
-                            as promised and transportation was seamless."</p>
-                        <div class="author">
-                            <div class="avatar">OM</div>
-                            <div class="author-info">
-                                <h5>Osman M.</h5>
-                                <span>Karachi, Pakistan</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="stars">★★★★★</div>
-                        <p class="quote">"Best fares I've found for my business trips to Dubai. Their transparent
-                            billing and support makes my life so much easier."</p>
-                        <div class="author">
-                            <div class="avatar">AK</div>
-                            <div class="author-info">
-                                <h5>Ali K.</h5>
-                                <span>Corporate Client</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="stars">★★★★★</div>
-                        <p class="quote">"Got my UK visa sorted without any hassle. The consultant guided me through
-                            every step of the documentation."</p>
-                        <div class="author">
-                            <div class="avatar">SZ</div>
-                            <div class="author-info">
-                                <h5>Sarah Z.</h5>
-                                <span>Tourist</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="slider-controls">
-                    <button id="prev-btn" class="control-btn"><i class="fas fa-arrow-left"></i></button>
-                    <button id="next-btn" class="control-btn"><i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Modern Contact Section -->
-    <section id="contact" class="section">
-        <div class="container">
-            <div class="contact-wrapper">
-                <div class="contact-info-panel fade-right">
-                    <h2>Get in Touch</h2>
-                    <p>Ready to start your journey? Reach out to our experts.</p>
-
-                    <div class="contact-methods">
-                        <div class="method-card">
-                            <div class="method-icon"><i class="fas fa-phone-alt"></i></div>
-                            <div class="method-details">
-                                <h5>Call Us Directly</h5>
-                                <p>S.M Rasool: <strong>0305-8107136</strong></p>
-                                <p>Hafiz Ihsan: <strong>0344-7888982</strong></p>
-                            </div>
-                        </div>
-
-                        <div class="method-card">
-                            <div class="method-icon"><i class="fas fa-envelope"></i></div>
-                            <div class="method-details">
-                                <h5>Email Support</h5>
-                                <p>aghairtravel101@gmail.com</p>
-                            </div>
-                        </div>
-
-                        <div class="method-card">
-                            <div class="method-icon"><i class="fas fa-map-marker-alt"></i></div>
-                            <div class="method-details">
-                                <h5>Our Office</h5>
-                                <p>Office #1,2 Faizan Market<br>Main Dawood Chorangi<br>Landhi, Karachi</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="contact-form-panel fade-left">
-                    <div class="glass-form-card">
-                        <h3>Send an Inquiry</h3>
-                        <form id="contact-form" onsubmit="event.preventDefault();">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Your Name</label>
-                                    <input type="text" placeholder="John Doe" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Phone Number</label>
-                                    <input type="tel" placeholder="+92 300 1234567" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Service Type</label>
-                                <div class="custom-select-wrapper">
-                                    <select required>
-                                        <option value="" disabled selected>Select a service</option>
-                                        <option value="flights">Air Tickets</option>
-                                        <option value="umrah">Umrah Packages</option>
-                                        <option value="visa">Visa Assistance</option>
-                                        <option value="other">General Inquiry</option>
-                                    </select>
-                                    <i class="fas fa-chevron-down select-icon"></i>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Message</label>
-                                <textarea rows="4" placeholder="How can we help you today?" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block btn-lg">Send Message <i
-                                    class="fas fa-paper-plane"></i></button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Home Trust Strip -->
-    <section class="home-trust-section">
-        <div class="container">
-            <div class="home-trust-content fade-up">
-                <h2>Trusted by Hundreds of Travelers</h2>
-                <p>Serving corporate clients, families, and Umrah pilgrims with transparency and care.</p>
-
-                <div class="home-trust-grid">
-                    <div class="home-trust-stat">
-                        <i class="fas fa-ticket-alt"></i>
-                        <div class="stat-number">500+</div>
-                        <div class="stat-label">Tickets Booked</div>
-                    </div>
-                    <div class="home-trust-stat">
-                        <i class="fas fa-kaaba"></i>
-                        <div class="stat-number">200+</div>
-                        <div class="stat-label">Umrah Clients</div>
-                    </div>
-                    <div class="home-trust-stat">
-                        <i class="fas fa-headset"></i>
-                        <div class="stat-number">24/7</div>
-                        <div class="stat-label">Support Access</div>
-                    </div>
-                    <div class="home-trust-stat">
-                        <i class="fas fa-tags"></i>
-                        <div class="stat-number">100%</div>
-                        <div class="stat-label">Transparent Pricing</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section id="contact" class="cta-section">
-        <div class="container">
-            <div class="cta-content fade-up">
-                <h2>Ready to Start Your Journey?</h2>
-                <p>Whether you're planning a corporate trip or a spiritual journey, our experts are here to assist you
-                    24/7.</p>
-                <div class="cta-buttons">
-                    <a href="javascript:void(0)" class="btn btn-primary btn-lg" onclick="openModal('flight')">Book
-                        Now</a>
-                    <a href="https://wa.me/923058107136?text=Hello%20Agha%20Air%20Travel,%20I%20need%20travel%20assistance."
-                        target="_blank" class="btn btn-whatsapp btn-lg"><i class="fab fa-whatsapp"></i> Chat on
-                        WhatsApp</a>
-                </div>
-                <p class="cta-trust-text">Transparent pricing. Dedicated support. Trusted service.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Dark footer -->
-    <footer class="modern-footer">
-        <div class="container footer-top">
-            <div class="footer-brand">
-                <div class="logo-text light">AAT</div>
-                <p>Elevating global connectivity with trust, transparency, and premium personalized service.</p>
-                <div class="social-links">
+            <div class="footer-bottom">
+                <span>&copy; 2026 Agha Air Travel. All rights reserved.</span>
+                <div class="footer-social">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
-
-            <div class="footer-links-group">
-                <h4>Company</h4>
-                <a href="#home">Home</a>
-                <a href="#about">About Us</a>
-                <a href="#services">Services</a>
-                <a href="#contact">Contact</a>
-            </div>
-
-            <div class="footer-links-group">
-                <h4>Services</h4>
-                <a href="air-ticket.html">Air Tickets</a>
-                <a href="umrah.html">Umrah Packages</a>
-                <a href="#services">Visa Processing</a>
-                <a href="#services">Corporate Travel</a>
-            </div>
-
-            <div class="footer-contact-widget">
-                <h4>Contact Info</h4>
-                <a href="tel:03058107136"><i class="fas fa-phone"></i> 0305-8107136</a>
-                <a href="mailto:aghairtravel101@gmail.com"><i class="fas fa-envelope"></i> aghairtravel101@gmail.com</a>
-                <p><i class="fas fa-map-marker-alt"></i> Landhi, Karachi, PK</p>
-            </div>
-        </div>
-        <div class="footer-bottom border-top">
-            <div class="container bottom-content">
-                <p>&copy; 2026 Agha Air Travel. All rights reserved.</p>
-                <div class="footer-legal">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script src="js/script.js" defer></script>
-    <script src="js/modal.js" defer></script>
-    <script src="js/whatsapp.js" defer async></script>
-    <script src="js/announcement.js" defer></script>
-    <script src="js/sticky-cta.js" defer></script>
+    <!-- ═══════════ SCRIPTS ═══════════ -->
+    <script>
+        // ---- Navbar Scroll Effect ----
+        window.addEventListener('scroll', () => {
+            document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // ---- Mobile Nav Toggle ----
+        document.getElementById('navToggle').addEventListener('click', () => {
+            const links = document.getElementById('navLinks');
+            links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // ---- Scroll Reveal ----
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // ---- Animated Stats Counter ----
+        const statNums = document.querySelectorAll('.stat-num[data-target]');
+        let statAnimated = false;
+
+        const statObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !statAnimated) {
+                    statAnimated = true;
+                    statNums.forEach(num => {
+                        const target = parseInt(num.dataset.target);
+                        const suffix = target >= 1000 ? '+' : target === 24 ? '' : '+';
+                        const duration = 2000;
+                        const increment = target / (duration / 16);
+                        let current = 0;
+
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= target) {
+                                current = target;
+                                clearInterval(timer);
+                            }
+                            num.textContent = Math.floor(current).toLocaleString() + suffix;
+                        }, 16);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        statNums.forEach(num => statObserver.observe(num));
+
+        // ---- Auto-scroll Testimonials ----
+        const track = document.querySelector('.testimonial-track');
+        if (track) {
+            let scrollDir = 1;
+            setInterval(() => {
+                track.scrollBy({ left: 380 * scrollDir, behavior: 'smooth' });
+                if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) scrollDir = -1;
+                if (track.scrollLeft <= 10) scrollDir = 1;
+            }, 4000);
+        }
+    </script>
+
 </body>
 
 </html>
