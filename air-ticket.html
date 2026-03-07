@@ -6,137 +6,138 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Air Tickets — Agha Air Travel</title>
     <meta name="description"
-        content="Book domestic and international flights at the best prices. Economy, business and first class tickets with instant confirmation.">
+        content="Book domestic and international flights through our intelligent booking engine. 150+ airlines, real-time pricing, instant confirmation.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+    <canvas id="particleCanvas"></canvas>
 
     <nav class="nav" id="mainNav">
         <div class="container">
             <a href="index.html" class="nav-brand">
-                <div class="nav-brand-icon"><i class="fas fa-plane"></i></div> Agha Air Travel
+                <div class="nav-brand-icon"><i class="fas fa-plane"></i></div>AGHA AIR
             </a>
-            <div class="nav-links" id="navLinks">
-                <a href="index.html">Home</a><a href="services.html">Services</a><a href="air-ticket.html"
-                    class="active">Air Tickets</a><a href="umrah.html">Umrah Packages</a><a
+            <div class="nav-links" id="navLinks"><a href="index.html">Home</a><a href="services.html">Services</a><a
+                    href="air-ticket.html" class="active">Air Tickets</a><a href="umrah.html">Umrah</a><a
                     href="about.html">About</a><a href="contact.html">Contact</a><a href="portal/login.html"
-                    class="nav-cta">Agent Portal</a>
-            </div>
+                    class="nav-cta">⬡ Agent Portal</a></div>
             <button class="nav-mobile-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
         </div>
     </nav>
 
     <section class="page-hero">
-        <h1>Air <span class="line2">Tickets</span></h1>
-        <p>Domestic & international flights at unbeatable prices</p>
+        <h1>AIR <span class="glow-line">TICKETS</span></h1>
+        <p>150+ airlines • Real-time pricing • Instant confirmation</p>
     </section>
 
     <!-- Airlines -->
     <section class="section section-alt">
         <div class="container">
             <div class="section-header reveal">
-                <div class="section-label"><i class="fas fa-plane"></i> Our Partners</div>
-                <h2 class="section-title">Major <span class="grad">Airlines</span></h2>
-                <p class="section-subtitle">We partner with top airlines worldwide to bring you the best fares and
-                    routes.</p>
+                <div class="section-tag"><i class="fas fa-satellite-dish"></i> AIRLINE NETWORK</div>
+                <h2 class="section-title">CONNECTED <span class="grad-text">AIRLINES</span></h2>
             </div>
-            <div class="features-grid">
-                <div class="feature-card reveal">
-                    <div class="feature-icon fi-1"><i class="fas fa-plane"></i></div>
+            <div class="holo-grid">
+                <div class="holo-panel reveal">
+                    <div class="holo-icon hi-cyan"><i class="fas fa-plane"></i></div>
                     <h3>PIA</h3>
                     <p>Pakistan International Airlines — domestic and international routes from all major Pakistani
-                        cities.</p>
+                        cities with Hajj/Umrah specials.</p>
                 </div>
-                <div class="feature-card reveal">
-                    <div class="feature-icon fi-3"><i class="fas fa-plane"></i></div>
-                    <h3>Emirates</h3>
-                    <p>Premium Dubai-based carrier with worldwide connectivity and award-winning in-flight service.</p>
+                <div class="holo-panel reveal">
+                    <div class="holo-icon hi-amber"><i class="fas fa-plane"></i></div>
+                    <h3>EMIRATES</h3>
+                    <p>Premium Dubai-based carrier with worldwide connectivity. Award-winning service, modern fleet,
+                        150+ destinations globally.</p>
                 </div>
-                <div class="feature-card reveal">
-                    <div class="feature-icon fi-2"><i class="fas fa-plane"></i></div>
-                    <h3>Saudi Airlines</h3>
-                    <p>Direct flights to Jeddah, Riyadh and Madinah with exclusive Hajj and Umrah flight schedules.</p>
+                <div class="holo-panel reveal">
+                    <div class="holo-icon hi-green"><i class="fas fa-plane"></i></div>
+                    <h3>SAUDI AIRLINES</h3>
+                    <p>Direct flights to Jeddah, Riyadh and Madinah. Exclusive Hajj & Umrah flight schedules with
+                        premium cabin options.</p>
                 </div>
-                <div class="feature-card reveal">
-                    <div class="feature-icon fi-4"><i class="fas fa-plane"></i></div>
-                    <h3>Qatar Airways</h3>
-                    <p>Five-star airline with excellent Doha hub connections to over 160 destinations worldwide.</p>
+                <div class="holo-panel reveal">
+                    <div class="holo-icon hi-purple"><i class="fas fa-plane"></i></div>
+                    <h3>QATAR AIRWAYS</h3>
+                    <p>Five-star airline with excellent Doha hub connections to 160+ destinations. Multiple daily
+                        frequencies from Pakistan.</p>
                 </div>
-                <div class="feature-card reveal">
-                    <div class="feature-icon fi-6"><i class="fas fa-plane"></i></div>
-                    <h3>Turkish Airlines</h3>
-                    <p>Fly to more countries than any other airline with Istanbul hub connecting East and West.</p>
+                <div class="holo-panel reveal">
+                    <div class="holo-icon hi-pink"><i class="fas fa-plane"></i></div>
+                    <h3>TURKISH AIRLINES</h3>
+                    <p>Fly to more countries than any other airline. Istanbul hub connects East and West with seamless
+                        transfers.</p>
                 </div>
-                <div class="feature-card reveal">
-                    <div class="feature-icon fi-5"><i class="fas fa-plane"></i></div>
-                    <h3>Air Blue & Serene</h3>
-                    <p>Budget-friendly domestic options for travel within Pakistan with frequent daily flights.</p>
+                <div class="holo-panel reveal">
+                    <div class="holo-icon hi-cyan"><i class="fas fa-plane"></i></div>
+                    <h3>AIR BLUE & SERENE</h3>
+                    <p>Budget-friendly domestic carriers for travel within Pakistan. Frequent daily flights between
+                        major cities.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Popular Routes -->
+    <!-- Routes -->
     <section class="section section-dark">
         <div class="container">
             <div class="section-header reveal">
-                <div class="section-label"><i class="fas fa-route"></i> Popular Routes</div>
-                <h2 class="section-title">Trending <span class="grad">Flight Routes</span></h2>
+                <div class="section-tag"><i class="fas fa-route"></i> ROUTE MATRIX</div>
+                <h2 class="section-title">TRENDING <span class="grad-text">ROUTES</span></h2>
             </div>
             <div class="content-grid reveal">
-                <div class="content-card" style="border-left: 3px solid #4F46E5;">
-                    <h3><i class="fas fa-plane-departure" style="color: var(--accent); margin-right: 8px;"></i> Karachi
-                        → Dubai</h3>
+                <div class="content-card" style="border-left: 2px solid var(--cyan);">
+                    <h3><i class="fas fa-plane-departure" style="color:var(--cyan);margin-right:8px;"></i>KARACHI →
+                        DUBAI</h3>
                     <p>Daily flights • From PKR 45,000 one-way<br><span
-                            style="color: var(--green); font-weight: 600;">Economy & Business Class</span></p>
+                            style="color:var(--green);font-weight:600;font-size:0.75rem;">◆ ECONOMY & BUSINESS
+                            CLASS</span></p>
                 </div>
-                <div class="content-card" style="border-left: 3px solid #22C55E;">
-                    <h3><i class="fas fa-plane-departure" style="color: var(--green); margin-right: 8px;"></i> Lahore →
-                        Jeddah</h3>
+                <div class="content-card" style="border-left: 2px solid var(--green);">
+                    <h3><i class="fas fa-plane-departure" style="color:var(--green);margin-right:8px;"></i>LAHORE →
+                        JEDDAH</h3>
                     <p>Direct flights • From PKR 65,000 one-way<br><span
-                            style="color: var(--amber); font-weight: 600;">Umrah Specials Available</span></p>
+                            style="color:var(--amber);font-weight:600;font-size:0.75rem;">◆ UMRAH SPECIALS ACTIVE</span>
+                    </p>
                 </div>
-                <div class="content-card" style="border-left: 3px solid #F59E0B;">
-                    <h3><i class="fas fa-plane-departure" style="color: var(--amber); margin-right: 8px;"></i> Islamabad
-                        → Istanbul</h3>
+                <div class="content-card" style="border-left: 2px solid var(--purple);">
+                    <h3><i class="fas fa-plane-departure" style="color:var(--purple);margin-right:8px;"></i>ISLAMABAD →
+                        ISTANBUL</h3>
                     <p>Direct flights • From PKR 80,000 one-way<br><span
-                            style="color: var(--accent); font-weight: 600;">Most Popular Route</span></p>
+                            style="color:var(--pink);font-weight:600;font-size:0.75rem;">◆ MOST POPULAR ROUTE</span></p>
                 </div>
-                <div class="content-card" style="border-left: 3px solid #06B6D4;">
-                    <h3><i class="fas fa-plane-departure" style="color: var(--indigo); margin-right: 8px;"></i> Karachi
-                        → London</h3>
+                <div class="content-card" style="border-left: 2px solid var(--pink);">
+                    <h3><i class="fas fa-plane-departure" style="color:var(--pink);margin-right:8px;"></i>KARACHI →
+                        LONDON</h3>
                     <p>Via Dubai/Doha • From PKR 130,000 one-way<br><span
-                            style="color: var(--green); font-weight: 600;">Multiple Airlines</span></p>
+                            style="color:var(--cyan);font-weight:600;font-size:0.75rem;">◆ MULTIPLE CARRIERS</span></p>
                 </div>
-                <div class="content-card" style="border-left: 3px solid #EF4444;">
-                    <h3><i class="fas fa-plane-departure" style="color: #EF4444; margin-right: 8px;"></i> Lahore → Kuala
-                        Lumpur</h3>
+                <div class="content-card" style="border-left: 2px solid var(--amber);">
+                    <h3><i class="fas fa-plane-departure" style="color:var(--amber);margin-right:8px;"></i>LAHORE →
+                        KUALA LUMPUR</h3>
                     <p>Direct & connecting • From PKR 55,000 one-way<br><span
-                            style="color: var(--accent); font-weight: 600;">Budget Friendly</span></p>
+                            style="color:var(--green);font-weight:600;font-size:0.75rem;">◆ BUDGET FRIENDLY</span></p>
                 </div>
-                <div class="content-card" style="border-left: 3px solid #8B5CF6;">
-                    <h3><i class="fas fa-plane-departure" style="color: #8B5CF6; margin-right: 8px;"></i> Islamabad →
-                        Bangkok</h3>
-                    <p>Via Doha/Sharjah • From PKR 60,000 one-way<br><span
-                            style="color: var(--amber); font-weight: 600;">Family Packages</span></p>
+                <div class="content-card" style="border-left: 2px solid var(--cyan);">
+                    <h3><i class="fas fa-plane-departure" style="color:var(--cyan);margin-right:8px;"></i>ISLAMABAD →
+                        BANGKOK</h3>
+                    <p>Via connecting hubs • From PKR 60,000 one-way<br><span
+                            style="color:var(--amber);font-weight:600;font-size:0.75rem;">◆ FAMILY PACKAGES</span></p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA -->
     <section class="cta-section">
         <div class="container">
             <div class="cta-content reveal">
-                <h2 class="cta-title">Book Your <span class="line2">Flight Today</span></h2>
-                <p class="cta-sub">Get the best fares with instant confirmation. Our agents are ready to help.</p>
-                <div class="cta-buttons">
-                    <a href="contact.html" class="btn-primary"><i class="fas fa-headset"></i> Talk to Agent</a>
-                    <a href="https://wa.me/923001234567" class="btn-secondary"><i class="fab fa-whatsapp"></i> WhatsApp
-                        Us</a>
-                </div>
+                <h2 class="cta-title">BOOK YOUR <span class="glow-line">FLIGHT</span></h2>
+                <p class="cta-sub">Initialize your booking sequence. Our agents are standing by.</p>
+                <div class="cta-buttons"><a href="contact.html" class="btn-neon"><i class="fas fa-headset"></i> Talk to
+                        Agent</a><a href="https://wa.me/923001234567" class="btn-neon btn-neon-alt"><i
+                            class="fab fa-whatsapp"></i> WhatsApp</a></div>
             </div>
         </div>
     </section>
@@ -146,14 +147,14 @@
             <div class="footer-grid">
                 <div>
                     <div class="footer-brand">
-                        <div class="nav-brand-icon"><i class="fas fa-plane"></i></div> Agha Air Travel
+                        <div class="nav-brand-icon"><i class="fas fa-plane"></i></div>AGHA AIR TRAVEL
                     </div>
-                    <p class="footer-desc">Premium travel services since 2010.</p>
+                    <p class="footer-desc">Next-generation travel platform since 2010.</p>
                 </div>
                 <div>
                     <h4>Company</h4>
                     <ul>
-                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="about.html">About</a></li>
                         <li><a href="services.html">Services</a></li>
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
@@ -162,33 +163,26 @@
                     <h4>Services</h4>
                     <ul>
                         <li><a href="air-ticket.html">Air Tickets</a></li>
-                        <li><a href="umrah.html">Umrah Packages</a></li>
-                        <li><a href="services.html">Visa Assistance</a></li>
+                        <li><a href="umrah.html">Umrah</a></li>
+                        <li><a href="services.html">Visa</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4>Contact</h4>
+                    <h4>Support</h4>
                     <ul>
                         <li><a href="tel:+923001234567"><i class="fas fa-phone" style="margin-right:6px;"></i>+92 300
                                 1234567</a></li>
-                        <li><a href="mailto:info@aghaairtravel.com"><i class="fas fa-envelope"
-                                    style="margin-right:6px;"></i>info@aghaairtravel.com</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="footer-bottom"><span>&copy; 2026 Agha Air Travel.</span>
+            <div class="footer-bottom"><span>◆ 2026 AGHA AIR TRAVEL</span>
                 <div class="footer-social"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i
                             class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-whatsapp"></i></a></div>
             </div>
         </div>
     </footer>
 
-    <script>
-        window.addEventListener('scroll', () => { document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60); });
-        document.getElementById('navToggle').addEventListener('click', () => { const l = document.getElementById('navLinks'); l.style.display = l.style.display === 'flex' ? 'none' : 'flex'; });
-        const ro = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
-    </script>
+    <script src="js/script.js"></script>
 </body>
 
 </html>
